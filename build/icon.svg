@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#262a3a"/><stop offset="1" stop-color="#0c0e14"/>
+    </linearGradient>
+    <linearGradient id="vio" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b9a9ff"/><stop offset="1" stop-color="#6d56f0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".72" cy=".28" r=".6">
+      <stop offset="0" stop-color="#8b7cff" stop-opacity=".45"/><stop offset="1" stop-color="#8b7cff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="190" fill="url(#bg)"/>
+  <rect x="100" y="100" width="824" height="824" rx="190" fill="url(#glow)"/>
+  <rect x="102" y="102" width="820" height="820" rx="188" fill="none" stroke="#ffffff" stroke-opacity=".10" stroke-width="4"/>
+  <!-- window dots -->
+  <circle cx="214" cy="206" r="17" fill="#f2606b"/><circle cx="266" cy="206" r="17" fill="#f2b84b"/><circle cx="318" cy="206" r="17" fill="#4cc38a"/>
+  <!-- prompt chevron + cursor -->
+  <path d="M236 420 L424 566 L236 712" fill="none" stroke="#e8ebf2" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="470" y="690" width="220" height="56" rx="28" fill="#e8ebf2"/>
+  <!-- AI sparkle -->
+  <path d="M722 250 C735 372 770 407 892 420 C770 433 735 468 722 590 C709 468 674 433 552 420 C674 407 709 372 722 250 Z" fill="url(#vio)"/>
+  <path d="M846 560 C851 604 863 616 906 621 C863 626 851 638 846 682 C841 638 829 626 786 621 C829 616 841 604 846 560 Z" fill="url(#vio)" opacity=".9"/>
+</svg>

@@ -1,0 +1,24 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Unit tests
+        run: npm test
+      - name: UI strings (every key exists in ko and en)
+        run: npm run i18n:check
+      - name: Feature e2e (real Electron + real PTY, scripted model servers — no GPU, no network)
+        run: npm run e2e:features
+        env:
+          AIT_E2E_WS: ${{ runner.temp }}/ait-demo-ws

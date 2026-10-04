@@ -1,0 +1,1002 @@
+{
+ "env": {
+  "measuredAt": "2026-10-03 16:13",
+  "chip": "Apple M4",
+  "ramGB": 16,
+  "ollama": "0.34.1",
+  "llamaCpp": "",
+  "note": "private ollama servers with OLLAMA_FLASH_ATTENTION=1; tok/s = median of 3 generations (num_predict 120, temperature 0, think off); other apps were running"
+ },
+ "memory": [
+  {
+   "model": "qwen3:8b",
+   "ctx": 4096,
+   "kvType": "f16",
+   "residentGB": 5.92,
+   "predictedGB": 5.83,
+   "tokPerSec": 19.6,
+   "coldLoadSec": 1.1,
+   "engine": "shared (before)"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 12288,
+   "kvType": "f16",
+   "residentGB": 7.14,
+   "predictedGB": 7.04,
+   "tokPerSec": 19.8,
+   "coldLoadSec": 1,
+   "engine": "shared (before)"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 32768,
+   "kvType": "f16",
+   "residentGB": 9.91,
+   "predictedGB": 10.06,
+   "tokPerSec": 19.7,
+   "coldLoadSec": 3.1,
+   "engine": "shared (before)"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 4096,
+   "kvType": "f16",
+   "residentGB": 5.92,
+   "predictedGB": 5.83,
+   "tokPerSec": 19.7,
+   "coldLoadSec": 3.3,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 12288,
+   "kvType": "f16",
+   "residentGB": 7.24,
+   "predictedGB": 7.04,
+   "tokPerSec": 19.7,
+   "coldLoadSec": 1,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 32768,
+   "kvType": "f16",
+   "residentGB": 10.26,
+   "predictedGB": 10.06,
+   "tokPerSec": 19.5,
+   "coldLoadSec": 1.3,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 4096,
+   "kvType": "q8_0",
+   "residentGB": 5.65,
+   "predictedGB": 5.55,
+   "tokPerSec": 19.5,
+   "coldLoadSec": 15.4,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 12288,
+   "kvType": "q8_0",
+   "residentGB": 6.41,
+   "predictedGB": 6.19,
+   "tokPerSec": 19.6,
+   "coldLoadSec": 0.8,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 32768,
+   "kvType": "q8_0",
+   "residentGB": 8.01,
+   "predictedGB": 7.8,
+   "tokPerSec": 19.5,
+   "coldLoadSec": 1.1,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 4096,
+   "kvType": "q4_0",
+   "residentGB": 5.49,
+   "predictedGB": 5.4,
+   "tokPerSec": 19.4,
+   "coldLoadSec": 0.8,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 12288,
+   "kvType": "q4_0",
+   "residentGB": 5.96,
+   "predictedGB": 5.74,
+   "tokPerSec": 19.3,
+   "coldLoadSec": 0.8,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 32768,
+   "kvType": "q4_0",
+   "residentGB": 6.8,
+   "predictedGB": 6.59,
+   "tokPerSec": 19.3,
+   "coldLoadSec": 1,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 12288,
+   "kvType": "f16",
+   "residentGB": 10.99,
+   "predictedGB": 11.29,
+   "tokPerSec": 9.8,
+   "coldLoadSec": 6.5,
+   "engine": "shared (before)"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 16384,
+   "kvType": "f16",
+   "residentGB": 12.48,
+   "predictedGB": 11.96,
+   "tokPerSec": 8.9,
+   "coldLoadSec": 7,
+   "engine": "shared (before)"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 12288,
+   "kvType": "f16",
+   "residentGB": 11.42,
+   "predictedGB": 11.29,
+   "tokPerSec": 8.9,
+   "coldLoadSec": 1.3,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 16384,
+   "kvType": "f16",
+   "residentGB": 12.48,
+   "predictedGB": 11.96,
+   "tokPerSec": 2.9,
+   "coldLoadSec": 2.7,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 12288,
+   "kvType": "q8_0",
+   "residentGB": 10.05,
+   "predictedGB": 10.35,
+   "tokPerSec": 9.8,
+   "coldLoadSec": 10.9,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 16384,
+   "kvType": "q8_0",
+   "residentGB": 10.41,
+   "predictedGB": 10.71,
+   "tokPerSec": 7.5,
+   "coldLoadSec": 6.2,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 12288,
+   "kvType": "q4_0",
+   "residentGB": 9.55,
+   "predictedGB": 9.85,
+   "tokPerSec": 6.5,
+   "coldLoadSec": 4.8,
+   "engine": "managed"
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 16384,
+   "kvType": "q4_0",
+   "residentGB": 9.74,
+   "predictedGB": 10.03,
+   "tokPerSec": 6.5,
+   "coldLoadSec": 5.9,
+   "engine": "managed"
+  }
+ ],
+ "speed": [
+  {
+   "model": "qwen3:8b",
+   "k": "f16",
+   "v": "f16",
+   "pp512": 164.6,
+   "pp2048": 138,
+   "tg64": 14.8
+  },
+  {
+   "model": "qwen3:8b",
+   "k": "q8_0",
+   "v": "q8_0",
+   "pp512": 130.8,
+   "pp2048": 123.3,
+   "tg64": 15.4
+  },
+  {
+   "model": "qwen3:8b",
+   "k": "q4_0",
+   "v": "q4_0",
+   "pp512": 124.3,
+   "pp2048": 126.2,
+   "tg64": 14.9
+  },
+  {
+   "model": "qwen3:8b",
+   "k": "q8_0",
+   "v": "q4_0",
+   "pp512": 75.9,
+   "pp2048": 40.3,
+   "tg64": 11
+  }
+ ],
+ "agent": {
+  "rows": [
+   {
+    "model": "qwen3:8b",
+    "task": "구조 설명",
+    "ok": true,
+    "secs": 35,
+    "cmds": 1,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/12288/14334ms",
+      "shared/f16/12288/2326ms",
+      "shared/f16/12288/1022ms"
+     ],
+     "calls": 3,
+     "prefill": 6171,
+     "prefillMs": 17682,
+     "gen": 292,
+     "promptEstMax": 402,
+     "ctx": 12288,
+     "kvType": "f16",
+     "kvGB": 1.81,
+     "peakGB": 6.79,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "baseline"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "버그 수정(JS)",
+    "ok": true,
+    "secs": 67,
+    "cmds": 1,
+    "edits": 1,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/12288/1636ms",
+      "shared/f16/12288/877ms",
+      "shared/f16/12288/1590ms",
+      "shared/f16/12288/1357ms",
+      "shared/f16/12288/1403ms",
+      "shared/f16/12288/1743ms",
+      "shared/f16/12288/1494ms",
+      "shared/f16/12288/1962ms"
+     ],
+     "calls": 8,
+     "prefill": 17223,
+     "prefillMs": 12062,
+     "gen": 735,
+     "promptEstMax": 708,
+     "ctx": 12288,
+     "kvType": "f16",
+     "kvGB": 1.81,
+     "peakGB": 6.79,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "baseline"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 기능+테스트 추가",
+    "ok": false,
+    "secs": 108,
+    "cmds": 1,
+    "edits": 3,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/12288/2155ms",
+      "shared/f16/12288/1461ms",
+      "shared/f16/12288/1401ms",
+      "shared/f16/12288/1346ms",
+      "shared/f16/12288/1459ms",
+      "shared/f16/12288/1431ms",
+      "shared/f16/12288/1336ms",
+      "shared/f16/12288/1334ms",
+      "shared/f16/12288/623ms",
+      "shared/f16/12288/1045ms"
+     ],
+     "calls": 10,
+     "prefill": 22663,
+     "prefillMs": 13591,
+     "gen": 1188,
+     "promptEstMax": 758,
+     "ctx": 12288,
+     "kvType": "f16",
+     "kvGB": 1.81,
+     "peakGB": 6.79,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "baseline"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 버그 수정(Python)",
+    "ok": true,
+    "secs": 66,
+    "cmds": 2,
+    "edits": 2,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/12288/1513ms",
+      "shared/f16/12288/2337ms",
+      "shared/f16/12288/1627ms",
+      "shared/f16/12288/1296ms",
+      "shared/f16/12288/3254ms",
+      "shared/f16/12288/633ms",
+      "shared/f16/12288/1049ms"
+     ],
+     "calls": 7,
+     "prefill": 14922,
+     "prefillMs": 11709,
+     "gen": 746,
+     "promptEstMax": 551,
+     "ctx": 12288,
+     "kvType": "f16",
+     "kvGB": 1.81,
+     "peakGB": 6.79,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "baseline"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "터미널: 파일 정리",
+    "ok": true,
+    "secs": 20,
+    "cmds": 1,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/12288/1507ms",
+      "shared/f16/12288/1030ms",
+      "shared/f16/12288/1016ms"
+     ],
+     "calls": 3,
+     "prefill": 5668,
+     "prefillMs": 3553,
+     "gen": 217,
+     "promptEstMax": 241,
+     "ctx": 12288,
+     "kvType": "f16",
+     "kvGB": 1.81,
+     "peakGB": 6.79,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "baseline"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "구조 설명",
+    "ok": true,
+    "secs": 34,
+    "cmds": 2,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/8192/10780ms",
+      "shared/f16/8192/1939ms",
+      "shared/f16/8192/1083ms",
+      "shared/f16/8192/687ms"
+     ],
+     "calls": 4,
+     "prefill": 8535,
+     "prefillMs": 14489,
+     "gen": 361,
+     "promptEstMax": 476,
+     "ctx": 8192,
+     "kvType": "f16",
+     "kvGB": 1.21,
+     "peakGB": 6.53,
+     "packRaw": 558,
+     "packKept": 558
+    },
+    "variant": "default"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "버그 수정(JS)",
+    "ok": true,
+    "secs": 52,
+    "cmds": 1,
+    "edits": 1,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/8192/1365ms",
+      "shared/f16/8192/634ms",
+      "shared/f16/8192/1044ms",
+      "shared/f16/8192/1026ms",
+      "shared/f16/8192/1041ms",
+      "shared/f16/8192/1076ms",
+      "shared/f16/8192/1202ms",
+      "shared/f16/8192/1890ms"
+     ],
+     "calls": 8,
+     "prefill": 17223,
+     "prefillMs": 9278,
+     "gen": 694,
+     "promptEstMax": 708,
+     "ctx": 8192,
+     "kvType": "f16",
+     "kvGB": 1.21,
+     "peakGB": 6.53,
+     "packRaw": 222,
+     "packKept": 222
+    },
+    "variant": "default"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 기능+테스트 추가",
+    "ok": false,
+    "secs": 173,
+    "cmds": 0,
+    "edits": 2,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/8192/2313ms",
+      "shared/f16/8192/1497ms",
+      "shared/f16/8192/1952ms",
+      "shared/f16/8192/1855ms",
+      "shared/f16/8192/1821ms",
+      "shared/f16/8192/1754ms",
+      "shared/f16/8192/1674ms",
+      "shared/f16/8192/1745ms",
+      "shared/f16/8192/1607ms",
+      "shared/f16/8192/1896ms"
+     ],
+     "calls": 10,
+     "prefill": 22853,
+     "prefillMs": 18114,
+     "gen": 1434,
+     "promptEstMax": 901,
+     "ctx": 8192,
+     "kvType": "f16",
+     "kvGB": 1.21,
+     "peakGB": 6.53,
+     "packRaw": 144,
+     "packKept": 144
+    },
+    "variant": "default"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 버그 수정(Python)",
+    "ok": true,
+    "secs": 79,
+    "cmds": 2,
+    "edits": 2,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/8192/1704ms",
+      "shared/f16/8192/2076ms",
+      "shared/f16/8192/1891ms",
+      "shared/f16/8192/1414ms",
+      "shared/f16/8192/1517ms",
+      "shared/f16/8192/829ms",
+      "shared/f16/8192/1209ms"
+     ],
+     "calls": 7,
+     "prefill": 14932,
+     "prefillMs": 10640,
+     "gen": 733,
+     "promptEstMax": 552,
+     "ctx": 8192,
+     "kvType": "f16",
+     "kvGB": 1.21,
+     "peakGB": 6.53,
+     "packRaw": 434,
+     "packKept": 434
+    },
+    "variant": "default"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "터미널: 파일 정리",
+    "ok": true,
+    "secs": 24,
+    "cmds": 1,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "shared/f16/8192/1702ms",
+      "shared/f16/8192/1116ms",
+      "shared/f16/8192/1214ms"
+     ],
+     "calls": 3,
+     "prefill": 5665,
+     "prefillMs": 4032,
+     "gen": 215,
+     "promptEstMax": 241,
+     "ctx": 8192,
+     "kvType": "f16",
+     "kvGB": 1.21,
+     "peakGB": 6.53,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "default"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "구조 설명",
+    "ok": true,
+    "secs": 51,
+    "cmds": 1,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q8_0/8192/19066ms",
+      "managed/q8_0/8192/3274ms",
+      "managed/q8_0/8192/1362ms"
+     ],
+     "calls": 3,
+     "prefill": 6177,
+     "prefillMs": 23702,
+     "gen": 279,
+     "promptEstMax": 402,
+     "ctx": 8192,
+     "kvType": "q8_0",
+     "kvGB": 0.64,
+     "peakGB": 5.62,
+     "packRaw": 403,
+     "packKept": 403
+    },
+    "variant": "q8"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "버그 수정(JS)",
+    "ok": true,
+    "secs": 68,
+    "cmds": 2,
+    "edits": 1,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q8_0/8192/2274ms",
+      "managed/q8_0/8192/991ms",
+      "managed/q8_0/8192/1897ms",
+      "managed/q8_0/8192/1697ms",
+      "managed/q8_0/8192/1445ms",
+      "managed/q8_0/8192/1463ms",
+      "managed/q8_0/8192/675ms",
+      "managed/q8_0/8192/1294ms"
+     ],
+     "calls": 8,
+     "prefill": 17053,
+     "prefillMs": 11736,
+     "gen": 591,
+     "promptEstMax": 594,
+     "ctx": 8192,
+     "kvType": "q8_0",
+     "kvGB": 0.64,
+     "peakGB": 5.62,
+     "packRaw": 248,
+     "packKept": 248
+    },
+    "variant": "q8"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 기능+테스트 추가",
+    "ok": true,
+    "secs": 277,
+    "cmds": 2,
+    "edits": 6,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q8_0/8192/2297ms",
+      "managed/q8_0/8192/1360ms",
+      "managed/q8_0/8192/1483ms",
+      "managed/q8_0/8192/1506ms",
+      "managed/q8_0/8192/1491ms",
+      "managed/q8_0/8192/1584ms",
+      "managed/q8_0/8192/1649ms",
+      "managed/q8_0/8192/1831ms",
+      "managed/q8_0/8192/1581ms",
+      "managed/q8_0/8192/1584ms",
+      "managed/q8_0/8192/1554ms",
+      "managed/q8_0/8192/1554ms",
+      "managed/q8_0/8192/4656ms",
+      "managed/q8_0/8192/1761ms",
+      "managed/q8_0/8192/1191ms",
+      "managed/q8_0/8192/1540ms",
+      "managed/q8_0/8192/1557ms"
+     ],
+     "calls": 17,
+     "prefill": 45335,
+     "prefillMs": 30179,
+     "gen": 2529,
+     "promptEstMax": 1554,
+     "ctx": 8192,
+     "kvType": "q8_0",
+     "kvGB": 0.64,
+     "peakGB": 5.62,
+     "packRaw": 1403,
+     "packKept": 1403
+    },
+    "variant": "q8"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 버그 수정(Python)",
+    "ok": true,
+    "secs": 136,
+    "cmds": 1,
+    "edits": 1,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q8_0/8192/1602ms",
+      "managed/q8_0/8192/2047ms",
+      "managed/q8_0/8192/1981ms",
+      "managed/q8_0/8192/1661ms",
+      "managed/q8_0/8192/1621ms",
+      "managed/q8_0/8192/2003ms",
+      "managed/q8_0/8192/1670ms",
+      "managed/q8_0/8192/1839ms"
+     ],
+     "calls": 8,
+     "prefill": 17727,
+     "prefillMs": 14424,
+     "gen": 1221,
+     "promptEstMax": 790,
+     "ctx": 8192,
+     "kvType": "q8_0",
+     "kvGB": 0.64,
+     "peakGB": 5.62,
+     "packRaw": 595,
+     "packKept": 595
+    },
+    "variant": "q8"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "터미널: 파일 정리",
+    "ok": true,
+    "secs": 28,
+    "cmds": 1,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q8_0/8192/1803ms",
+      "managed/q8_0/8192/1232ms",
+      "managed/q8_0/8192/1352ms"
+     ],
+     "calls": 3,
+     "prefill": 5668,
+     "prefillMs": 4387,
+     "gen": 221,
+     "promptEstMax": 241,
+     "ctx": 8192,
+     "kvType": "q8_0",
+     "kvGB": 0.64,
+     "peakGB": 5.62,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "q8"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "구조 설명",
+    "ok": false,
+    "secs": 26,
+    "cmds": 0,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q4_0/8192/20624ms"
+     ],
+     "calls": 1,
+     "prefill": 1869,
+     "prefillMs": 20624,
+     "gen": 54,
+     "promptEstMax": 175,
+     "ctx": 8192,
+     "kvType": "q4_0",
+     "kvGB": 0.34,
+     "peakGB": 5.67,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "tight"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "버그 수정(JS)",
+    "ok": true,
+    "secs": 76,
+    "cmds": 2,
+    "edits": 1,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q4_0/8192/2150ms",
+      "managed/q4_0/8192/1086ms",
+      "managed/q4_0/8192/2106ms",
+      "managed/q4_0/8192/1990ms",
+      "managed/q4_0/8192/1603ms",
+      "managed/q4_0/8192/1547ms",
+      "managed/q4_0/8192/741ms",
+      "managed/q4_0/8192/1358ms"
+     ],
+     "calls": 8,
+     "prefill": 17030,
+     "prefillMs": 12581,
+     "gen": 628,
+     "promptEstMax": 594,
+     "ctx": 8192,
+     "kvType": "q4_0",
+     "kvGB": 0.34,
+     "peakGB": 5.67,
+     "packRaw": 248,
+     "packKept": 248
+    },
+    "variant": "tight"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 기능+테스트 추가",
+    "ok": true,
+    "secs": 265,
+    "cmds": 2,
+    "edits": 5,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q4_0/8192/2585ms",
+      "managed/q4_0/8192/1667ms",
+      "managed/q4_0/8192/1498ms",
+      "managed/q4_0/8192/1825ms",
+      "managed/q4_0/8192/1497ms",
+      "managed/q4_0/8192/4040ms",
+      "managed/q4_0/8192/894ms",
+      "managed/q4_0/8192/824ms",
+      "managed/q4_0/8192/1073ms",
+      "managed/q4_0/8192/1607ms",
+      "managed/q4_0/8192/2579ms",
+      "managed/q4_0/8192/2002ms",
+      "managed/q4_0/8192/1486ms",
+      "managed/q4_0/8192/1631ms",
+      "managed/q4_0/8192/2762ms",
+      "managed/q4_0/8192/4371ms",
+      "managed/q4_0/8192/1892ms"
+     ],
+     "calls": 17,
+     "prefill": 47225,
+     "prefillMs": 34233,
+     "gen": 2257,
+     "promptEstMax": 1886,
+     "ctx": 8192,
+     "kvType": "q4_0",
+     "kvGB": 0.34,
+     "peakGB": 5.67,
+     "packRaw": 2741,
+     "packKept": 2741
+    },
+    "variant": "tight"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "코딩: 버그 수정(Python)",
+    "ok": true,
+    "secs": 264,
+    "cmds": 2,
+    "edits": 4,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q4_0/8192/1697ms",
+      "managed/q4_0/8192/2279ms",
+      "managed/q4_0/8192/2106ms",
+      "managed/q4_0/8192/1623ms",
+      "managed/q4_0/8192/1831ms",
+      "managed/q4_0/8192/2430ms",
+      "managed/q4_0/8192/1583ms",
+      "managed/q4_0/8192/1483ms",
+      "managed/q4_0/8192/1919ms",
+      "managed/q4_0/8192/1703ms",
+      "managed/q4_0/8192/1541ms",
+      "managed/q4_0/8192/1931ms",
+      "managed/q4_0/8192/1336ms",
+      "managed/q4_0/8192/1956ms",
+      "managed/q4_0/8192/1218ms",
+      "managed/q4_0/8192/1601ms",
+      "managed/q4_0/8192/1712ms"
+     ],
+     "calls": 17,
+     "prefill": 45418,
+     "prefillMs": 29949,
+     "gen": 2329,
+     "promptEstMax": 1461,
+     "ctx": 8192,
+     "kvType": "q4_0",
+     "kvGB": 0.34,
+     "peakGB": 5.67,
+     "packRaw": 1429,
+     "packKept": 1429
+    },
+    "variant": "tight"
+   },
+   {
+    "model": "qwen3:8b",
+    "task": "터미널: 파일 정리",
+    "ok": true,
+    "secs": 27,
+    "cmds": 1,
+    "edits": 0,
+    "err": "",
+    "kv": {
+     "plans": [
+      "managed/q4_0/8192/1789ms",
+      "managed/q4_0/8192/1146ms",
+      "managed/q4_0/8192/1151ms"
+     ],
+     "calls": 3,
+     "prefill": 5665,
+     "prefillMs": 4086,
+     "gen": 234,
+     "promptEstMax": 241,
+     "ctx": 8192,
+     "kvType": "q4_0",
+     "kvGB": 0.34,
+     "peakGB": 5.67,
+     "packRaw": 0,
+     "packKept": 0
+    },
+    "variant": "tight"
+   }
+  ],
+  "measuredAt": "2026-10-05 03:30",
+  "variants": {
+   "baseline": {
+    "kvPrecision": "f16",
+    "ctxCompaction": "off",
+    "contextTokens": 12288
+   },
+   "default": {
+    "kvPrecision": "auto",
+    "ctxCompaction": "auto",
+    "contextTokens": 12288
+   },
+   "q8": {
+    "kvPrecision": "q8_0",
+    "ctxCompaction": "auto",
+    "contextTokens": 12288
+   },
+   "tight": {
+    "kvPrecision": "q4_0",
+    "ctxCompaction": "aggressive",
+    "contextTokens": 12288
+   }
+  },
+  "tasks": [
+   "구조 설명",
+   "버그 수정(JS)",
+   "코딩: 기능+테스트 추가",
+   "코딩: 버그 수정(Python)",
+   "터미널: 파일 정리"
+  ]
+ },
+ "reuse": {
+  "model": "qwen3:8b",
+  "tokens": 3275,
+  "coldMs": 31579,
+  "reuseMs": 467,
+  "missMs": 14591,
+  "measuredAt": "2026-10-03 16:13"
+ },
+ "perplexity": {
+  "corpusChars": 291405,
+  "rows": [
+   {
+    "model": "qwen3:8b",
+    "ctx": 2048,
+    "chunks": 16,
+    "k": "f16",
+    "v": "f16",
+    "ppl": 5.9811,
+    "pm": 0.1323,
+    "seconds": 318
+   },
+   {
+    "model": "qwen3:8b",
+    "ctx": 2048,
+    "chunks": 16,
+    "k": "q8_0",
+    "v": "q8_0",
+    "ppl": 5.9768,
+    "pm": 0.13216,
+    "seconds": 363
+   },
+   {
+    "model": "qwen3:8b",
+    "ctx": 2048,
+    "chunks": 16,
+    "k": "q4_0",
+    "v": "q4_0",
+    "ppl": 6.0451,
+    "pm": 0.13317,
+    "seconds": 382
+   },
+   {
+    "model": "qwen3:8b",
+    "ctx": 8192,
+    "chunks": 4,
+    "k": "f16",
+    "v": "f16",
+    "ppl": 5.0113,
+    "pm": 0.10756,
+    "seconds": 509
+   },
+   {
+    "model": "qwen3:8b",
+    "ctx": 8192,
+    "chunks": 4,
+    "k": "q8_0",
+    "v": "q8_0",
+    "ppl": 5.0093,
+    "pm": 0.10747,
+    "seconds": 458
+   },
+   {
+    "model": "qwen3:8b",
+    "ctx": 8192,
+    "chunks": 4,
+    "k": "q4_0",
+    "v": "q4_0",
+    "ppl": 5.0147,
+    "pm": 0.10575,
+    "seconds": 447
+   }
+  ],
+  "failed": []
+ }
+}

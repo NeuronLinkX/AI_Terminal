@@ -1,0 +1,147 @@
+{
+ "env": {
+  "measuredAt": "2026-10-03 10:24",
+  "macOS": "27.0.1",
+  "chip": "Apple M4",
+  "ramGB": 16,
+  "ollama": "0.34.1",
+  "prompt": "터미널에서 3000번 포트를 사용하는 프로세스를 확인하는 방법을 세 문장으로 설명해줘.",
+  "note": "num_predict=120, temperature=0, think=false; tok/s = median of 3 generations; other apps (browser, messenger, editor) were running"
+ },
+ "rows": [
+  {
+   "model": "qwen3:8b",
+   "ctx": 4096,
+   "residentGB": 5.6,
+   "gpuPct": 100,
+   "coldLoadSec": 4.4,
+   "firstWallSec": 9.7,
+   "tokPerSec": 18.8,
+   "availBeforeGB": 5.3,
+   "availAfterGB": 1.8,
+   "wiredBeforeGB": 2.5,
+   "wiredAfterGB": 7.8
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 8192,
+   "residentGB": 6.5,
+   "gpuPct": 100,
+   "coldLoadSec": 3.6,
+   "firstWallSec": 8.9,
+   "tokPerSec": 18.7,
+   "availBeforeGB": 7.4,
+   "availAfterGB": 1.1,
+   "wiredBeforeGB": 2.5,
+   "wiredAfterGB": 10.2
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 12288,
+   "residentGB": 7.1,
+   "gpuPct": 100,
+   "coldLoadSec": 1.3,
+   "firstWallSec": 6.8,
+   "tokPerSec": 19.1,
+   "availBeforeGB": 6.4,
+   "availAfterGB": 1.8,
+   "wiredBeforeGB": 4.1,
+   "wiredAfterGB": 9.3
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 16384,
+   "residentGB": 7.8,
+   "gpuPct": 100,
+   "coldLoadSec": 1.1,
+   "firstWallSec": 6.4,
+   "tokPerSec": 19.6,
+   "availBeforeGB": 7.8,
+   "availAfterGB": 1.5,
+   "wiredBeforeGB": 2.6,
+   "wiredAfterGB": 9.7
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 24576,
+   "residentGB": 9,
+   "gpuPct": 100,
+   "coldLoadSec": 1.3,
+   "firstWallSec": 6.7,
+   "tokPerSec": 19.4,
+   "availBeforeGB": 8.3,
+   "availAfterGB": 1.1,
+   "wiredBeforeGB": 2.3,
+   "wiredAfterGB": 10.8
+  },
+  {
+   "model": "qwen3:8b",
+   "ctx": 32768,
+   "residentGB": 10.3,
+   "gpuPct": 100,
+   "coldLoadSec": 1.6,
+   "firstWallSec": 6.9,
+   "tokPerSec": 19.5,
+   "availBeforeGB": 9.2,
+   "availAfterGB": 0.7,
+   "wiredBeforeGB": 2.3,
+   "wiredAfterGB": 12.1
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 8192,
+   "residentGB": 10.7,
+   "gpuPct": 100,
+   "coldLoadSec": 12.2,
+   "firstWallSec": 24,
+   "tokPerSec": 10.7,
+   "availBeforeGB": 9.6,
+   "availAfterGB": 0.7,
+   "wiredBeforeGB": 2.6,
+   "wiredAfterGB": 12.4
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 12288,
+   "residentGB": 11.4,
+   "gpuPct": 100,
+   "coldLoadSec": 1.9,
+   "firstWallSec": 15.3,
+   "tokPerSec": 10.7,
+   "availBeforeGB": 10,
+   "availAfterGB": 0.6,
+   "wiredBeforeGB": 2.5,
+   "wiredAfterGB": 12.7
+  },
+  {
+   "model": "qwen3:14b",
+   "ctx": 16384,
+   "residentGB": 12.5,
+   "gpuPct": 96,
+   "coldLoadSec": 2.4,
+   "firstWallSec": 15.6,
+   "tokPerSec": 9,
+   "availBeforeGB": 10.7,
+   "availAfterGB": 0.5,
+   "wiredBeforeGB": 2.2,
+   "wiredAfterGB": 13.3
+  },
+  {
+   "model": "qwen2.5:7b",
+   "ctx": 12288,
+   "residentGB": 5.4,
+   "gpuPct": 100,
+   "coldLoadSec": 4.1,
+   "firstWallSec": 11.1,
+   "tokPerSec": 18.6,
+   "availBeforeGB": 11.1,
+   "availAfterGB": 4.2,
+   "wiredBeforeGB": 2.3,
+   "wiredAfterGB": 7.3
+  }
+ ],
+ "app": {
+  "idleRssMB": 479,
+  "processes": 5
+ }
+}

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:" />
+  <title>AI Terminal</title>
+  <link rel="stylesheet" href="../../node_modules/@xterm/xterm/css/xterm.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="topbar" role="banner">
+    <div class="traffic-space"></div>
+    <div class="chip path" id="cwd" role="button" tabindex="0"><span class="ico" data-ic="folder"></span><span id="cwd-text">~</span></div>
+    <div class="spacer sysmon-wrap">
+      <div id="sysmon" role="group" aria-label="System monitor">
+        <span class="sm cpu" id="sm-cpu"><span class="ic-slot" data-ic="cpu"></span><span class="lbl">CPU</span><span class="bar"><i id="cpu-fill"></i></span><b id="cpu-val">--</b></span>
+        <span class="sm gpu" id="sm-gpu"><span class="ic-slot" data-ic="gpu"></span><span class="lbl" data-i18n="mon.gpu">GPU</span><span class="bar"><i id="gpu-fill"></i></span><b id="gpu-val">--</b></span>
+        <span class="sm mem" id="sm-mem"><span class="ic-slot" data-ic="ram"></span><span class="lbl" data-i18n="mon.avail">가용</span><span class="bar"><i id="mem-fill"></i></span><b id="mem-val">--</b></span>
+        <span class="sm mdl" id="sm-model"><span class="ic-slot" data-ic="cpu"></span><span id="mdl-val">…</span></span>
+      </div>
+    </div>
+    <div class="chip state" id="state" data-phase="idle" role="status" aria-live="polite"><span class="dot"></span><span id="state-text">대기 중</span></div>
+    <div class="chip model" id="model" role="button" tabindex="0"><span class="dot" id="model-dot"></span><span id="model-text">…</span></div>
+    <button class="btn icon" id="btn-history" data-ic="clock" data-i18n-title="top.history.tip"></button>
+    <button class="btn icon" id="btn-settings" data-ic="gear" data-i18n-title="top.settings.tip"></button>
+    <button class="btn icon" id="btn-theme"></button>
+    <button class="btn danger" id="btn-stop" data-ic="stop" data-i18n-title="top.stop.tip"><span data-i18n="top.stop">중단</span></button>
+    <button class="btn" id="btn-copy" data-ic="copy" data-i18n-title="top.copy.tip"><span data-i18n="top.copy">출력 복사</span></button>
+    <button class="btn" id="btn-reset" data-ic="reset" data-i18n-title="top.reset.tip"><span data-i18n="top.reset">세션 초기화</span></button>
+  </header>
+  <nav id="tabbar" role="tablist"></nav>
+  <div id="rstrip" role="region" aria-label="SSH server" hidden></div>
+  <div id="model-pop" hidden></div>
+
+  <main id="main">
+    <aside id="side" aria-label="Side bar">
+      <nav id="activity" role="tablist" aria-orientation="vertical">
+        <button class="act" data-pane="sessions" role="tab" aria-selected="false" data-ic="server" data-i18n-title="side.sessions.tip"></button>
+        <button class="act" data-pane="files" role="tab" aria-selected="false" data-ic="folder" data-i18n-title="side.files.tip"><span class="badge-n" id="act-files-n" hidden></span></button>
+        <button class="act" data-pane="status" role="tab" aria-selected="false" data-ic="activity" data-i18n-title="side.status.tip"></button>
+        <span class="grow"></span>
+        <button class="act" data-pane="settings" data-ic="gear" data-i18n-title="side.settings.tip"></button>
+      </nav>
+      <div id="side-panel" hidden>
+        <div class="sp" id="sp-sessions" hidden></div>
+        <div class="sp" id="sp-files" hidden></div>
+        <div class="sp" id="sp-status" hidden></div>
+      </div>
+    </aside>
+    <div id="side-split" role="separator" aria-orientation="vertical" hidden></div>
+    <section id="term-pane" aria-label="Terminal">
+      <div class="pane-title">
+        <span class="badge term">TERMINAL</span><span class="hint" data-i18n="pane.termHint">실제 셸 — 여기에 직접 입력해도 됩니다</span>
+        <span class="grow"></span>
+        <button class="btn mini" id="btn-search" data-ic="search" data-i18n-title="top.search.tip"></button>
+        <button class="btn mini" id="btn-split" data-ic="split" data-i18n-title="top.split.tip"></button>
+        <button class="btn mini" id="btn-blocks" data-ic="list" data-i18n-title="top.blocks.tip"></button>
+        <button class="btn mini" id="btn-procs" data-ic="activity" data-i18n-title="top.procs.tip"></button>
+      </div>
+      <div id="termsearch" hidden role="search">
+        <input id="ts-input" type="text" spellcheck="false" data-i18n-ph="search.ph" />
+        <button class="btn mini" id="ts-case" data-i18n-title="search.case">Aa</button>
+        <button class="btn mini" id="ts-regex" data-i18n-title="search.regex">.*</button>
+        <span id="ts-count"></span>
+        <button class="btn mini" id="ts-prev" data-ic="up" data-i18n-title="search.prev"></button>
+        <button class="btn mini" id="ts-next" data-ic="caret" data-i18n-title="search.next"></button>
+        <button class="btn mini" id="ts-close" data-ic="x" data-i18n-title="search.close"></button>
+      </div>
+      <div id="terminal"></div>
+    </section>
+    <div id="splitter" role="separator" aria-orientation="vertical"></div>
+    <section id="ai-pane" aria-label="AI">
+      <div class="pane-title"><span class="badge ai" data-ic="sparkle"> AI</span><span class="hint" data-i18n="pane.aiHint">자연어로 지시하면 AI가 실제 셸에서 실행합니다</span></div>
+      <div id="tl-host"></div>
+      <div id="statusbar" data-phase="idle"><span class="spinner"></span><span id="status-text">대기 중</span><span id="status-time"></span></div>
+      <aside id="drawer" hidden aria-label="Drawer">
+        <div class="dr-head"><span id="drawer-title"></span><button class="btn icon" id="drawer-close" data-i18n-title="common.close">×</button></div>
+        <div id="drawer-body"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="approval-bar" hidden role="alertdialog" aria-label="Approval">
+    <div class="ap-row1"><span class="lbl" data-ic="alert"><span data-i18n="ap.label">승인 필요</span></span><span id="ap-host" class="remote-badge" hidden></span><code id="ap-cmd"></code></div>
+    <div class="ap-why" id="ap-why"></div>
+    <div class="ap-row2">
+      <button class="btn yes" id="ap-once"><span class="num">1</span><span data-i18n="ap.once.btn">한 번만 승인 (⌘⏎)</span></button>
+      <button class="btn always" id="ap-always"><span class="num">2</span><span data-i18n="ap.always.btn">이 세션 동안</span> <b id="ap-rule"></b> <span data-i18n="ap.always.btn2">항상 허용 (⌘⇧⏎)</span></button>
+      <button class="btn always" id="ap-always-proj"><span class="num">3</span><span data-i18n="ap.proj.btn">이 프로젝트에서 항상 허용(저장)</span></button>
+      <button class="btn no" id="ap-no"><span class="num">4</span><span data-i18n="ap.no.btn">거부 (Esc)</span></button>
+      <input id="ap-fb" type="text" spellcheck="false" data-i18n-ph="ap.fb.ph" />
+    </div>
+  </div>
+  <div id="perm-pop" hidden></div>
+
+  <div id="settings-modal" hidden><div class="sm-backdrop"></div><div class="sm-dialog" role="dialog" aria-modal="true" aria-label="Settings"></div></div>
+  <div id="history-modal" hidden>
+    <div class="sm-backdrop"></div>
+    <div class="sm-dialog wide" role="dialog" aria-modal="true" aria-label="History">
+      <div class="sm-head"><h3><span class="ic-slot" data-ic="clock"></span><span data-i18n="hist.title"> 세션 기록</span></h3><button class="btn icon" id="hist-close" data-i18n-title="common.close">×</button></div>
+      <div class="hist-body">
+        <div class="hist-side"><input id="hist-q" class="sm-input" type="search" data-i18n-ph="hist.ph" /><div id="hist-list"></div></div>
+        <div class="hist-main"><div id="hist-view"><div class="dr-empty" data-i18n="hist.pick">왼쪽에서 세션을 고르세요</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="dock">
+    <button class="btn perm" id="perm-chip" data-i18n-title="dock.perm.tip">권한</button>
+    <div id="mode" role="tablist" aria-label="Input mode">
+      <button id="mode-ai" class="active" role="tab" data-ic="sparkle" data-i18n-title="dock.mode.ai.tip"> AI</button>
+      <button id="mode-sh" role="tab" data-i18n-title="dock.mode.sh.tip">$ <span data-i18n="dock.shell">셸</span></button>
+    </div>
+    <button class="btn toggle" id="plan-toggle" data-ic="checklist" aria-pressed="false" data-i18n-title="dock.plan.tip"><span data-i18n="dock.plan">계획</span></button>
+    <button class="btn toggle" id="remote-toggle" data-ic="globe" aria-pressed="false" data-i18n-title="dock.remote.tip"><span data-i18n="dock.remote">원격</span></button>
+    <div id="inputwrap">
+      <span id="prompt-cwd"></span>
+      <textarea id="input" rows="1" spellcheck="false" aria-label="AI / shell input"></textarea>
+    </div>
+    <button class="btn primary" id="btn-send"><span data-i18n="dock.send">전송 ⏎</span></button>
+  </footer>
+
+  <script src="../../node_modules/@xterm/xterm/lib/xterm.js"></script>
+  <script src="../../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+  <script src="../../node_modules/@xterm/addon-search/lib/addon-search.js"></script>
+  <script src="../../node_modules/@xterm/addon-web-links/lib/addon-web-links.js"></script>
+  <script src="i18n.js"></script>
+  <script src="core.js"></script>
+  <script src="panels.js"></script>
+  <script src="ssh.js"></script>
+  <script src="files.js"></script>
+</body>
+</html>

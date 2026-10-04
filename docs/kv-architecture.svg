@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1369" font-family="-apple-system,'Apple SD Gothic Neo',Helvetica,Arial,sans-serif">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6475"/></marker></defs>
+<rect width="1500" height="1369" fill="#ffffff"/>
+<text x="24" y="32" font-size="20" font-weight="700" fill="#1f2430">AI Terminal — 코드 레이어 아키텍처 (KV 캐시 절약 · 토큰 사용량 · 키)</text>
+<text x="24" y="53" font-size="12.5" fill="#5b6475">박스 = 소스 파일(실제 이름), 모노스페이스 = 클래스·함수·데이터. 번호 ①~⑩ = AI 요청 한 번의 호출 순서. 점선 = 이벤트/표시 경로, 실선 = 호출·HTTP.</text>
+<text x="24" y="76" font-size="12.5" fill="#1f2430" >흐름: ① 렌더러가 ai:submit 으로 요청 → main.js → ② Agent.handle 이 한 턴을 시작(Packer 생성) → ③ Packer.render 가 관찰 결과를 예산에 맞게 압축해 프롬프트를 완성 → ④ llm.complete 로 제공자에 전달 →</text>
+<text x="24" y="95" font-size="12.5" fill="#1f2430" >(로컬 모델) ⑤ _rightSize 로 필요한 컨텍스트 결정 → ⑥ /api/show 로 모델 구조를 읽음(parseGeometry) → ⑦ plan() 이 KV 정밀도·컨텍스트를 결정 → ⑧ q8_0/q4_0 이면 engine.ensure 로 앱 전용 서버 시작 →</text>
+<text x="24" y="114" font-size="12.5" fill="#1f2430" >⑨ 결정된 서버로 /api/chat 요청 → ⑩ 응답의 usage 를 agent 가 이벤트로 올려 상단 칩에 표시.</text>
+<g transform="translate(0,79)">
+<rect x="20" y="66" width="1460" height="128" rx="10" fill="#f6f8fc" stroke="#4a6fa5" stroke-width="1" />
+<text x="32" y="83" font-size="12.5" font-weight="700" fill="#4a6fa5">A. Renderer (sandbox)</text>
+<rect x="40" y="88" width="430" height="96" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="50" y="106" font-size="13" font-weight="700" fill="#1f2430">src/renderer/core.js</text>
+<text x="50" y="121" font-size="11" fill="#5b6475">탭·타임라인·승인·상단 바</text>
+<text x="50" y="134.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">ait.onAiEvent: case 'kv-usage' → ui.kv = usage</text>
+<text x="50" y="148" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  case 'token-usage' / 'summary' → 토큰 줄</text>
+<text x="50" y="161.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">onStats(st): GPU·메모리·모델 칩 + KV 툴팁</text>
+<text x="50" y="175" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">onUsage(summary) → ui.usage.local → 칩 갱신</text>
+<rect x="486" y="88" width="440" height="96" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="496" y="106" font-size="13" font-weight="700" fill="#1f2430">src/renderer/panels.js</text>
+<text x="496" y="121" font-size="11" fill="#5b6475">설정 · 기록 · 서랍</text>
+<text x="496" y="134.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">renderSettings(): KV 정밀도·프롬프트 압축 seg</text>
+<text x="496" y="148" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">memEstimate(ctx, kvType) ← kv:info.f16PerToken</text>
+<text x="496" y="161.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">usageSection(): localTable() · officialTable()</text>
+<text x="496" y="175" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">keyNote: OPENAI_API_KEY / OPENAI_ADMIN_KEY 출처</text>
+<rect x="942" y="88" width="260" height="96" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="952" y="106" font-size="13" font-weight="700" fill="#1f2430">src/preload.js</text>
+<text x="952" y="121" font-size="11" fill="#5b6475">contextBridge → window.ait</text>
+<text x="952" y="136" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">settingsSet · kvInfo · llmDetect</text>
+<text x="952" y="151" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">usageGet · usageOfficial · secretSet</text>
+<text x="952" y="166" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">onAiEvent · onUsage · onSysStats</text>
+<rect x="1218" y="88" width="242" height="96" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="1228" y="106" font-size="13" font-weight="700" fill="#1f2430">src/renderer/i18n.js</text>
+<text x="1228" y="121" font-size="11" fill="#5b6475">ko / en</text>
+<text x="1228" y="136" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">t(lang, key, vars)</text>
+<text x="1228" y="151" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">translateMain(msg) — 메인 안내문</text>
+<text x="1228" y="166" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">i18n-check.js 로 키 검증</text>
+<rect x="20" y="214" width="1460" height="142" rx="10" fill="#f7f7f9" stroke="#6b7280" stroke-width="1" />
+<text x="32" y="231" font-size="12.5" font-weight="700" fill="#6b7280">B. Main 프로세스</text>
+<rect x="40" y="236" width="470" height="112" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="50" y="254" font-size="13" font-weight="700" fill="#1f2430">src/main/main.js</text>
+<text x="50" y="269" font-size="11" fill="#5b6475">ipcMain · 탭별 세션</text>
+<text x="50" y="284" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">ipc: ai:submit · settings:set · kv:info · usage:*</text>
+<text x="50" y="299" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">wireSession(tab): new Agent(…).attach({memoryProbe})</text>
+<text x="50" y="314" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">memoryProbe() → { availGB, loadedGB } (sysmon 캐시)</text>
+<text x="50" y="329" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">fixPath(): importShellEnv(PATH, OPENAI_*)</text>
+<rect x="526" y="236" width="300" height="112" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="536" y="254" font-size="13" font-weight="700" fill="#1f2430">src/main/settings.js</text>
+<text x="536" y="269" font-size="11" fill="#5b6475">SCHEMA(검증·영속화)</text>
+<text x="536" y="284" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">kvPrecision  'auto'|'f16'|'q8_0'|'q4_0'</text>
+<text x="536" y="299" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">ctxCompaction 'auto'|'aggressive'|'off'</text>
+<text x="536" y="314" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">contextTokens  4K…32K (상한)</text>
+<text x="536" y="329" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">keepAlive · autoContext · blockNetwork</text>
+<rect x="842" y="236" width="300" height="112" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="852" y="254" font-size="13" font-weight="700" fill="#1f2430">src/main/sysmon.js</text>
+<text x="852" y="269" font-size="11" fill="#5b6475">2초 폴링</text>
+<text x="852" y="284" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">modelStats(): /api/ps shared+extraBases</text>
+<text x="852" y="299" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">setExtraBases(() =&gt; [engine.base])</text>
+<text x="852" y="314" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">memStats(): vm_stat · gpuStats(): ioreg</text>
+<text x="852" y="329" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">→ lastStats → memoryProbe</text>
+<rect x="1158" y="236" width="302" height="112" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="1168" y="254" font-size="13" font-weight="700" fill="#1f2430">src/main/keys.js · usage.js</text>
+<text x="1168" y="269" font-size="11" fill="#5b6475">키 출처 · 토큰 계측</text>
+<text x="1168" y="284" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">resolveKey(name,{baseUrl}): env→Keychain</text>
+<text x="1168" y="299" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">importShellEnv(names): 로그인 셸</text>
+<text x="1168" y="314" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">UsageMeter.record/summary (jsonl)</text>
+<text x="1168" y="329" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">fetchOfficial(): Usage·Costs API</text>
+<rect x="20" y="376" width="1460" height="226" rx="10" fill="#f3f0ff" stroke="#5b46d6" stroke-width="1" />
+<text x="32" y="393" font-size="12.5" font-weight="700" fill="#5b46d6">C. 에이전트 + 컨텍스트</text>
+<rect x="40" y="398" width="400" height="192" rx="7" fill="#fff" stroke="#c9c1f5" stroke-width="1.3"/>
+<text x="50" y="416" font-size="13" font-weight="700" fill="#1f2430">src/main/agent.js</text>
+<text x="50" y="431" font-size="11" fill="#5b6475">class Agent extends EventEmitter</text>
+<text x="50" y="445.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">handle(userText) → _loop()</text>
+<text x="50" y="460" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_loop: this.packer = new Packer({level})</text>
+<text x="50" y="474.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_decide(steps) → _buildPrompt(…):</text>
+<text x="50" y="489" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  obs = packer.render(steps, 관찰 예산)</text>
+<text x="50" y="503.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  관찰 예산 = ctx − est(SYSTEM) − est(고정부)</text>
+<text x="50" y="518" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">              − 답변 1400 − 여유 300</text>
+<text x="50" y="532.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">→ llm.complete({system,user,needTokens,memory})</text>
+<text x="50" y="547" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_ctxTokens(): lastPlan.ctx(로컬) | setting</text>
+<text x="50" y="561.5" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">emit: 'kv-usage' · 'token-usage' · 'summary'</text>
+<rect x="572" y="398" width="580" height="192" rx="7" fill="#fff" stroke="#c9c1f5" stroke-width="1.3"/>
+<text x="582" y="416" font-size="13" font-weight="700" fill="#1f2430">src/main/kv/ctxpack.js</text>
+<text x="582" y="431" font-size="11" fill="#5b6475">3층 프롬프트 압축 — DepthKV · PyramidKV · SnapKV · H2O</text>
+<text x="582" y="446" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">class Packer { setQuery(req); render(steps, budgetChars) }</text>
+<text x="582" y="461" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  caps: Map(stepIdx → cap)  ← 한 번 줄이면 그대로 유지</text>
+<text x="582" y="476" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  while total &gt; budget (≤3회): 예산의 75% 까지 축소</text>
+<text x="582" y="491" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">sensitivity(steps,i,newest) = (1+age)^-0.8 × 종류 × 상태</text>
+<text x="582" y="506" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  실패 ×1.8 · 수정된 파일의 read ×0.15 · 대체된 재실행 ×0.3</text>
+<text x="582" y="521" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">allocate(items{len,w,protect}, total) 상한 + 남는 몫 재분배</text>
+<text x="582" y="536" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">selectLines(text,budget,terms) ← scoreLines(): 오류+3</text>
+<text x="582" y="551" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  파일:줄+1.5 요약+1.2 질의어+1.2 앞·뒤 줄, ±1줄 풀링</text>
+<text x="582" y="566" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">queryTerms() · renderObs() · estimateTokens()</text>
+<rect x="1168" y="398" width="292" height="192" rx="7" fill="#fffdf2" stroke="#e6d58a" stroke-width="1.3"/>
+<text x="1178" y="416" font-size="13" font-weight="700" fill="#1f2430">호출 순서 (코드와 대조 검증)</text>
+<text x="1178" y="430.5" font-size="11"  fill="#1f2430">① core.js → main.js  ai:submit</text>
+<text x="1178" y="445" font-size="11"  fill="#1f2430">② Agent.handle → _loop: Packer 생성</text>
+<text x="1178" y="459.5" font-size="11"  fill="#1f2430">③ _buildPrompt → Packer.render → 압축본</text>
+<text x="1178" y="474" font-size="11"  fill="#1f2430">④ llm.complete({needTokens, memory})</text>
+<text x="1178" y="488.5" font-size="11"  fill="#1f2430">⑤ _kvPlan: _rightSize → 컨텍스트(≥8K)</text>
+<text x="1178" y="503" font-size="11"  fill="#1f2430">⑥ _geometry: /api/show → parseGeometry</text>
+<text x="1178" y="517.5" font-size="11"  fill="#1f2430">⑦ plan() → {kvType, ctx} (kvGB 계산)</text>
+<text x="1178" y="532" font-size="11"  fill="#1f2430">⑧ q8_0/q4_0 이면 engine.ensure → base</text>
+<text x="1178" y="546.5" font-size="11"  fill="#1f2430">⑨ POST {base}/api/chat {num_ctx}</text>
+<text x="1178" y="561" font-size="11"  fill="#1f2430">⑩ _recordUsage → usage → kv-usage → 칩</text>
+<rect x="20" y="622" width="1460" height="282" rx="10" fill="#eefaf3" stroke="#198754" stroke-width="1" />
+<text x="32" y="639" font-size="12.5" font-weight="700" fill="#198754">D. LLM 제공자 + KV 제어</text>
+<rect x="40" y="644" width="300" height="118" rx="7" fill="#fff" stroke="#b5dfc8" stroke-width="1.3"/>
+<text x="50" y="662" font-size="13" font-weight="700" fill="#1f2430">src/main/llm/manager.js</text>
+<text x="50" y="677" font-size="11" fill="#5b6475">class LlmManager</text>
+<text x="50" y="692" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">providers = [Ollama, OpenAI, Codex]</text>
+<text x="50" y="707" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">complete(req) → {text, provider, usage}</text>
+<text x="50" y="722" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">unload() · detect() · status</text>
+<text x="50" y="737" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">engine = new KvEngine({dataDir})</text>
+<rect x="360" y="644" width="540" height="156" rx="7" fill="#fff" stroke="#b5dfc8" stroke-width="1.3"/>
+<text x="370" y="662" font-size="13" font-weight="700" fill="#1f2430">src/main/llm/ollama.js</text>
+<text x="370" y="677" font-size="11" fill="#5b6475">class OllamaProvider — 2층 길이 맞춤 · 1층 호출</text>
+<text x="370" y="691" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">complete({system,user,onToken,memory,needTokens})</text>
+<text x="370" y="705" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_rightSize(maxCtx, needTokens)  ctxHigh = 최대 사용치</text>
+<text x="370" y="719" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_geometry(model) ← POST /api/show (캐시)</text>
+<text x="370" y="733" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_kvPlan(memory,onNote,need): plan() → ensure()</text>
+<text x="370" y="747" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  p.engine = managed|shared · 노트는 변경 시 1회</text>
+<text x="370" y="761" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">complete → fetch {base}/api/chat {num_ctx}</text>
+<text x="370" y="775" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_recordUsage(): prompt_eval_count(전체)·_duration</text>
+<text x="370" y="789" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">unload(): shared + managed 양쪽 · kvInfo() · warm()</text>
+<rect x="920" y="644" width="250" height="86" rx="7" fill="#fff" stroke="#b5dfc8" stroke-width="1.3"/>
+<text x="930" y="662" font-size="13" font-weight="700" fill="#1f2430">src/main/kv/model.js</text>
+<text x="930" y="677" font-size="11" fill="#5b6475">1층 · 정확한 KV 메모리 모델</text>
+<text x="930" y="691" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">parseGeometry(model_info)</text>
+<text x="930" y="705" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">kvBytes/kvGB(geo, ctx, type)</text>
+<text x="930" y="719" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">q8_0=34/32 · q4_0=18/32 B/원소</text>
+<rect x="1190" y="644" width="270" height="150" rx="7" fill="#fff" stroke="#b5dfc8" stroke-width="1.3"/>
+<text x="1200" y="662" font-size="13" font-weight="700" fill="#1f2430">src/main/kv/planner.js</text>
+<text x="1200" y="677" font-size="11" fill="#5b6475">1층 정밀도 — plan() 비용 모델</text>
+<text x="1200" y="692" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">plan({geo, weightsGB, wantCtx,</text>
+<text x="1200" y="707" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">      precision, memory, current})</text>
+<text x="1200" y="722" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">cost = TYPE_COST[t] + 1.5·log2(want/c)</text>
+<text x="1200" y="737" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">       (+3·log2(8K/c) if c&lt;8K) − 0.5</text>
+<text x="1200" y="752" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">fits: w + KV + 0.3 ≤ avail+loaded−1.5</text>
+<text x="1200" y="767" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">→ {ctx, kvType, kvGB, lowered, nofit}</text>
+<rect x="40" y="782" width="300" height="112" rx="7" fill="#fff" stroke="#b5dfc8" stroke-width="1.3"/>
+<text x="50" y="800" font-size="13" font-weight="700" fill="#1f2430">src/main/llm/openai.js</text>
+<text x="50" y="815" font-size="11" fill="#5b6475">class OpenAIProvider</text>
+<text x="50" y="830" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">complete(): stream_options.include_usage</text>
+<text x="50" y="845" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">  400/422 → stream_options 없이 재시도</text>
+<text x="50" y="860" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">_record(usage) → UsageMeter.record</text>
+<text x="50" y="875" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">key = resolveKey("openai",{baseUrl})</text>
+<rect x="920" y="808" width="540" height="86" rx="7" fill="#fff" stroke="#b5dfc8" stroke-width="1.3"/>
+<text x="930" y="826" font-size="13" font-weight="700" fill="#1f2430">src/main/kv/engine.js</text>
+<text x="930" y="841" font-size="11" fill="#5b6475">1층 정밀도 — class KvEngine · 앱 전용 Ollama 서버</text>
+<text x="930" y="856" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">ensure(type) → _start(): spawn("ollama", ["serve"], env)</text>
+<text x="930" y="871" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">env: OLLAMA_KV_CACHE_TYPE=type · FLASH_ATTENTION=1 · NUM_PARALLEL=1</text>
+<text x="930" y="886" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">kv-engine.json(pid) · _reapStale() · stop()/dispose()</text>
+<rect x="20" y="924" width="1460" height="224" rx="10" fill="#f4f5f7" stroke="#6b7280" stroke-width="1" />
+<text x="32" y="941" font-size="12.5" font-weight="700" fill="#6b7280">E. 외부 서버 · 엔진</text>
+<rect x="40" y="948" width="300" height="62" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="50" y="966" font-size="13" font-weight="700" fill="#1f2430">api.openai.com</text>
+<text x="50" y="981" font-size="11"  fill="#1f2430">/v1/chat/completions (+usage)</text>
+<text x="50" y="996" font-size="11"  fill="#1f2430">/v1/organization/usage · costs</text>
+<rect x="360" y="948" width="330" height="62" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="370" y="966" font-size="13" font-weight="700" fill="#1f2430">Ollama — 사용자의 서버 127.0.0.1:11434</text>
+<text x="370" y="981" font-size="11"  fill="#1f2430">KV f16 (기본) · /api/tags /show /ps /chat /pull</text>
+<rect x="710" y="948" width="330" height="62" rx="7" fill="#fff" stroke="#198754" stroke-width="1.3"/>
+<text x="720" y="966" font-size="13" font-weight="700" fill="#1f2430">앱 전용 ollama serve 127.0.0.1:11435+</text>
+<text x="720" y="981" font-size="11"  fill="#1f2430">q8_0 / q4_0 + flash attention · 모델 저장소 공유</text>
+<rect x="360" y="1050" width="1100" height="84" rx="7" fill="#fff" stroke="#cfd4dd" stroke-width="1.3"/>
+<text x="370" y="1068" font-size="13" font-weight="700" fill="#1f2430">llama.cpp llama-server (Ollama 0.34 의 러너) → Metal GPU</text>
+<text x="370" y="1083" font-size="11" fill="#5b6475">실행 인자(실제 로그): --cache-type-k/-v &lt;type&gt; --flash-attn on -c &lt;num_ctx&gt; -np 1 --context-shift --keep 4</text>
+<text x="370" y="1098" font-size="11"  fill="#1f2430">KV 캐시 = 토큰 셀을 모든 층이 공유: 36층 × 8 KV헤드 × (K 128 + V 128) × num_ctx × 원소바이트(f16 2 · q8_0 1.0625 · q4_0 0.5625)</text>
+<text x="370" y="1113" font-size="11"  fill="#1f2430">앞부분이 같은 프롬프트는 캐시된 KV 를 재사용(prompt_eval_duration 0.2s vs 9.3s) · prompt_eval_count 는 전체 토큰</text>
+<rect x="20" y="1168" width="1460" height="106" rx="10" fill="#fff8e8" stroke="#b26b00" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="32" y="1185" font-size="12.5" font-weight="700" fill="#b26b00">F. 연구·측정 (앱과 별도 도구)</text>
+<rect x="40" y="1190" width="470" height="74" rx="7" fill="#fff" stroke="#f0d9a8" stroke-width="1.3"/>
+<text x="50" y="1208" font-size="13" font-weight="700" fill="#1f2430">native/kvprof.cpp · kvpolicy.hpp (C++)</text>
+<text x="50" y="1223" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">libllama cb_eval: kq_soft_max-&lt;il&gt; → 층·KV헤드 어텐션</text>
+<text x="50" y="1238" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">uniform · pyramid · cake · depthkv · marginal · adakv</text>
+<rect x="526" y="1190" width="470" height="74" rx="7" fill="#fff" stroke="#f0d9a8" stroke-width="1.3"/>
+<text x="536" y="1208" font-size="13" font-weight="700" fill="#1f2430">scripts/bench-kv.js · bench-kv-agent.js · kv-profile.js</text>
+<text x="536" y="1223" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">mem(사설 Ollama ×KV) · ppl(llama-perplexity) · speed</text>
+<text x="536" y="1238" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">에이전트 5과제 × 변형(baseline/default/q8/tight)</text>
+<rect x="1012" y="1190" width="448" height="74" rx="7" fill="#fff" stroke="#f0d9a8" stroke-width="1.3"/>
+<text x="1022" y="1208" font-size="13" font-weight="700" fill="#1f2430">docs/benchmark-kv*.json → bench-report.js</text>
+<text x="1022" y="1223" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">표 자동 생성 → README.md · docs/KV_CACHE.md</text>
+<text x="1022" y="1238" font-size="11" font-family="Menlo,Monaco,monospace" fill="#1f2430">test/*.test.js · e2e-features.js · visual.js</text>
+<line x1="250" y1="184" x2="250" y2="236" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="250" cy="204" r="8" fill="#2b3a67"/><text x="250" y="207.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">1</text>
+<text x="264" y="208" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">ai:submit</text>
+<line x1="250" y1="348" x2="250" y2="398" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="250" cy="366" r="8" fill="#2b3a67"/><text x="250" y="369.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">2</text>
+<text x="264" y="370" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">handle()</text>
+<line x1="440" y1="486" x2="572" y2="486" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="506" cy="486" r="8" fill="#2b3a67"/><text x="506" y="489.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">3</text>
+<text x="452" y="470" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">render(steps, 예산)</text>
+<line x1="572" y1="508" x2="440" y2="508" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<text x="454" y="526" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">압축된 관찰 텍스트</text>
+<line x1="250" y1="590" x2="250" y2="644" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="250" cy="612" r="8" fill="#2b3a67"/><text x="250" y="615.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">4</text>
+<text x="264" y="616" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">complete({needTokens, memory ← memoryProbe()})</text>
+<line x1="340" y1="700" x2="360" y2="700" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="350" cy="686" r="8" fill="#2b3a67"/><text x="350" y="689.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">5</text>
+<line x1="900" y1="668" x2="920" y2="668" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="910" cy="654" r="8" fill="#2b3a67"/><text x="910" y="657.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">6</text>
+<line x1="900" y1="744" x2="1190" y2="744" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="940" cy="744" r="8" fill="#2b3a67"/><text x="940" y="747.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">7</text>
+<text x="960" y="764" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">plan(...) → {kvType, ctx}</text>
+<line x1="900" y1="786" x2="920" y2="828" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="908" cy="803" r="8" fill="#2b3a67"/><text x="908" y="806.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">8</text>
+<text x="872" y="822" font-size="10.5" text-anchor="end" fill="#2b3a67" font-weight="600">ensure(kvType)</text>
+<line x1="560" y1="800" x2="560" y2="948" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="560" cy="826" r="8" fill="#2b3a67"/><text x="560" y="829.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">9</text>
+<text x="574" y="850" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">f16 → 사용자의 서버</text>
+<line x1="880" y1="800" x2="880" y2="948" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<circle cx="880" cy="856" r="8" fill="#2b3a67"/><text x="880" y="859.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">9</text>
+<text x="866" y="884" font-size="10.5" text-anchor="end" fill="#2b3a67" font-weight="600">q8_0/q4_0 → ⑧ 의 base</text>
+<line x1="1000" y1="894" x2="1000" y2="948" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<text x="1008" y="918" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">spawn</text>
+<line x1="190" y1="894" x2="190" y2="948" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<text x="198" y="918" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">POST /chat/completions</text>
+<line x1="525" y1="1010" x2="525" y2="1050" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<line x1="875" y1="1010" x2="875" y2="1050" stroke="#5b6475" stroke-width="1.5"  marker-end="url(#arr)"/>
+<line x1="370" y1="398" x2="370" y2="348" stroke="#5b6475" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<text x="384" y="370" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">agent.emit('event')</text>
+<line x1="370" y1="236" x2="370" y2="184" stroke="#5b6475" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<circle cx="370" cy="204" r="8" fill="#2b3a67"/><text x="370" y="207.8" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">10</text>
+<text x="384" y="208" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">ai:event</text>
+<line x1="480" y1="236" x2="480" y2="184" stroke="#5b6475" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<text x="494" y="208" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">sys:stats · settings:changed</text>
+<line x1="1010" y1="236" x2="1010" y2="184" stroke="#5b6475" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<text x="1024" y="208" font-size="10.5" text-anchor="start" fill="#2b3a67" font-weight="600">usage:update</text>
+</g>
+</svg>

@@ -1,0 +1,48 @@
+name: Release
+# Tag a version (git tag v0.2.0 && git push --tags): builds the unsigned DMG + ZIP for Apple Silicon and Intel and attaches them
+# to a GitHub Release. The app is NOT signed or notarized (see README: first launch needs right-click → Open).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-latest
+          - arch: x64
+            runner: macos-13
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: node scripts/build.js --arch=${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-terminal-${{ matrix.arch }}
+          path: |
+            dist/*.dmg
+            dist/*.zip
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true

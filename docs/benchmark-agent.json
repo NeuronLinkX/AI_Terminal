@@ -1,0 +1,103 @@
+{
+ "env": {
+  "measuredAt": "2026-10-02",
+  "chip": "Apple M4",
+  "ramGB": 16,
+  "macOS": "27.0.1",
+  "ollama": "0.34.1",
+  "note": "1 run per task; model call limit 240s (120s before 2026-10-03), 420s per task",
+  "lastRun": "2026-10-03 10:37"
+ },
+ "rows": [
+  {
+   "model": "qwen3:8b",
+   "task": "구조 설명",
+   "ok": true,
+   "secs": 27,
+   "cmds": 1,
+   "edits": 0,
+   "err": ""
+  },
+  {
+   "model": "qwen3:8b",
+   "task": "버그 수정(JS)",
+   "ok": true,
+   "secs": 47,
+   "cmds": 2,
+   "edits": 1,
+   "err": ""
+  },
+  {
+   "model": "qwen3:8b",
+   "task": "코딩: 기능+테스트 추가",
+   "ok": false,
+   "secs": 129,
+   "cmds": 1,
+   "edits": 2,
+   "err": ""
+  },
+  {
+   "model": "qwen3:8b",
+   "task": "코딩: 버그 수정(Python)",
+   "ok": false,
+   "secs": 205,
+   "cmds": 2,
+   "edits": 1,
+   "err": ""
+  },
+  {
+   "model": "qwen3:8b",
+   "task": "터미널: 파일 정리",
+   "ok": true,
+   "secs": 27,
+   "cmds": 1,
+   "edits": 0,
+   "err": ""
+  },
+  {
+   "model": "qwen3:14b",
+   "task": "구조 설명",
+   "ok": true,
+   "secs": 101,
+   "cmds": 1,
+   "edits": 0,
+   "err": ""
+  },
+  {
+   "model": "qwen3:14b",
+   "task": "버그 수정(JS)",
+   "ok": true,
+   "secs": 341,
+   "cmds": 1,
+   "edits": 1,
+   "err": ""
+  },
+  {
+   "model": "qwen3:14b",
+   "task": "코딩: 버그 수정(Python)",
+   "ok": false,
+   "secs": 420,
+   "cmds": 2,
+   "edits": 3,
+   "err": ""
+  },
+  {
+   "model": "qwen3:14b",
+   "task": "터미널: 파일 정리",
+   "ok": true,
+   "secs": 58,
+   "cmds": 1,
+   "edits": 0,
+   "err": ""
+  },
+  {
+   "model": "qwen3:14b",
+   "task": "코딩: 기능+테스트 추가",
+   "ok": false,
+   "secs": 420,
+   "cmds": 1,
+   "edits": 2,
+   "err": ""
+  }
+ ]
+}
