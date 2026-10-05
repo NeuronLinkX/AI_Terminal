@@ -280,7 +280,9 @@
       keyNote.textContent = !ks ? '' : ks.source === 'env' ? t('set.openai.keyEnv') : ks.envIgnored ? (v.openaiBaseUrl ? t('set.openai.keyEnvIgnored', { host: (() => { try { return new URL(v.openaiBaseUrl).host; } catch { return v.openaiBaseUrl; } })() }) : t('set.openai.keyEnvNoUrl')) + (ks.source === 'keychain' ? ' ' + t('set.openai.keyKeychain') : '') : ks.source === 'keychain' ? t('set.openai.keyKeychain') : t('set.openai.keyHow');
       const grid = el('div', 'sm-grid');
       grid.append(el('label', '', t('set.openai.url')), urlIn, el('label', '', t('set.openai.model')), modelIn, el('label', '', t('set.openai.key')), (() => { const w = el('div', 'sm-keyrow'); w.append(keyIn, keyBtn, keyMsg); return w; })(), el('span'), keyNote);
-      body.append(row(t('set.openai.title'), t('set.openai.desc') + (meta.secureStorage ? '' : ' ' + t('set.openai.noKeychain')), el('span', 'sm-note'), grid));
+      const openaiRow = row(t('set.openai.title'), t('set.openai.desc') + (meta.secureStorage ? '' : '\n' + t('set.openai.noKeychain')), el('span', 'sm-note'), grid);
+      openaiRow.querySelector('.sd').classList.add('pre'); // the description has several short paragraphs
+      body.append(openaiRow);
 
       // ---- API token usage (what this app sent + the provider's own accounting)
       usageSection(body, meta);

@@ -287,6 +287,7 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .sm-sec { margin: 16px 0 4px; font-size: 11px; letter-spacing: .06em; color: var(--faint); text-transform: uppercase; font-weight: 700; }
 .srow { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 13px 0; border-bottom: 1px solid var(--line); }
 .srow:last-child { border-bottom: 0; }
+.srow .sd.pre { white-space: pre-line; }
 .srow .sl { flex: 1; min-width: 0; } .srow .st { font-weight: 600; font-size: 13px; } .srow .sd { color: var(--dim); font-size: 12px; margin-top: 3px; line-height: 1.5; }
 .sm-est { margin-top: 8px; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: var(--ai-bg); color: var(--ai-text); border: 1px solid rgba(157,140,255,.25); }
 .sm-est.warn { background: rgba(242,184,75,.10); color: var(--warn); border-color: rgba(242,184,75,.4); }
