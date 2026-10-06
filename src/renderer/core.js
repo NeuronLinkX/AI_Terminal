@@ -1,5 +1,5 @@
 'use strict';
-// AI Terminal renderer core: tabs, terminal panes, AI timeline, approvals, input dock.
+// MacAIterm renderer core: tabs, terminal panes, AI timeline, approvals, input dock.
 // Panels (settings, history, command blocks, processes, onboarding, updates) live in panels.js and use window.AITCore.
 (() => {
   const ait = window.ait;
@@ -191,7 +191,7 @@
       d.draggable = true;
       d.setAttribute('role', 'tab');
       d.setAttribute('aria-selected', String(tab === T));
-      d.title = `${tab.state.cwd}\n(⌘${i + 1}) — ${t('tab.renameHint')}`;
+      d.title = `${tab.state.cwd}\n(⌘${i + 1}): ${t('tab.renameHint')}`;
       d.append(el('span', 'tdot'), el('span', 'ttl', tabTitle(tab)));
       if (tab.remote) d.append(el('span', 'tremote', tab.remoteInfo ? tab.remoteInfo.label : t('tab.remote')));
       else if (tab.ssh && tab.ssh.active) d.append(el('span', 'tssh', tab.ssh.target ? tab.ssh.target.host : 'ssh'));
@@ -638,7 +638,7 @@
       $('gpu-val').textContent = `${g.util}%`;
       $('sm-gpu').title = t('mon.gpuTip', { name: g.name, cores: g.cores ? ` (${g.cores})` : '', util: g.util, mem: g.usedGB !== null ? t('mon.gpuMem', { gb: g.usedGB }) : '' });
     } else {
-      $('gpu-val').textContent = '—';
+      $('gpu-val').textContent = 'n/a';
       $('sm-gpu').title = t('mon.gpuNone');
     }
     const m = st.mem;
@@ -684,7 +684,7 @@
       $('model-text').textContent = t('model.checking');
     } else if (st && st.active) {
       dot.className = 'dot ok';
-      $('model-text').textContent = st.active.label;
+      $('model-text').textContent = tr(st.active.label);
       $('model').title = t('model.tip');
       actions.get('model-ok') && actions.get('model-ok')();
     } else {
@@ -714,7 +714,7 @@
       const d = el('span', 'dot ' + (p.ok ? 'ok' : 'bad'));
       d.style.marginTop = '5px';
       const tt = el('div', 't');
-      tt.append(el('div', '', p.label));
+      tt.append(el('div', '', tr(p.label)));
       const s = el('div', '', tr(p.detail || ''));
       s.style.color = 'var(--dim)';
       tt.append(s);
@@ -775,7 +775,7 @@
 
   function welcome() {
     const w = el('div', 'welcome');
-    const h3 = withIcon('h3', 'sparkle', ' AI Terminal');
+    const h3 = withIcon('h3', 'sparkle', ' MacAIterm');
     w.append(h3, el('p', '', t('welcome.body')));
     const ex = el('div', 'ex');
     ['welcome.ex1', 'welcome.ex2', 'welcome.ex3', 'welcome.ex4', 'welcome.ex5'].forEach((k) => {
@@ -1370,7 +1370,7 @@
     return undefined;
   });
 
-  // `AI Terminal --ssh=<host>` (menu-bar server list): open a tab and run the ssh command once its shell is ready.
+  // `MacAIterm --ssh=<host>` (menu-bar server list): open a tab and run the ssh command once its shell is ready.
   // main hands over only commands built by connectCommand() from a validated destination.
   let externalBusy = false;
   async function openExternal() {

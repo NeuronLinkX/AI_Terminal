@@ -5,7 +5,7 @@
 // in at a readable pace, and the script then reports what the agent does. It never approves anything by itself:
 // when the agent asks for approval the command is printed and the script waits for a decision file.
 //
-//   TASK_DIR=/path/to/project TASK_TEXT="…" AIT_APP_BIN="/Applications/AI Terminal.app/Contents/MacOS/AI Terminal" node scripts/live-task.js
+//   TASK_DIR=/path/to/project TASK_TEXT="…" AIT_APP_BIN="/Applications/MacAIterm.app/Contents/MacOS/MacAIterm" node scripts/live-task.js
 //   approve / deny:  echo once > /private/tmp/ait-live-decision      (or `no`)
 //   close the window when done:  touch /private/tmp/ait-live-stop
 const fs = require('fs');

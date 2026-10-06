@@ -166,7 +166,7 @@ function assessTokens(tokensIn, raw, cwd, findings, depth, opts = {}) {
       const sub = assessCommand(inner, cwd, depth + 1, opts);
       sub.reasons.forEach((r) => add(findings, sub.level, r));
     } else if (cmd !== 'eval' && ci < 0 && args.length === 0) add(findings, 'deny', `${cmd}: 대화형 셸은 AI가 실행하지 않습니다`);
-    else if (ci < 0 && args[0]) add(findings, 'approve', `스크립트 실행(${args[0]}) — 내용 확인 필요`);
+    else if (ci < 0 && args[0]) add(findings, 'approve', `스크립트 실행(${args[0]}): 내용 확인 필요`);
     return;
   }
   if (cmd === 'xargs') {
@@ -181,20 +181,20 @@ function assessTokens(tokensIn, raw, cwd, findings, depth, opts = {}) {
   if (cmd === 'rm' || cmd === 'rmdir' || cmd === 'unlink' || cmd === 'shred' || cmd === 'trash') {
     const catastrophic = operands.some((o) => ['/', '~', '~/', '$HOME', '/*', '~/*', '$HOME/*', '.', '..', '*'].includes(o) || /^\/(usr|bin|sbin|etc|System|Library|Applications|Users|private|var|opt)\/?$/.test(o));
     if (catastrophic && /r|R|f/.test(flags.replace(/-/g, ''))) return add(findings, 'deny', `${cmd} ${flags}: 광범위/시스템 경로 삭제는 차단됨`);
-    return add(findings, 'approve', `파일 삭제(${cmd}${flags ? ' ' + flags : ''}) — 대상: ${operands.join(' ') || '(없음)'}`);
+    return add(findings, 'approve', `파일 삭제(${cmd}${flags ? ' ' + flags : ''}), 대상: ${operands.join(' ') || '(없음)'}`);
   }
   if (cmd === 'find' && /(^|\s)(-delete|-exec\s+rm|-execdir\s+rm)/.test(args.join(' '))) return add(findings, 'approve', 'find로 파일 일괄 삭제');
   if (cmd === 'git') {
     const sub = args.find((a) => !a.startsWith('-')) || '';
     const rest = args.join(' ');
-    if (sub === 'push') add(findings, 'approve', 'git push — 외부 저장소로 전송');
+    if (sub === 'push') add(findings, 'approve', 'git push: 외부 저장소로 전송');
     if (/(^|\s)(--force|--force-with-lease|-f)(\s|$)/.test(rest) && ['push', 'checkout', 'branch', 'clean', 'tag', 'worktree'].includes(sub)) add(findings, 'approve', `git ${sub} 강제 옵션`);
-    if (sub === 'reset' && /--hard|--merge|--keep/.test(rest)) add(findings, 'approve', 'git reset --hard — 작업 내용 폐기');
-    if (sub === 'clean') add(findings, 'approve', 'git clean — 추적되지 않는 파일 삭제');
-    if (sub === 'checkout' && /(^|\s)(--\s|\.\s*$|\.$)/.test(rest)) add(findings, 'approve', 'git checkout — 변경 사항 폐기');
-    if (sub === 'restore' && !/--staged/.test(rest)) add(findings, 'approve', 'git restore — 변경 사항 폐기');
-    if (sub === 'branch' && /(^|\s)-D(\s|$)/.test(rest)) add(findings, 'approve', 'git branch -D — 브랜치 강제 삭제');
-    if (['rebase', 'filter-branch', 'filter-repo'].includes(sub)) add(findings, 'approve', `git ${sub} — 히스토리 재작성`);
+    if (sub === 'reset' && /--hard|--merge|--keep/.test(rest)) add(findings, 'approve', 'git reset --hard: 작업 내용 폐기');
+    if (sub === 'clean') add(findings, 'approve', 'git clean: 추적되지 않는 파일 삭제');
+    if (sub === 'checkout' && /(^|\s)(--\s|\.\s*$|\.$)/.test(rest)) add(findings, 'approve', 'git checkout: 변경 사항 폐기');
+    if (sub === 'restore' && !/--staged/.test(rest)) add(findings, 'approve', 'git restore: 변경 사항 폐기');
+    if (sub === 'branch' && /(^|\s)-D(\s|$)/.test(rest)) add(findings, 'approve', 'git branch -D: 브랜치 강제 삭제');
+    if (['rebase', 'filter-branch', 'filter-repo'].includes(sub)) add(findings, 'approve', `git ${sub}: 히스토리 재작성`);
     if (sub === 'stash' && /\b(drop|clear)\b/.test(rest)) add(findings, 'approve', 'git stash 삭제');
     if ((sub === 'reflog' && /expire/.test(rest)) || (sub === 'gc' && /prune/.test(rest))) add(findings, 'approve', 'git 객체 영구 삭제');
     if (sub === 'remote' && /\b(add|set-url)\b/.test(rest)) add(findings, 'approve', 'git remote 변경');
@@ -209,16 +209,16 @@ function assessTokens(tokensIn, raw, cwd, findings, depth, opts = {}) {
   }
   if (cmd === 'npm' || cmd === 'pnpm' || cmd === 'yarn') {
     const sub = args.find((a) => !a.startsWith('-')) || '';
-    if (['publish', 'login', 'adduser', 'logout', 'token', 'unpublish', 'deprecate', 'owner'].includes(sub)) add(findings, 'approve', `${cmd} ${sub} — 외부 레지스트리/인증 변경`);
+    if (['publish', 'login', 'adduser', 'logout', 'token', 'unpublish', 'deprecate', 'owner'].includes(sub)) add(findings, 'approve', `${cmd} ${sub}: 외부 레지스트리/인증 변경`);
     if (/^(i|install|add|remove|uninstall|rm|update|up|link)$/.test(sub) && /(^|\s)(-g|--global)(\s|$)/.test(args.join(' '))) add(findings, 'approve', `${cmd} 전역 패키지 변경`);
     return;
   }
-  if (cmd === 'brew' && /^(install|uninstall|remove|reinstall|upgrade|tap|untap|cleanup|services)$/.test(args[0] || '')) return add(findings, 'approve', `brew ${args[0]} — 시스템 패키지 변경`);
+  if (cmd === 'brew' && /^(install|uninstall|remove|reinstall|upgrade|tap|untap|cleanup|services)$/.test(args[0] || '')) return add(findings, 'approve', `brew ${args[0]}: 시스템 패키지 변경`);
   if ((cmd === 'pip' || cmd === 'pip3') && /^(uninstall)$/.test(args[0] || '')) return add(findings, 'approve', 'pip uninstall');
   if (cmd === 'twine' || cmd === 'cargo' && args[0] === 'publish') return add(findings, 'approve', '패키지 배포');
   if (cmd === 'docker' && /^(push|login|system|rm|rmi|volume|prune)/.test(args[0] || '')) return add(findings, 'approve', `docker ${args[0]}`);
   if (cmd === 'gh') {
-    if (/^(pr|issue|release|repo|gist|workflow|secret|auth|api)$/.test(args[0] || '') && !/^(list|view|status|diff|checks)$/.test(args[1] || '')) return add(findings, 'approve', `gh ${args.slice(0, 2).join(' ')} — GitHub로 전송/변경`);
+    if (/^(pr|issue|release|repo|gist|workflow|secret|auth|api)$/.test(args[0] || '') && !/^(list|view|status|diff|checks)$/.test(args[1] || '')) return add(findings, 'approve', `gh ${args.slice(0, 2).join(' ')}: GitHub로 전송/변경`);
     return;
   }
   if (cmd === 'chmod' || cmd === 'chown' || cmd === 'chgrp') {

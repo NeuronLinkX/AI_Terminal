@@ -24,6 +24,7 @@ const { SshTab } = require('./ssh-tab');
 const { SessionStore, buildCommand, buildDestinationCommand, x11Available } = require('./sshsessions');
 const { localList } = require('./sftp');
 const { controlDir } = require('./sshlink');
+const { migrateLegacyData } = require('./legacy');
 
 if (process.env.AIT_DEBUG_PORT) app.commandLine.appendSwitch('remote-debugging-port', process.env.AIT_DEBUG_PORT);
 
@@ -44,7 +45,7 @@ function fixPath() {
   const have = new Set((process.env.PATH || '').split(':'));
   process.env.PATH = [...(process.env.PATH || '').split(':').filter(Boolean), ...extra.filter((p) => !have.has(p))].join(':');
 }
-// One window per profile: `AI Terminal --ssh=<host>` (menu-bar server list) hands its request to the running instance,
+// One window per profile: `MacAIterm --ssh=<host>` (menu-bar server list) hands its request to the running instance,
 // which opens a tab and connects. AIT_NO_SINGLE_INSTANCE=1 turns the lock off (tests, a second copy on purpose).
 const gotLock = process.env.AIT_NO_SINGLE_INSTANCE ? true : app.requestSingleInstanceLock();
 if (!gotLock) app.quit();
@@ -248,7 +249,7 @@ function createWindow() {
     backgroundColor: '#0e1014',
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 14, y: 14 },
-    title: 'AI Terminal',
+    title: 'MacAIterm',
     webPreferences: { preload: path.join(__dirname, '..', 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   win.setOpacity(settings.get('windowOpacity'));
@@ -279,6 +280,13 @@ const uiLang = () => {
   const l = settings ? settings.get('language') : 'auto';
   return l === 'auto' ? autoLang() : l;
 };
+
+let keyRecordTimer = null;
+/** While Settings records a shortcut the menu is taken away so its accelerators do not swallow the keys; it comes back on blur (or after 30 s). */
+function recordKeys(on) {
+  clearTimeout(keyRecordTimer);
+  if (on) { Menu.setApplicationMenu(null); keyRecordTimer = setTimeout(() => buildMenu(), 30000); } else buildMenu();
+}
 
 function buildMenu() {
   const L = MENU[uiLang()];
@@ -332,9 +340,9 @@ function onboardingStatus() {
   const ollama = llm.status.providers.find((p) => p.id === 'ollama') || {};
   const ram = Math.round(os.totalmem() / 1073741824);
   const recommended = [
-    { name: 'qwen3:8b', sizeGB: 5.2, note: ram >= 16 ? '기본 권장 — 터미널 작업·단일 파일 수정' : '8GB 램에서는 무거울 수 있음', preferred: ram >= 16 },
-    { name: 'qwen3:4b', sizeGB: 2.6, note: '더 가벼움 — 램이 작은 Mac(8GB)용, 정확도는 낮음', preferred: ram < 16 },
-    { name: 'qwen3:14b', sizeGB: 9.3, note: '고성능 — 램 24GB 이상 권장(16GB 에서는 비권장)', preferred: false },
+    { name: 'qwen3:8b', sizeGB: 5.2, note: ram >= 16 ? '기본 권장: 터미널 작업·단일 파일 수정' : '8GB 램에서는 무거울 수 있음', preferred: ram >= 16 },
+    { name: 'qwen3:4b', sizeGB: 2.6, note: '더 가벼움: 램이 작은 Mac(8GB)용, 정확도는 낮음', preferred: ram < 16 },
+    { name: 'qwen3:14b', sizeGB: 9.3, note: '고성능: 램 24GB 이상 권장(16GB 에서는 비권장)', preferred: false },
   ];
   return { installed, serverUp: !!ollama.ok || (ollama.kind !== 'server-down' && ollama.kind !== undefined), models: ollama.models || [], hasModel: !!(ollama.models && ollama.models.length), ramGB: ram, recommended };
 }
@@ -342,9 +350,10 @@ function onboardingStatus() {
 // ---------------------------------------------------------------- app
 app.whenReady().then(async () => {
   if (!gotLock) return;
-  app.setName('AI Terminal');
+  app.setName('MacAIterm');
   if (app.dock && process.platform === 'darwin') app.dock.setIcon(path.join(__dirname, '..', '..', 'build', 'icon.png'));
   dataDir = app.getPath('userData');
+  migrateLegacyData(dataDir, app.getPath('appData'));
   hostBook = new HostBook(dataDir, process.env.AIT_SSH_DIR ? { sshDir: process.env.AIT_SSH_DIR } : undefined); // AIT_SSH_DIR: read the host list from another folder (tests / documentation runs)
   sessionStore = new SessionStore(dataDir);
   settings = new Settings(dataDir);
@@ -575,6 +584,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('kv:info', () => llm.ollama.kvInfo().catch(() => null));
   ipcMain.handle('llm:status', () => llm.status);
   ipcMain.handle('llm:detect', () => llm.detect());
+  ipcMain.handle('keys:record', (_e, on) => { recordKeys(!!on); return true; });
   ipcMain.handle('llm:prefer', (_e, id) => llm.setPreference(id));
   ipcMain.handle('llm:setModel', (_e, arg) => (arg && typeof arg === 'object' ? llm.setModel(String(arg.name), arg.provider) : llm.setModel(String(arg))));
   ipcMain.handle('onboard:status', () => onboardingStatus());

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko" data-depth="1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MacAIterm: AI 에이전트를 내장한 macOS 터미널</title>
+  <meta name="description" content="MacAIterm은 실제 셸과 AI 에이전트를 결합한 macOS 터미널이며, SSH 원격 작업을 위한 자원 모니터링, 파일 트리, 세션 관리를 제공합니다.">
+  <meta name="theme-color" content="#fbfaf7">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="MacAIterm">
+  <meta property="og:description" content="AI 에이전트, 서버 모니터링, SSH 파일 전송을 갖춘 macOS 터미널.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/img/ko/hero-dark.png">
+  <link rel="icon" href="../assets/img/icon.png" type="image/png">
+  <link rel="alternate" hreflang="en" href="../index.html">
+  <link rel="alternate" hreflang="ko" href="index.html">
+  <link rel="alternate" hreflang="x-default" href="../index.html">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script src="../assets/js/release.js"></script>
+  <script src="../assets/js/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-current="page"><img src="../assets/img/icon.png" alt="" width="52" height="52">MacAIterm</a>
+    <nav aria-label="주 메뉴"><ul>
+<li><a href="index.html" aria-current="page">소개</a></li><li><a href="download.html">다운로드</a></li><li><a href="help.html">도움말</a></li>
+</ul></nav>
+    <div class="tools">
+<button class="menu-toggle btn btn-line sm" type="button" aria-expanded="false" aria-controls="mobile-nav" hidden>메뉴</button>
+      <a class="lang" href="../index.html" hreflang="en" lang="en">English</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="라이트 / 다크 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <a class="btn btn-solid sm" href="download.html">다운로드</a>
+    </div>
+  </div>
+<nav class="mobile-nav" id="mobile-nav" aria-label="모바일" hidden><a href="index.html" aria-current="page">소개</a><a href="download.html">다운로드</a><a href="help.html">도움말</a></nav></header>
+
+<main id="main">
+  <section class="hero" style="border-top:0;padding-bottom:0">
+    <div class="wrap">
+      <img class="hero-mark" src="../assets/img/icon.png" width="96" height="96" alt="MacAIterm">
+      <h1><span>에이전트</span>를 내장한 macOS 터미널</h1>
+      <p class="lede">MacAIterm은 실제 셸과, 같은 세션에서 동작하는 AI 에이전트를 결합했습니다.<br>SSH로 서버에서 작업할 때 필요한 자원 모니터링, 파일 트리, 저장된 세션도 함께 제공합니다.</p>
+      <div class="cta">
+        <a class="btn btn-solid" href="download.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></svg>
+          macOS용 다운로드
+        </a>
+        <a class="btn btn-line" href="#screens">화면 보기</a>
+      </div>
+      <div class="facts"><span><b>v<span data-rel="version">0.1.0</span></b></span><span>macOS 13 이상</span><span>Apple 실리콘</span><span>무료 · MIT 라이선스</span></div>
+      <figure class="shot demo">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <video id="demo" class="demo-video" src="../assets/video/demo.mp4" poster="../assets/video/demo-poster.jpg" width="1710" height="1074" autoplay muted loop playsinline preload="metadata" aria-label="화면 녹화: 로컬 모델이 npm test 실패 원인을 찾아 파일을 고치고 테스트를 다시 실행합니다"></video>
+        <button class="demo-toggle" id="demo-toggle" type="button" aria-label="Pause the video" hidden>❚❚</button>
+        <figcaption>실제 앱을 녹화한 영상입니다.<br>로컬 모델(Ollama)이 실패한 테스트를 찾아 고칩니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="head">
+        <div class="label">기능</div>
+        <h2>실제 셸을 중심으로 구성했습니다</h2>
+        <p>MacAIterm은 터미널을 대체하지 않습니다.<br>직접 입력할 수 있는 실제 zsh 세션을 중심에 두고, 에이전트와 승인 절차, 서버 도구를 더했습니다.</p>
+      </div>
+      <div class="points">
+        <div class="point"><span class="n">01</span><h3>셸 안의 에이전트</h3><p>에이전트는 지금 작업 중인 세션과 디렉터리에서 명령을 실행합니다.<br>파일을 읽고, 수정하고, 생성하며 모든 변경을 되돌릴 수 있는 diff로 보여 줍니다.<br>테스트가 실패하면 통과할 때까지, 또는 중단하고 이유를 설명할 때까지 작업을 이어 갑니다.</p></div>
+        <div class="point"><span class="n">02</span><h3>승인 절차</h3><p>위험한 명령은 사용자의 승인을 기다립니다.<br>권한 모드 4종, 비밀 정보 마스킹, 네트워크 차단 모드, 에이전트가 실행했거나 시도한 모든 명령의 감사 로그를 제공합니다.</p></div>
+        <div class="point"><span class="n">03</span><h3>로컬 및 클라우드 모델</h3><p>Ollama의 로컬 모델, OpenAI 호환 서버나 OpenAI API, 또는 ChatGPT 로그인을 쓰는 Codex CLI를 사용할 수 있습니다.<br>로컬 모델은 대화가 Mac 안에 머물고, 그 밖의 선택지는 선택한 제공자에게 대화를 전송합니다.</p></div>
+        <div class="point"><span class="n">04</span><h3>SSH 원격 작업</h3><p>SSH로 접속하면 에이전트가 서버에서 명령 실행, 파일 편집, 검색을 수행할 수 있습니다.<br>서버를 변경하는 작업은 서버 이름이 표시된 승인을 거치고, 읽기 전용 확인은 즉시 실행됩니다.</p></div>
+        <div class="point"><span class="n">05</span><h3>자원 모니터링</h3><p>탭 아래 띠에 서버의 CPU, 메모리, GPU(NVIDIA 포함), 디스크가 표시되고, Mac의 CPU, GPU, 메모리는 상단 바에 유지됩니다.<br>서버에서는 읽기 전용 스크립트만 실행합니다.</p></div>
+        <div class="point"><span class="n">06</span><h3>세션과 파일 전송</h3><p>세션 저장, <code>~/.ssh/config</code> 가져오기, 점프 호스트, X11, 포트 포워딩을 지원합니다.<br>서버와 Mac의 파일 트리가 나란히 열리며, 끌어다 놓으면 복사되고 모든 파일을 SHA-256으로 검증합니다.<br>비밀번호는 저장하지 않습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screens" class="tint">
+    <div class="wrap">
+      <div class="head">
+        <div class="label">화면</div>
+        <h2>실제 동작 화면</h2>
+        <p>모든 이미지는 실행 중인 애플리케이션을 그대로 캡처한 것입니다.<br>이 화면의 에이전트는 Codex CLI이며, SSH 화면은 실제 NVIDIA DGX Spark입니다.</p>
+      </div>
+
+      <div class="show">
+        <div class="text"><div class="label">플랜 모드</div><h3>실행 전에 계획을 검토합니다</h3><p>여러 단계가 필요한 요청이면 에이전트가 먼저 3~6단계의 계획을 제안합니다.<br>승인하거나, 수정을 요청하거나, 취소할 수 있습니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-plan.png" width="1680" height="1080" loading="lazy" alt="플랜 모드: 에이전트가 실행하려는 단계를 나열하고 승인을 기다립니다"></figure>
+      </div>
+
+      <div class="show flip">
+        <div class="text"><div class="label">승인</div><h3>위험한 명령은 승인 후에 실행합니다</h3><p>삭제, 설치, 푸시 등 시스템을 변경하는 작업은 정확한 명령과 사유를 보여 주고 승인을 요청합니다.<br>한 번만, 세션 동안, 또는 프로젝트 단위로 허용하거나, 거부하고 에이전트에게 사유를 전달할 수 있습니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-approval.png" width="1680" height="1080" loading="lazy" alt="파일 삭제 승인 바: 한 번, 세션, 프로젝트, 거부 선택지"></figure>
+      </div>
+
+      <div class="show">
+        <div class="text"><div class="label">로컬 모델</div><h3>가벼운 조회는 로컬 모델로 처리합니다</h3><p>Ollama 모델은 전부 사용자의 기기에서 실행되므로 이 화면과 같은 짧은 조회에 적합합니다.<br>여러 단계로 이어지는 작업에는 16&nbsp;GB 노트북보다 메모리가 큰 Mac이 필요합니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-local-simple.png" width="1680" height="1080" loading="lazy" alt="로컬 모델이 조회 명령을 실행해 간단한 질문에 답합니다"></figure>
+      </div>
+
+      <div class="show flip">
+        <div class="text"><div class="label">SSH</div><h3>서버 자원과 파일을 한 창에서 확인합니다</h3><p>탭 아래 띠에 서버의 CPU, 메모리, GPU, 디스크가 표시되고, 상단 바에는 Mac의 수치가 유지됩니다.<br>두 기기의 파일 트리가 왼쪽에 열립니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-files.png" width="1680" height="1080" loading="lazy" alt="DGX Spark에 SSH로 접속한 화면: 탭 아래에 서버의 CPU, 메모리, GPU, 디스크가 보이고 왼쪽에 파일 트리가 열려 있습니다"></figure>
+      </div>
+
+      <div class="pair">
+        <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-transfers.png" width="1680" height="1080" loading="lazy" alt="완료되고 검증된 복사 목록이 있는 전송 창"></figure><h3>검증하는 파일 전송</h3><p>파일과 폴더 전체를 양방향으로 복사합니다.<br>각 파일은 기존 파일을 바꾸기 전에 SHA-256으로 검증하며, 취소한 전송이 일부만 기록된 파일을 남기지 않습니다.</p></div>
+        <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-status.png" width="1680" height="1080" loading="lazy" alt="Mac 옆에 서버 상태 그래프가 보이는 상태 패널"></figure><h3>상세 서버 상태</h3><p>상태 패널은 최근 샘플을 그래프로 보여 주고 서버와 Mac을 비교합니다. <code>/proc</code>, <code>df</code>, <code>nvidia-smi</code>를 읽기만 하며 설치하거나 기록하는 것은 없습니다.</p></div>
+      </div>
+
+      <div class="show">
+        <div class="text"><div class="label">서버의 에이전트</div><h3>에이전트가 원격 호스트에서 작업합니다</h3><p>명령은 지켜보고 있는 터미널의 서버 셸에서 실행됩니다.<br>결과 카드에 서버와 폴더 이름이 표시되어 모든 명령이 실행된 위치를 알 수 있습니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-ai.png" width="1680" height="1080" loading="lazy" alt="에이전트가 서버에서 nvidia-smi를 실행해 사용률과 온도를 보고합니다"></figure>
+      </div>
+
+      <div class="show flip">
+        <div class="text"><div class="label">서버 승인</div><h3>승인에 대상 서버가 표시됩니다</h3><p>읽기 전용 확인은 즉시 실행됩니다.<br>서버를 변경할 수 있는 작업은 서버 이름이 표시된 승인을 먼저 받습니다.<br>“항상 허용” 규칙은 해당 서버와 해당 세션에만 적용됩니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-approval.png" width="1680" height="1080" loading="lazy" alt="서버 이름이 표시된 서버 삭제 명령 승인"></figure>
+      </div>
+
+      <div class="pair" style="margin-bottom:0">
+        <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-sessions.png" width="1680" height="1080" loading="lazy" alt="저장한 세션, 폴더, ~/.ssh/config의 호스트가 있는 세션 관리자"></figure><h3>세션 관리자</h3><p>폴더로 정리한 저장 세션, <code>~/.ssh/config</code>의 호스트, 최근 접속을 제공합니다.<br>더블클릭하면 연결됩니다.<br>비밀번호는 입력하는 위치인 터미널에만 남습니다.</p></div>
+        <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-editor.png" width="1680" height="1080" loading="lazy" alt="세션 편집기: 키 파일, 점프 호스트, X11 포워딩, 포트 포워딩"></figure><h3>세션 설정</h3><p>키 파일, 점프 호스트, 시작 폴더, X11, 포트 포워딩, keep-alive를 설정할 수 있습니다.<br>모든 입력란을 검증하므로 붙여 넣은 값이 추가 ssh 옵션으로 해석되지 않습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="models">
+    <div class="wrap">
+      <div class="head">
+        <div class="label">모델</div>
+        <h2>모델 제공자</h2>
+        <p>모델은 포함되어 있지 않습니다.<br>에이전트를 실행할 위치를 선택하며, 상단 바의 칩에서 언제든 변경할 수 있습니다.</p>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>선택지</th><th>필요한 것</th><th>참고</th></tr></thead>
+        <tbody>
+          <tr><td>로컬 (Ollama)</td><td><a href="https://ollama.com">Ollama</a>와 모델, 예: <code>ollama pull qwen3:8b</code></td><td>대화가 Mac 밖으로 나가지 않습니다. 8B 모델은 16&nbsp;GB Mac에서 실행되지만 여러 단계 작업에는 느립니다.</td></tr>
+          <tr><td>OpenAI API / 호환 서버</td><td><code>OPENAI_API_KEY</code> 또는 LM Studio, llama.cpp, vLLM 같은 서버의 주소</td><td>컨텍스트가 해당 서버로 전송됩니다.<br>키는 환경 변수에서 읽거나 Keychain에 저장하며 화면에 표시하지 않습니다.</td></tr>
+          <tr><td>Codex CLI</td><td>ChatGPT로 로그인한 <code>codex</code></td><td>컨텍스트가 Codex 로그인을 통해 OpenAI로 전송됩니다.<br>위 화면은 이 방식으로 캡처했습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="tint">
+    <div class="wrap">
+      <div class="head">
+        <div class="label">시작하기</div>
+        <h2>세 단계로 시작합니다</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>설치</h3><p><code>.dmg</code>를 내려받아 MacAIterm을 응용 프로그램 폴더로 옮기고, 처음 실행할 때는 우클릭 후 열기를 선택합니다.<br>아직 서명하지 않은 앱입니다.</p></div>
+        <div class="step"><div class="n">02</div><h3>모델 선택</h3><p>Ollama로 모델을 받거나, API 키를 입력하거나, Codex에 로그인합니다.<br>그다음 모델 칩에서 선택합니다.</p></div>
+        <div class="step"><div class="n">03</div><h3>요청 입력</h3><p>예: “3000번 포트를 사용하는 프로세스가 무엇인가요?”, “이 테스트가 실패합니다.<br>수정해 주세요.”<br>서버에서는 평소처럼 <code>ssh</code>로 접속합니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="dl">
+        <div class="main">
+          <h2>MacAIterm 다운로드</h2>
+          <p>무료, MIT 라이선스, 계정 불필요.<br>Apple 실리콘 Mac용 버전 <span data-rel="version">0.1.0</span>.</p>
+          <a class="btn btn-solid" href="download.html">다운로드 페이지로 이동</a>
+        </div>
+        <div class="side">
+          <dl class="specs">
+            <dt>버전</dt><dd><span data-rel="version">0.1.0</span></dd>
+            <dt>요구 사양</dt><dd>macOS 13 이상, Apple 실리콘</dd>
+            <dt>크기</dt><dd data-rel="files.dmg.size">130 MB</dd>
+            <dt>서명</dt><dd>아니요.<br>처음 실행할 때 우클릭 → 열기가 필요합니다</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><div class="cols">
+<div><a class="brand" href="index.html"><img src="../assets/img/icon.png" alt="" width="44" height="44">MacAIterm</a><p>에이전트와 서버 도구를 내장한<br>macOS 터미널.</p></div>
+<div><h4>제품</h4><ul><li><a href="index.html">소개</a></li><li><a href="download.html">다운로드</a></li><li><a href="https://github.com/NeuronLinkX/macAIterm/blob/main/CHANGELOG.md">변경 내역</a></li></ul></div>
+<div><h4>지원</h4><ul><li><a href="help.html">도움말 / FAQ</a></li><li><a href="https://github.com/NeuronLinkX/macAIterm/issues">GitHub 이슈</a></li></ul></div>
+<div><h4>프로젝트</h4><ul><li><a href="https://github.com/NeuronLinkX/macAIterm">GitHub</a></li><li><a href="privacy.html">개인정보</a></li><li><a href="license.html">라이선스</a></li></ul></div>
+</div><div>© MacAIterm · MIT 라이선스 · 이 사이트는 쿠키와 외부 스크립트를 사용하지 않습니다.<br>MacAIterm의 이전 이름은 AI Terminal입니다.<br>문의 : <a href="mailto:jiwoo93@kookmin.ac.kr">jiwoo93@kookmin.ac.kr</a></div></div></footer>
+</body>
+</html>

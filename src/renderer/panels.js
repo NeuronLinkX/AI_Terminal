@@ -113,7 +113,7 @@
       if (models.length) {
         box.append(el('div', 'sd', t('usage.models')));
         const ul = el('div', 'umodels');
-        models.sort((a, b) => b[1].total - a[1].total).forEach(([m, c]) => ul.append(el('div', '', `${m || '?'}  —  ${fmt(c.input)} / ${fmt(c.output)}`)));
+        models.sort((a, b) => b[1].total - a[1].total).forEach(([m, c]) => ul.append(el('div', '', `${m || '?'}  ·  ${fmt(c.input)} / ${fmt(c.output)}`)));
         box.append(ul);
       }
     }
@@ -143,7 +143,7 @@
       const models = Object.entries(o.byModel).sort((a, b) => b[1].input + b[1].output - (a[1].input + a[1].output));
       if (models.length) {
         const ul = el('div', 'umodels');
-        models.forEach(([m, c]) => ul.append(el('div', '', `${m}  —  ${fmt(c.input)} / ${fmt(c.output)}`)));
+        models.forEach(([m, c]) => ul.append(el('div', '', `${m}  ·  ${fmt(c.input)} / ${fmt(c.output)}`)));
         box.append(ul);
       }
     }
@@ -247,7 +247,7 @@
       body.append(row(t('set.unload.title'), t('set.unload.desc'), toggle(v.unloadOnClose, (b) => save('unloadOnClose', b), t('set.unload.title'))));
       body.append(row(t('set.preload.title'), t('set.preload.desc'), toggle(v.preloadModel, (b) => save('preloadModel', b), t('set.preload.title'))));
       const cur = ui.llm && ui.llm.active ? ui.llm.active.label : t('model.none');
-      body.append(row(t('set.curModel.title'), `${cur} — ${t('set.curModel.desc')}`, el('span', 'sm-note')));
+      body.append(row(t('set.curModel.title'), `${cur}. ${t('set.curModel.desc')}`, el('span', 'sm-note')));
 
       // ---- OpenAI-compatible server
       body.append(el('h4', 'sm-sec', t('set.sec.openai')));
@@ -341,16 +341,50 @@
       body.append(el('h4', 'sm-sec', t('set.sec.keys')));
       const keysBox = el('div', 'keys');
       const eff = { ...ch.defaultKeys, ...v.keybindings };
+      // shown the way macOS writes shortcuts (⌘⇧T) and recorded by pressing the keys; stored as an Electron accelerator (CmdOrCtrl+Shift+T)
+      const MODS = [['⌃', /^(Ctrl|Control)$/i], ['⌥', /^(Alt|Option)$/i], ['⇧', /^Shift$/i], ['⌘', /^(CmdOrCtrl|Cmd|Command|Super)$/i]];
+      const SPECIAL = { Enter: '↩', Tab: '⇥', Space: 'Space', Up: '↑', Down: '↓', Left: '←', Right: '→', Plus: '+' };
+      const pretty = (acc) => {
+        const parts = String(acc).split('+');
+        const key = parts.pop();
+        return MODS.filter(([, re]) => parts.some((p) => re.test(p))).map(([g]) => g).join('') + (SPECIAL[key] || (key.length === 1 ? key.toUpperCase() : key));
+      };
+      const norm = (acc) => String(acc).toLowerCase().replace(/\b(cmd|command|super)\b/g, 'cmdorctrl').replace(/\boption\b/g, 'alt').split('+').sort().join('+');
+      const CODE = { BracketLeft: '[', BracketRight: ']', Period: '.', Comma: ',', Slash: '/', Backslash: '\\', Semicolon: ';', Quote: "'", Backquote: '`', Equal: '=', Minus: '-', Enter: 'Enter', NumpadEnter: 'Enter', Tab: 'Tab', Space: 'Space', ArrowUp: 'Up', ArrowDown: 'Down', ArrowLeft: 'Left', ArrowRight: 'Right' };
+      const accelOf = (e) => {
+        let k = CODE[e.code];
+        if (!k) { if (/^Key[A-Z]$/.test(e.code)) k = e.code.slice(3); else if (/^Digit\d$/.test(e.code)) k = e.code.slice(5); else if (/^F\d{1,2}$/.test(e.code)) k = e.code; }
+        if (!k) return ''; // a modifier on its own, or a key that cannot be a shortcut
+        const mods = [e.metaKey && 'CmdOrCtrl', e.ctrlKey && 'Ctrl', e.altKey && 'Alt', e.shiftKey && 'Shift'].filter(Boolean);
+        if (!mods.length && !/^F\d/.test(k)) return ''; // a plain letter would be typed into the terminal
+        return [...mods, k].join('+');
+      };
       ch.keyActions.forEach((a) => {
         const r = el('div', 'keyrow');
         r.append(el('span', 'kn', t('key.' + a)));
         const inp = el('input', 'sm-input kin');
-        inp.value = eff[a];
+        inp.readOnly = true;
+        inp.value = pretty(eff[a]);
+        inp.title = eff[a];
         inp.setAttribute('aria-label', t('key.' + a));
-        inp.onchange = async () => {
-          const next = { ...v.keybindings, [a]: inp.value.trim() };
-          if (next[a] === ch.defaultKeys[a]) delete next[a];
-          if (!(await save('keybindings', next))) { inp.classList.add('bad'); inp.title = t('set.keys.invalid'); }
+        const apply = async (acc) => {
+          const other = ch.keyActions.find((x) => x !== a && norm(eff[x]) === norm(acc));
+          if (other) { inp.classList.add('bad'); inp.title = t('set.keys.dup', { name: t('key.' + other) }); return false; }
+          const next = { ...v.keybindings, [a]: acc };
+          if (acc === ch.defaultKeys[a]) delete next[a];
+          return save('keybindings', next);
+        };
+        inp.onfocus = () => { inp.classList.remove('bad'); inp.value = t('set.keys.press'); inp.classList.add('rec'); ait.keysRecord(true); };
+        inp.onblur = () => { ait.keysRecord(false); inp.classList.remove('rec'); inp.value = pretty(eff[a]); };
+        inp.onkeydown = async (e) => {
+          if (e.key === 'Tab') return; // keep keyboard navigation working
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.key === 'Escape') return inp.blur();
+          if ((e.key === 'Backspace' || e.key === 'Delete') && !e.metaKey && !e.ctrlKey && !e.altKey) { const next = { ...v.keybindings }; delete next[a]; await save('keybindings', next); return; }
+          const acc = accelOf(e);
+          if (!acc) return;
+          if (!(await apply(acc))) inp.value = pretty(acc); // refused (already used): show what was pressed and why on hover
         };
         const rst = el('button', 'btn', t('set.keys.reset'));
         rst.onclick = () => { const next = { ...v.keybindings }; delete next[a]; save('keybindings', next); };

@@ -117,7 +117,7 @@ class Agent extends EventEmitter {
   setSession(session) {
     this.session = session;
     session.on('sensitive-input', () => {
-      if (this.busy) this.emit('event', { type: 'status', phase: 'waiting-input', text: '비밀번호/민감 입력 대기 — 터미널에 직접 입력하세요 (AI는 입력 내용을 보지 않습니다)' });
+      if (this.busy) this.emit('event', { type: 'status', phase: 'waiting-input', text: '비밀번호/민감 입력 대기. 터미널에 직접 입력하세요 (AI는 입력 내용을 보지 않습니다)' });
     });
   }
 
@@ -493,14 +493,14 @@ class Agent extends EventEmitter {
     } else if (needAsk && mode === 'trust' && verdict.level === 'approve') {
       needAsk = false;
       decision = 'trust';
-      this.emitEv({ type: 'note', text: `신뢰 모드: 자동 승인됨 — ${verdict.reasons.join('; ')}` });
+      this.emitEv({ type: 'note', text: `신뢰 모드: 자동 승인됨. ${verdict.reasons.join('; ')}` });
     }
     if (needAsk) {
       const reasons = verdict.reasons.length ? verdict.reasons : ['모든 명령 확인 모드'];
       const ok = await this._askApproval('command', cmd, cwd, reasons, signal, { rule: rule && { label: rule.label, exact: rule.exact }, mode, ...(remote ? { remote: remote.label, cwd: shownCwd } : {}) });
       if (!ok.approved) {
         this._audit({ kind: 'command', subject: cmd, decision: 'denied', reasons, feedback: ok.feedback || undefined });
-        const fb = ok.feedback ? ` 사용자 의견: "${ok.feedback}" — 이 의견을 반영해 다른 방법을 쓰세요.` : '';
+        const fb = ok.feedback ? ` 사용자 의견: "${ok.feedback}". 이 의견을 반영해 다른 방법을 쓰세요.` : '';
         return { kind: 'run', command: cmd, error: ok.aborted ? '중단됨' : `사용자가 이 명령 실행을 거부했습니다. 같은 명령을 다시 시도하지 마세요.${fb}` };
       }
       decision = 'approved';
@@ -520,7 +520,7 @@ class Agent extends EventEmitter {
         this._remoteLost('SSH 연결이 끝났습니다');
         return { kind: 'run', command: cmd, error: 'SSH 연결이 끊어져 원격 모드를 껐습니다. 사용자가 다시 접속해야 합니다. done 으로 상황을 설명하세요.' };
       }
-      this.emitEv({ type: 'command-start', id, command: cmd, cwd: `원격 ${remote.label}:${remote.cwd || ''}` });
+      this.emitEv({ type: 'command-start', id, command: cmd, cwd: `${remote.label}:${remote.cwd || ''}` });
       this.emitEv({ type: 'status', phase: 'running', text: `원격(${remote.label})에서 실행 중: ${truncateMiddle(cmd, 80)}` });
       const rres = await this.session.runSentinel(cmd, { signal, kind: remote.kind });
       if (rres.cwd) remote.cwd = rres.cwd;
@@ -531,7 +531,7 @@ class Agent extends EventEmitter {
       }
       if (rres.status === 'waiting_input') return { kind: 'run', command: cmd, error: '원격이 비밀번호/입력을 기다리고 있습니다. 사용자가 터미널에서 직접 입력해야 합니다(AI는 입력하지 않습니다). done 으로 안내하세요.' };
       if (rres.status === 'fullscreen') return { kind: 'run', command: cmd, error: '원격에서 전체 화면 프로그램(vim, top 등)이 실행 중이라 명령을 입력하지 않았습니다. 사용자가 먼저 종료해야 합니다.' };
-      return this._afterExec(id, cmd, rres, log, `원격 ${remote.label}:${remote.cwd || ''}`);
+      return this._afterExec(id, cmd, rres, log, `${remote.label}:${remote.cwd || ''}`);
     }
     // wait briefly for the shell to be free
     for (let i = 0; i < 40 && this.session.state === 'busy'; i++) await new Promise((r) => setTimeout(r, 100));

@@ -276,7 +276,7 @@ test('SshWatcher: the fingerprint arriving in a later chunk than the host-key qu
 });
 
 test('externalSshTarget: --ssh=<host> from the command line, only acceptable destinations', () => {
-  assert.equal(S.externalSshTarget(['AI Terminal', '--ssh', 'ubuntu']), 'ubuntu');
+  assert.equal(S.externalSshTarget(['MacAIterm', '--ssh', 'ubuntu']), 'ubuntu');
   assert.equal(S.externalSshTarget(['--ssh=deploy@192.0.2.10']), 'deploy@192.0.2.10');
   assert.equal(S.externalSshTarget(['--user-data-dir=/x', '--ssh=dgx', '--other']), 'dgx');
   // Electron's reordering of a second launch: the separate value is lost, and that must not pick up a switch or '.'

@@ -7,7 +7,7 @@
 //      (start your screen recording, then:  touch /private/tmp/ait-demo-go)
 //   3. runs the demo (~80 s): failing test fixed by the agent → approval gate for a delete → model chip + KV settings
 //
-//   AIT_APP_BIN="/Applications/AI Terminal.app/Contents/MacOS/AI Terminal" node scripts/demo-live.js
+//   AIT_APP_BIN="/Applications/MacAIterm.app/Contents/MacOS/MacAIterm" node scripts/demo-live.js
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');

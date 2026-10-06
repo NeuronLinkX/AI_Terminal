@@ -1,4 +1,4 @@
-" AI Terminal dark — matches the app's dark theme
+" MacAIterm dark — matches the app's dark theme
 call ait#colors#apply('aitdark', 'dark', {
   \ 'bg': '#0b0d11', 'fg': '#d4d8e0', 'dim': '#8b93a3', 'faint': '#4d5565', 'guide': '#2a303c',
   \ 'line': '#13161c', 'line2': '#232833', 'bar': '#191d25', 'pop': '#1a1e27', 'sel': '#2b2f4a',

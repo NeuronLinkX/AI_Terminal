@@ -76,7 +76,7 @@ H = 1290 + SHIFT;
 add(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="-apple-system,'Apple SD Gothic Neo',Helvetica,Arial,sans-serif">`);
 add(`<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="${C.line}"/></marker></defs>`);
 add(`<rect width="${W}" height="${H}" fill="#ffffff"/>`);
-add(`<text x="24" y="32" font-size="20" font-weight="700" fill="${C.text}">AI Terminal — 코드 레이어 아키텍처 (KV 캐시 절약 · 토큰 사용량 · 키)</text>`);
+add(`<text x="24" y="32" font-size="20" font-weight="700" fill="${C.text}">MacAIterm — 코드 레이어 아키텍처 (KV 캐시 절약 · 토큰 사용량 · 키)</text>`);
 add(`<text x="24" y="53" font-size="12.5" fill="${C.dim}">박스 = 소스 파일(실제 이름), 모노스페이스 = 클래스·함수·데이터. 번호 ①~⑩ = AI 요청 한 번의 호출 순서. 점선 = 이벤트/표시 경로, 실선 = 호출·HTTP.</text>`);
 flowLines.forEach((l, i) => add(`<text x="24" y="${76 + i * 19}" font-size="12.5" fill="${C.text}" >${esc(l)}</text>`));
 add(`<g transform="translate(0,${SHIFT})">`);

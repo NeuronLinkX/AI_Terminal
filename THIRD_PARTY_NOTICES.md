@@ -1,6 +1,6 @@
 # Third-party notices
 
-AI Terminal is built on the open-source components below. The list is generated from the production dependencies installed in `node_modules` (`node scripts/notices.js`); each component remains under its own license.
+MacAIterm is built on the open-source components below. The list is generated from the production dependencies installed in `node_modules` (`node scripts/notices.js`); each component remains under its own license.
 
 ## Bundled in the app
 
@@ -13,7 +13,7 @@ AI Terminal is built on the open-source components below. The list is generated 
 | node-addon-api | 7.1.1 | MIT | https://github.com/nodejs/node-addon-api |
 | node-pty | 1.1.0 | MIT | https://github.com/microsoft/node-pty |
 
-**Electron** (Chromium + Node.js) is the runtime of the app. Its own license texts ship inside the app bundle (`LICENSE` and `LICENSES.chromium.html` in `AI Terminal.app/Contents/Resources` / the Electron framework folder).
+**Electron** (Chromium + Node.js) is the runtime of the app. Its own license texts ship inside the app bundle (`LICENSE` and `LICENSES.chromium.html` in `MacAIterm.app/Contents/Resources` / the Electron framework folder).
 
 ## Used but NOT bundled (installed separately by the user)
 

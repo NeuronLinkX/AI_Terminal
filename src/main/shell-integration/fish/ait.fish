@@ -1,4 +1,4 @@
-# AI Terminal shell integration for fish (loaded with `fish --init-command 'source ...'`).
+# MacAIterm shell integration for fish (loaded with `fish --init-command 'source ...'`).
 function __ait_b64
     printf '%s' $argv[1] | /usr/bin/base64 | /usr/bin/tr -d '\n'
 end

@@ -1,4 +1,4 @@
-" AI Terminal light — matches the app's light theme
+" MacAIterm light — matches the app's light theme
 call ait#colors#apply('aitlight', 'light', {
   \ 'bg': '#fbfbfd', 'fg': '#1f2430', 'dim': '#5b6475', 'faint': '#9aa2b2', 'guide': '#dfe3ea',
   \ 'line': '#f0f2f6', 'line2': '#dfe3ea', 'bar': '#e6e9f0', 'pop': '#ffffff', 'sel': '#dcd6ff',

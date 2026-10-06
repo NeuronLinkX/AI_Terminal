@@ -1,4 +1,4 @@
-# AI Terminal shell integration for bash (loaded with `bash --rcfile`).
+# MacAIterm shell integration for bash (loaded with `bash --rcfile`).
 # Same private OSC protocol as zsh:  command start (C) / command end + exit status + cwd (D).
 [[ -r "$HOME/.bash_profile" ]] && source "$HOME/.bash_profile" || { [[ -r "$HOME/.bashrc" ]] && source "$HOME/.bashrc"; }
 # bash keeps history in $HOME by default; make sure the app folder is never used.

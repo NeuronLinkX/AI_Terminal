@@ -1,6 +1,6 @@
 {
-  "name": "ai-terminal",
-  "productName": "AI Terminal",
+  "name": "macaiterm",
+  "productName": "MacAIterm",
   "version": "0.1.0",
   "description": "AI-driven terminal: real PTY shell + natural-language agent",
   "main": "src/main/main.js",
@@ -18,7 +18,11 @@
     "dist": "node scripts/build.js",
     "dist:arm64": "node scripts/build.js --arch=arm64",
     "dist:x64": "node scripts/build.js --arch=x64",
-    "dist:universal": "node scripts/build.js --arch=universal"
+    "dist:universal": "node scripts/build.js --arch=universal",
+    "site": "node scripts/build-site.js",
+    "site:local": "node scripts/build-site.js --local",
+    "demo": "node scripts/demo-show.js",
+    "record": "node scripts/demo-show.js --record --lang=en"
   },
   "license": "MIT",
   "dependencies": {
@@ -34,10 +38,10 @@
     "pixelmatch": "^5.3.0",
     "pngjs": "^7.0.0"
   },
-  "author": "AI Terminal",
+  "author": "MacAIterm",
   "build": {
-    "appId": "local.aiterminal.app",
-    "productName": "AI Terminal",
+    "appId": "com.neuronlinkx.macaiterm",
+    "productName": "MacAIterm",
     "copyright": "MIT",
     "directories": {
       "output": "dist",
@@ -72,7 +76,7 @@
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "dmg": {
-      "title": "AI Terminal ${version}",
+      "title": "MacAIterm ${version}",
       "icon": "build/icon.icns",
       "window": {
         "width": 540,
@@ -84,7 +88,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/NeuronLinkX/AI_Terminal.git"
+    "url": "https://github.com/NeuronLinkX/macAIterm.git"
   },
-  "homepage": "https://github.com/NeuronLinkX/AI_Terminal"
+  "homepage": "https://github.com/NeuronLinkX/macAIterm",
+  "bugs": {
+    "url": "https://github.com/NeuronLinkX/macAIterm/issues"
+  }
 }

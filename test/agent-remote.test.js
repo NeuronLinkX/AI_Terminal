@@ -114,7 +114,7 @@ test('remote commands: read-only runs freely, a change asks (naming the server),
     assert.equal(o.exitCode, 0, JSON.stringify(o));
     assert.ok(!events.some((e) => e.type === 'approval'), 'a read-only command needs no approval');
     const res = events.filter((e) => e.type === 'command-result').pop();
-    assert.equal(res.cwd, `원격 dev@build-box:${dir}`, 'the result card names the server and its folder, never this Mac\'s');
+    assert.equal(res.cwd, `dev@build-box:${dir}`, 'the result card names the server and its folder, never this Mac\'s');
 
     // a change asks, and the approval says which server and which directory
     let stop = approver(agent, events, () => false);

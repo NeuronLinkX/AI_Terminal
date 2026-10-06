@@ -197,7 +197,7 @@ function! ait#check() abort
     let l:prog = executable('shellcheck') ? 'shellcheck -f gcc ' . expand('%:p:S') : 'bash -n ' . expand('%:p:S')
     let l:efm = executable('shellcheck') ? '' : '%f: line %l: %m'
   else
-    echo 'AI Terminal: 이 파일 형식(' . l:ft . ')의 검사기가 없습니다'
+    echo 'MacAIterm: 이 파일 형식(' . l:ft . ')의 검사기가 없습니다'
     return
   endif
   let l:old_prg = &l:makeprg | let l:old_efm = &l:errorformat
@@ -216,7 +216,7 @@ function! ait#check() abort
   else
     botright copen 8
     wincmd p
-    echo '✖ ' . len(l:items) . '개 문제 — ]d / [d 로 이동, :cclose 로 닫기'
+    echo '✖ ' . len(l:items) . '개 문제: ]d / [d 로 이동, :cclose 로 닫기'
   endif
 endfunction
 
@@ -253,7 +253,7 @@ function! ait#run() abort
       let l:cmd = 'rustc --edition 2021 -o ' . l:out . ' ' . l:f . ' && ' . l:out
     endif
   else
-    echo 'AI Terminal: ' . l:ft . ' 파일은 실행을 지원하지 않습니다 (python/c/cpp/rust/sh)'
+    echo 'MacAIterm: ' . l:ft . ' 파일은 실행을 지원하지 않습니다 (python/c/cpp/rust/sh)'
     return
   endif
   botright 14new
@@ -307,7 +307,7 @@ let s:outline = {
 function! ait#outline() abort
   let l:pat = get(s:outline, &filetype, '')
   if l:pat ==# ''
-    echo 'AI Terminal: ' . &filetype . ' 파일은 개요를 지원하지 않습니다'
+    echo 'MacAIterm: ' . &filetype . ' 파일은 개요를 지원하지 않습니다'
     return
   endif
   silent! execute 'lvimgrep /' . l:pat . '/j %'
@@ -357,7 +357,7 @@ endfunction
 
 function! ait#help() abort
   let l:lines = [
-    \ ' AI Terminal · Vim   (Space = leader · Mac: fn 없이 사용 가능)',
+    \ ' MacAIterm · Vim   (Space = leader · Mac: fn 없이 사용 가능)',
     \ '',
     \ ' Space r    실행 (py/c/cpp/rust/sh)      = fn+F5',
     \ ' Space c    문법·린트 검사 → 줄에 ●        = fn+F6   (]d [d 이동)',

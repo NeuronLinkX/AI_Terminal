@@ -1,6 +1,6 @@
 scriptencoding utf-8
 " ---------- :AitAI — inline AI edit ----------
-" Sends the selected lines + your instruction to AI Terminal (private escape sequence ESC]777;ait;A;<base64 json>BEL),
+" Sends the selected lines + your instruction to MacAIterm (private escape sequence ESC]777;ait;A;<base64 json>BEL),
 " which asks the model you chose there and writes the answer to a reply file this script polls. The proposed result is
 " shown as a diff and applied ONLY after you confirm; `u` undoes it. Secrets in the selection are never sent.
 "   Space a  (normal: current line · visual: selection)      :[range]AitAI {instruction}

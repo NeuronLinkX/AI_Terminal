@@ -228,8 +228,14 @@ const scenarios = {
       await a.ev(`[...document.querySelectorAll('.stepper .btn')].find(b => b.textContent === '+').click()`); await sleep(600);
       check('설정: 글자 크기가 터미널에 즉시 반영', (await a.ev(`__ait.term.options.fontSize`)) === before + 1);
       // invalid accelerator is rejected, valid one accepted
-      await a.ev(`(()=>{const i=document.querySelector('.keyrow .kin'); i.value='NotAKey++'; i.dispatchEvent(new Event('change',{bubbles:true}));})()`); await sleep(500);
-      check('설정: 잘못된 단축키 형식은 거부됨', await a.ev(`document.querySelector('.keyrow .kin').classList.contains('bad')`));
+      // shortcuts are shown the macOS way (⌘T) and recorded by pressing the keys; a key combination that another action uses is refused
+      const keyDown = (idx, init) => a.ev(`(() => { const i = document.querySelectorAll('.keyrow .kin')[${idx}]; i.focus(); i.dispatchEvent(new KeyboardEvent('keydown', Object.assign({ bubbles: true, cancelable: true }, ${JSON.stringify(init)}))); return i.value; })()`);
+      check('설정: 단축키가 ⌘T 처럼 표시됨(CmdOrCtrl 이 아님)', /^⌘T$/.test(await a.ev(`document.querySelectorAll('.keyrow .kin')[0].blur(), document.querySelectorAll('.keyrow .kin')[0].value`)));
+      await keyDown(1, { code: 'KeyT', key: 't', metaKey: true }); await sleep(400); // "close tab" ← ⌘T is the new-tab shortcut
+      check('설정: 다른 동작이 쓰는 단축키는 거부됨', await a.ev(`document.querySelectorAll('.keyrow .kin')[1].classList.contains('bad')`));
+      await keyDown(1, { code: 'KeyK', key: 'k', altKey: true, shiftKey: true }); await sleep(900);
+      check('설정: 키를 눌러 단축키를 기록(⌥⇧K)하면 저장되고 표시됨', await a.ev(`window.ait.settingsGet().then((s) => (s.values || s).keybindings['close-tab'])`).then((v) => v === 'Alt+Shift+K').catch(() => false));
+      await a.ev(`window.ait.settingsSet('keybindings', {}).then(() => 1)`); await sleep(400);
       // language → English
       await a.ev(`__panels.save('language', 'en').then(() => 1)`); await sleep(800);
       const en = await text(a, '#settings-modal .sm-dialog');

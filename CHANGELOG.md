@@ -18,7 +18,11 @@
 - **Left side bar** with a **session manager** (saved sessions, folders, search, import from `~/.ssh/config`, key file, jump host, X11, port forwards, keep-alive, shared connection) and **file trees of the server and this Mac** with drag & drop copy both ways (files and folders, Finder → server, server → Finder), transfers with progress / cancel / SHA-256 verification, conflict dialog, rename / delete (guarded) / chmod / preview / ask the AI / `cd` in the terminal.
 - This Mac's CPU utilisation in the top bar; the server's file engine uses plain `ssh` channels (no SFTP subsystem needed).
 
+### Added (site)
+- **Download website** (`site/`, bilingual, light / dark, no cookies or external requests): an overview page and a download page (.dmg / .zip, SHA-256, install and first-launch steps, requirements, FAQ, changelog); `npm run site` fills in version, sizes and checksums from `dist/`; a Pages workflow publishes it. Added the MIT `LICENSE` file.
+
 ### Changed
+- **The app is now called MacAIterm** (was *AI Terminal*): app bundle `MacAIterm.app`, installers `MacAIterm-<version>-<arch>.dmg`, bundle id `com.neuronlinkx.macaiterm`. On the first start the old data folder (`~/Library/Application Support/AI Terminal`) is copied to `MacAIterm` (settings, tabs, history, audit, usage, project rules, saved SSH sessions; never moved or overwritten). API keys saved in Settings are not copied (the Keychain item is named after the app) and must be entered again. Project guidance files may now also be called `MACAITERM.md` / `.macaiterm.md` (the old names still work).
 - Larger default window (1720×1060, never larger than the screen); the top bar now gives up labels and button captions step by step instead of cutting content off or overlapping when the window is narrow.
 
 ### Fixed

@@ -283,7 +283,7 @@ function validTarget(t) {
 }
 
 /**
- * `AI Terminal --ssh=<host>`: the host to connect to, or null. Used by the menu-bar server list.
+ * `MacAIterm --ssh=<host>`: the host to connect to, or null. Used by the menu-bar server list.
  * Use the `=` form: when a running instance is asked, Electron reorders the second launch's arguments (switches first,
  * positional values last), so a separate `--ssh <host>` can lose its value.
  * Only an acceptable destination (see validTarget) is returned, so nothing here can inject an ssh option or shell syntax.

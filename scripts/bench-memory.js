@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-// Memory / speed benchmark for the local models (Ollama), plus the memory footprint of the AI Terminal app itself.
+// Memory / speed benchmark for the local models (Ollama), plus the memory footprint of the MacAIterm app itself.
 //   node scripts/bench-memory.js                       # default matrix, writes docs/benchmark-memory.json
 //   node scripts/bench-memory.js qwen3:8b:4096,8192    # custom  model:ctx,ctx,...
 // Method per (model, context): unload everything -> cold load + first generation -> 2 warm generations,
@@ -68,17 +68,17 @@ async function measure(model, ctx) {
 
 /** RSS of the installed app (all Electron processes), idle with one tab. RSS counts shared pages in every process. */
 async function appMemory() {
-  const bin = '/Applications/AI Terminal.app/Contents/MacOS/AI Terminal';
+  const bin = '/Applications/MacAIterm.app/Contents/MacOS/MacAIterm';
   if (!fs.existsSync(bin)) return null;
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ait-memprofile-'));
   const child = spawn(bin, [`--user-data-dir=${profile}`], { stdio: 'ignore', env: { ...process.env, AIT_CWD: os.homedir() } });
   await sleep(12000);
-  const rss = () => execFileSync('/bin/ps', ['-axo', 'rss=,command='], { encoding: 'utf8' }).split('\n').filter((l) => l.includes('AI Terminal.app/Contents')).reduce((a, l) => a + Number(l.trim().split(/\s+/)[0] || 0), 0) / 1024;
+  const rss = () => execFileSync('/bin/ps', ['-axo', 'rss=,command='], { encoding: 'utf8' }).split('\n').filter((l) => l.includes('MacAIterm.app/Contents')).reduce((a, l) => a + Number(l.trim().split(/\s+/)[0] || 0), 0) / 1024;
   const idle = Math.round(rss());
-  const procs = execFileSync('/bin/ps', ['-axo', 'command='], { encoding: 'utf8' }).split('\n').filter((l) => l.includes('AI Terminal.app/Contents')).length;
+  const procs = execFileSync('/bin/ps', ['-axo', 'command='], { encoding: 'utf8' }).split('\n').filter((l) => l.includes('MacAIterm.app/Contents')).length;
   child.kill('SIGTERM');
   await sleep(3000);
-  try { execFileSync('/usr/bin/pkill', ['-f', 'AI Terminal.app/Contents/MacOS']); } catch { /* already gone */ }
+  try { execFileSync('/usr/bin/pkill', ['-f', 'MacAIterm.app/Contents/MacOS']); } catch { /* already gone */ }
   return { idleRssMB: idle, processes: procs };
 }
 

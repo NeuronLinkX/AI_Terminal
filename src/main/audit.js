@@ -50,7 +50,7 @@ class Audit {
     const rows = this.read(opts);
     if (format === 'json') return JSON.stringify(rows, null, 1);
     const label = { allowed: '자동 허용', approved: '승인', denied: '거부', blocked: '차단', 'auto-rule': '허용 규칙으로 자동 승인', trust: '신뢰 모드 자동 승인', done: '실행됨' };
-    const lines = ['# AI Terminal 실행·승인 기록', '', `내보낸 시각: ${new Date().toLocaleString('ko-KR')} · 항목 ${rows.length}개 (비밀 정보는 마스킹됨)`, '', '| 시각 | 탭 | 종류 | 대상 | 결정 | 종료코드 | 사유 |', '|---|---|---|---|---|---|---|'];
+    const lines = ['# MacAIterm 실행·승인 기록', '', `내보낸 시각: ${new Date().toLocaleString('ko-KR')} · 항목 ${rows.length}개 (비밀 정보는 마스킹됨)`, '', '| 시각 | 탭 | 종류 | 대상 | 결정 | 종료코드 | 사유 |', '|---|---|---|---|---|---|---|'];
     for (const r of rows) {
       lines.push(`| ${r.ts.replace('T', ' ').slice(0, 19)} | ${r.tab || ''} | ${r.kind} | \`${String(r.subject).replace(/\|/g, '\\|').replace(/\n/g, ' ')}\` | ${label[r.decision] || r.decision} | ${r.exitCode ?? ''} | ${(r.reasons || []).join('; ').replace(/\|/g, '\\|')} |`);
     }

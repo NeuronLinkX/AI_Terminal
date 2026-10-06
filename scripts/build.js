@@ -21,7 +21,7 @@ const run = (cmd, args) => {
   if (r.status !== 0) process.exit(r.status || 1);
 };
 
-console.log(`\n▶ building AI Terminal for ${arch}${given ? '' : ' (this Mac)'}\n`);
+console.log(`\n▶ building MacAIterm for ${arch}${given ? '' : ' (this Mac)'}\n`);
 run(process.execPath, [path.join(__dirname, 'stamp.js')]); // build time shown in the app
 run(path.join(root, 'node_modules', '.bin', 'electron-builder'), ['--mac', 'dmg', 'zip', `--${arch}`]);
 run(process.execPath, [path.join(__dirname, 'detach-dmg.js')]); // electron-builder leaves the DMG mounted

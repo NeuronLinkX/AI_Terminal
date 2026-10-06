@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 // Documentation screenshots of the SSH features (README / docs/SSH.md), taken from the INSTALLED app:
-//   AIT_DOC_PROMPT='%F{green}user@mac%f %F{blue}%~%f %# ' AIT_APP_BIN="/Applications/AI Terminal.app/Contents/MacOS/AI Terminal" \
+//   AIT_DOC_PROMPT='%F{green}user@mac%f %F{blue}%~%f %# ' AIT_APP_BIN="/Applications/MacAIterm.app/Contents/MacOS/MacAIterm" \
 //   AIT_SHOT_DIR=docs/screenshots node scripts/shots-ssh.js
 // The "server" is a throw-away sshd on 127.0.0.1 (key login, generated keys) running as this account, with a made-up
 // project tree in /private/tmp, so the shots show a realistic server without any real host, user or file. The AI answers in

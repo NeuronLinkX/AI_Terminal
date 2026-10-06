@@ -77,7 +77,7 @@ class PtySession extends EventEmitter {
     Object.assign(env, {
       TERM: 'xterm-256color',
       COLORTERM: 'truecolor',
-      TERM_PROGRAM: 'AITerminal',
+      TERM_PROGRAM: 'MacAIterm',
       LANG: env.LANG && /UTF-?8/i.test(env.LANG) ? env.LANG : 'en_US.UTF-8',
     });
     if (!env.LC_ALL || !/UTF-?8/i.test(env.LC_ALL)) delete env.LC_ALL;

@@ -27,7 +27,7 @@ const rows = [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
 const out = [
   '# Third-party notices',
   '',
-  'AI Terminal is built on the open-source components below. The list is generated from the production dependencies installed in `node_modules` (`node scripts/notices.js`); each component remains under its own license.',
+  'MacAIterm is built on the open-source components below. The list is generated from the production dependencies installed in `node_modules` (`node scripts/notices.js`); each component remains under its own license.',
   '',
   '## Bundled in the app',
   '',
@@ -35,7 +35,7 @@ const out = [
   '|---|---|---|---|',
   ...rows.map((r) => `| ${r.name} | ${r.version} | ${r.license} | ${r.home || '—'} |`),
   '',
-  '**Electron** (Chromium + Node.js) is the runtime of the app. Its own license texts ship inside the app bundle (`LICENSE` and `LICENSES.chromium.html` in `AI Terminal.app/Contents/Resources` / the Electron framework folder).',
+  '**Electron** (Chromium + Node.js) is the runtime of the app. Its own license texts ship inside the app bundle (`LICENSE` and `LICENSES.chromium.html` in `MacAIterm.app/Contents/Resources` / the Electron framework folder).',
   '',
   '## Used but NOT bundled (installed separately by the user)',
   '',

@@ -1,8 +1,8 @@
 # Privacy
 
-AI Terminal runs on your Mac. There is **no account, no telemetry, no analytics and no crash reporting**. This page lists exactly what is stored, what can leave the machine, and when.
+MacAIterm runs on your Mac. There is **no account, no telemetry, no analytics and no crash reporting**. This page lists exactly what is stored, what can leave the machine, and when.
 
-## What is stored (all local, in `~/Library/Application Support/AI Terminal/`)
+## What is stored (all local, in `~/Library/Application Support/MacAIterm/`)
 
 | File / folder | Content | Notes |
 |---|---|---|

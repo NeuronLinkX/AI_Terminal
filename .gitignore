@@ -82,3 +82,5 @@ docs/*.partial.json
 .Spotlight-V100
 .Trashes
 Thumbs.db
+site/downloads/
+*.outbox.log

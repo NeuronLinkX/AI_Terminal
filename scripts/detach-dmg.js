@@ -1,4 +1,4 @@
-// electron-builder leaves the freshly built DMG mounted after every build, which piles up "AI Terminal x.y.z N" volumes
+// electron-builder leaves the freshly built DMG mounted after every build, which piles up "MacAIterm x.y.z N" volumes
 // on the desktop. Detach every mounted copy of this project's DMGs (run automatically after `npm run dist`).
 const { execFileSync } = require('child_process');
 let info = '';
@@ -9,7 +9,7 @@ try {
 }
 let n = 0;
 for (const block of info.split(/^=+$/m)) {
-  if (!/image-path\s*:.*AI Terminal-.*\.dmg/.test(block)) continue;
+  if (!/image-path\s*:.*MacAIterm-.*\.dmg/.test(block)) continue;
   for (const m of block.matchAll(/\/dev\/(disk\d+)\s*\n?/g)) {
     try {
       execFileSync('hdiutil', ['detach', `/dev/${m[1]}`, '-quiet']);

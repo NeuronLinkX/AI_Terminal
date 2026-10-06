@@ -3,7 +3,7 @@
 // Documentation screenshots + live verification of the new features with the REAL model (Ollama), the REAL shell and, for
 // the KV chip, the REAL managed engine. Run against the installed app (AIT_DOC_PROMPT = neutral prompt, keeps the local
 // account / host name out of the images):
-//   AIT_DOC_PROMPT='%F{green}user@mac%f %F{blue}%~%f %# ' AIT_APP_BIN="/Applications/AI Terminal.app/Contents/MacOS/AI Terminal" AIT_SHOT_DIR=docs/screenshots node scripts/shots-features.js
+//   AIT_DOC_PROMPT='%F{green}user@mac%f %F{blue}%~%f %# ' AIT_APP_BIN="/Applications/MacAIterm.app/Contents/MacOS/MacAIterm" AIT_SHOT_DIR=docs/screenshots node scripts/shots-features.js
 // Screenshots that show an AI answer come from the real model; the onboarding and usage screens are UI-only and use the
 // scripted servers (their numbers are NOT real usage — the README says so).
 const fs = require('fs');

@@ -269,6 +269,7 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 #sysmon .sm[data-level="warn"] .ic { color: var(--warn); } #sysmon .sm[data-level="err"] .ic { color: var(--err); } #sysmon .sm[data-level="ok"] .ic { color: var(--ok); }
 #sysmon .sm.mdl[data-loaded="1"] { color: var(--ai); } #sysmon .sm.mdl[data-loaded="1"] .ic { color: var(--ai); }
 #sysmon .sm.mdl { font-family: var(--mono); font-size: 11px; }
+#sysmon .sm { flex-shrink: 0; } #sysmon .sm.mdl { flex-shrink: 1; min-width: 0; } #sysmon .sm.mdl #mdl-val { overflow: hidden; text-overflow: ellipsis; min-width: 0; } /* a long model name ends in an ellipsis instead of being cut off by the bar */
 /* the top bar gives up its least important parts first, so what is left is never cut off or overlapped */
 @media (max-width: 1900px) { #btn-copy > span:not(.ic), #btn-reset > span:not(.ic) { display: none; } #btn-copy, #btn-reset { padding: 0 9px; } }
 @media (max-width: 1660px) { #btn-stop > span:not(.ic) { display: none; } #btn-stop { padding: 0 9px; } }
@@ -621,3 +622,4 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .mtop { display: flex; justify-content: space-between; font-size: 12px; } .ml { color: var(--dim); font-weight: 600; } .mv { font-variant-numeric: tabular-nums; }
 .msub { color: var(--faint); font-size: 10.5px; margin-top: 3px; line-height: 1.4; word-break: break-word; }
 .spark { display: block; width: 100%; height: 34px; margin-top: 4px; } .spark .line { fill: none; stroke: var(--info); stroke-width: 1.4; } .spark .area { fill: rgba(90,169,255,.14); stroke: none; }
+.keyrow .kin { cursor: pointer; font-family: var(--sans); letter-spacing: .04em; } .keyrow .kin.rec { border-color: var(--accent); color: var(--accent); }

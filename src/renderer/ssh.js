@@ -27,7 +27,7 @@
       return `${v >= 100 ? Math.round(v) : v.toFixed(1)} ${u[i]}`;
     };
     const fmtUp = (sec) => {
-      if (sec == null) return '—';
+      if (sec == null) return 'n/a';
       const d = Math.floor(sec / 86400);
       const h = Math.floor((sec % 86400) / 3600);
       const m = Math.floor((sec % 3600) / 60);
@@ -154,7 +154,7 @@
     function monitorTip(tab, st) {
       const m = st.metrics;
       const L = [t('ssh.tip.head', { host: st.ssh.target.label, os: m.os || '?', arch: m.arch || '' })];
-      if (m.cpu) L.push(t('ssh.tip.cpu', { pct: m.cpu.pct, cores: m.cores || '?', load: m.load ? m.load.join(' ') : '—' }));
+      if (m.cpu) L.push(t('ssh.tip.cpu', { pct: m.cpu.pct, cores: m.cores || '?', load: m.load ? m.load.join(' ') : 'n/a' }));
       if (m.mem) L.push(t('ssh.tip.mem', { used: m.mem.usedGB, total: m.mem.totalGB, pct: m.mem.usedPct, swap: m.mem.swapTotalGB ? t('ssh.tip.swap', { u: m.mem.swapUsedGB, t: m.mem.swapTotalGB }) : '' }));
       if (m.gpus.length) m.gpus.forEach((g, i) => L.push(t('ssh.tip.gpu', { i, name: g.name, util: g.util, mem: g.memTotalMB ? ` · ${(g.memUsedMB / 1024).toFixed(1)}/${(g.memTotalMB / 1024).toFixed(1)}GB` : '', temp: g.temp != null ? ` · ${g.temp}℃` : '' })));
       else L.push(t('ssh.tip.nogpu'));
@@ -179,13 +179,13 @@
         return;
       }
       const tip = monitorTip(tab, st);
-      setSeg(sCpu, m.cpu ? m.cpu.pct : null, m.cpu ? `${m.cpu.pct}%` : '—', m.cores ? t('ssh.mon.cores', { n: m.cores }) : '');
-      setSeg(sMem, m.mem ? m.mem.usedPct : null, m.mem ? `${m.mem.usedGB}/${m.mem.totalGB}G` : '—');
+      setSeg(sCpu, m.cpu ? m.cpu.pct : null, m.cpu ? `${m.cpu.pct}%` : 'n/a', m.cores ? t('ssh.mon.cores', { n: m.cores }) : '');
+      setSeg(sMem, m.mem ? m.mem.usedPct : null, m.mem ? `${m.mem.usedGB}/${m.mem.totalGB}G` : 'n/a');
       if (m.gpus.length) {
         const g = m.gpus[0];
         setSeg(sGpu, g.util, `${g.util}%${m.gpus.length > 1 ? `+${m.gpus.length - 1}` : ''}`, g.name);
-      } else setSeg(sGpu, null, '—', t('ssh.mon.nogpu'));
-      setSeg(sDisk, m.disk ? m.disk.usedPct : null, m.disk ? `${m.disk.usedPct}%` : '—');
+      } else setSeg(sGpu, null, 'n/a', t('ssh.mon.nogpu'));
+      setSeg(sDisk, m.disk ? m.disk.usedPct : null, m.disk ? `${m.disk.usedPct}%` : 'n/a');
       rinfo.textContent = [m.load ? `${t('ssh.mon.load')} ${m.load[0]}` : '', m.uptimeSec != null ? `${t('ssh.mon.up')} ${fmtUp(m.uptimeSec)}` : ''].filter(Boolean).join(' · ');
       for (const s of SEGS) s.root.title = tip;
       rinfo.title = tip;
@@ -592,10 +592,10 @@
       if (!st || !st.ssh) sv.append(el('div', 'dr-empty', t('ssh.status.connect')));
       else if (!m) sv.append(el('div', 'dr-empty', st.unavailable ? tr(st.unavailable.hint || '') : t('ssh.mon.waiting')));
       else {
-        sv.append(metricBlock('CPU', m.cpu ? m.cpu.pct : null, m.cpu ? `${m.cpu.pct}%` : '—', st.hist.cpu, t('ssh.status.load', { cores: m.cores || '?', load: m.load ? m.load.join(' · ') : '—' })));
+        sv.append(metricBlock('CPU', m.cpu ? m.cpu.pct : null, m.cpu ? `${m.cpu.pct}%` : 'n/a', st.hist.cpu, t('ssh.status.load', { cores: m.cores || '?', load: m.load ? m.load.join(' · ') : 'n/a' })));
         if (m.mem) sv.append(metricBlock(t('ssh.mon.mem'), m.mem.usedPct, `${m.mem.usedGB} / ${m.mem.totalGB} GB`, st.hist.mem, m.mem.swapTotalGB ? t('ssh.status.swap', { u: m.mem.swapUsedGB, t: m.mem.swapTotalGB }) : ''));
         if (m.gpus.length) m.gpus.forEach((g, i) => sv.append(metricBlock(`GPU${m.gpus.length > 1 ? ' ' + i : ''}`, g.util, `${g.util}%`, i === 0 ? st.hist.gpu : null, `${g.name}${g.memTotalMB ? ` · ${(g.memUsedMB / 1024).toFixed(1)}/${(g.memTotalMB / 1024).toFixed(1)} GB` : ''}${g.temp != null ? ` · ${g.temp}℃` : ''}`)));
-        else sv.append(metricBlock('GPU', null, '—', null, t('ssh.tip.nogpu')));
+        else sv.append(metricBlock('GPU', null, 'n/a', null, t('ssh.tip.nogpu')));
         if (m.disk) sv.append(metricBlock(t('ssh.status.disk'), m.disk.usedPct, `${m.disk.usedGB} / ${m.disk.totalGB} GB`, null, m.disk.mount));
         sv.append(el('div', 'msub', `${m.os} ${m.arch} · ${t('ssh.status.uptime', { up: fmtUp(m.uptimeSec) })} · ${t(`ssh.via.${m.via || 'own'}`)}`));
       }

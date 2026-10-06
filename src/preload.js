@@ -76,6 +76,7 @@ contextBridge.exposeInMainWorld('ait', {
   // settings / secrets
   settingsGet: () => call('settings:get'),
   settingsSet: (key, value) => call('settings:set', { key, value }),
+  keysRecord: (on) => call('keys:record', !!on), // while a shortcut is being recorded the menu must not swallow the keys
   settingsReset: () => call('settings:reset'),
   onSettings: (cb) => on('settings:changed', cb),
   secretSet: (name, value) => call('secret:set', { name, value }),

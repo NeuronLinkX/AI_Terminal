@@ -97,7 +97,7 @@ function! ait#colors#apply(name, bg, p) abort
   call l:H('Underlined', l:p.func, '', 'underline')
   call l:H('Error', l:p.err, '', 'bold')
   call l:H('Todo', l:p.bg, l:p.warn, 'bold')
-  " --- AI Terminal extras ---
+  " --- MacAIterm extras ---
   call l:H('AitTodo', l:p.bg, l:p.warn, 'bold')
   call l:H('AitIllum', '', l:p.sel, '')
   call l:H('AitBorder', l:p.accent, l:p.pop, '')

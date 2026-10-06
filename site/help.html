@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Help / FAQ | MacAIterm</title>
+  <meta name="description" content="Installation, setup and answers to common questions.">
+  <meta name="theme-color" content="#fbfaf7">
+  <meta property="og:title" content="Help / FAQ | MacAIterm">
+  <meta property="og:description" content="Installation, setup and answers to common questions.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/hero-dark.png">
+  <link rel="icon" href="assets/img/icon.png" type="image/png">
+  <link rel="alternate" hreflang="en" href="help.html">
+  <link rel="alternate" hreflang="ko" href="ko/help.html">
+  <link rel="alternate" hreflang="x-default" href="help.html">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/release.js"></script>
+  <script src="assets/js/site.js" defer></script>
+</head>
+<body><a class="skip" href="#main">Skip to content</a><header class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/img/icon.png" alt="" width="52" height="52">MacAIterm</a>
+    <nav aria-label="Main"><ul>
+<li><a href="index.html">Overview</a></li><li><a href="download.html">Download</a></li><li><a href="help.html" aria-current="page">Help</a></li>
+</ul></nav>
+    <div class="tools">
+<button class="menu-toggle btn btn-line sm" type="button" aria-expanded="false" aria-controls="mobile-nav" hidden>Menu</button>
+      <a class="lang" href="ko/help.html" hreflang="ko" lang="ko">한국어</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch light / dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <a class="btn btn-solid sm" href="download.html">Download</a>
+    </div>
+  </div>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile" hidden><a href="index.html">Overview</a><a href="download.html">Download</a><a href="help.html" aria-current="page">Help</a></nav></header><main id="main"><div class="wrap"><div class="page-head"><div class="label">MacAIterm / Help / FAQ</div><h1>Help / FAQ</h1><p>Installation, setup and answers to common questions.</p></div></div><section class="support-section"><div class="wrap"><div class="steps"><div class="step"><div class="n">01 / INSTALL</div><h3>Install the application</h3><p>Download the Apple silicon build for macOS 13 or later.<br>Follow the <a href="download.html">installation and first-launch instructions</a>.</p></div><div class="step"><div class="n">02 / CONFIGURE</div><h3>Configure a model</h3><p>No model is bundled.<br>Choose local Ollama, an OpenAI-compatible server or Codex CLI from the model chip.<br>See the <a href="index.html#models">model options</a>.</p></div><div class="step"><div class="n">03 / USE</div><h3>Send a first request</h3><p>Try “Which directory am I in?” or “Which process is using port 3000?”<br>Review the proposed commands and approvals before any change is made.</p></div></div></div></section>
+<section class="tint"><div class="wrap reading"><h2>Frequently asked questions</h2>
+<details><summary>Which Macs are supported?</summary><p>The downloadable build targets Apple silicon (M1 and later) with macOS 13 or later.<br>No Intel build is available yet.<br>Check the <a href="download.html">download page</a> for requirements.</p></details>
+<details><summary>Why does macOS warn me on first launch?</summary><p>The current app is not signed or notarized.<br>See the <a href="download.html">first-launch instructions</a> and verify your download against the published SHA-256 before opening it.</p></details>
+<details><summary>Do I need an account or an API key?</summary><p>MacAIterm does not require its own account.<br>Local Ollama uses a model on your Mac.<br>Hosted services may require their own credentials; Codex CLI uses its own login.</p></details>
+<details><summary>The model is not responding.<br>What should I check?</summary><p>Confirm the selected provider in the model chip.<br>For Ollama, check that Ollama is running and a model is installed.<br>For a compatible server, check the endpoint, model name, and credentials.<br>For Codex CLI, confirm it is installed and signed in.</p></details>
+<details><summary>Does my terminal output leave my Mac?</summary><p>With local Ollama, model requests stay on your Mac.<br>With a remote provider, conversation context and command output go to that provider.<br>This includes output from SSH servers.<br>Read the <a href="privacy.html">privacy notes</a>.</p></details>
+<details><summary>Why is the SSH monitor or file tree empty?</summary><p>These tools need a separate non-interactive SSH connection, using key login or a shared connection from a session opened in the sidebar.<br>An ordinary password-only terminal connection may not provide that access.</p></details>
+<details><summary>Where are settings and history stored?</summary><p>In <code>~/Library/Application Support/MacAIterm/</code>.<br>Session history can be disabled in Settings and deleted per session.<br>The <a href="privacy.html">privacy page</a> describes local storage.</p></details>
+<details><summary>How do I uninstall MacAIterm?</summary><p>Quit the app and move it from Applications to the Trash.<br>To remove settings and history as well, remove <code>~/Library/Application Support/MacAIterm/</code>.<br>Removing this folder permanently deletes that local data.</p></details>
+<details><summary>Is MacAIterm free?</summary><p>MacAIterm is released under the <a href="license.html">MIT license</a>.<br>Your chosen model provider may charge separately for its service.</p></details>
+</div></section><section><div class="wrap two"><div><h2>Resources</h2><p><a href="https://github.com/NeuronLinkX/macAIterm#readme">Project README ↗</a></p></div><div><h2>Need more help?</h2><p>Share the steps you tried and any error message in an issue, with sensitive details removed.</p><a class="btn btn-solid" href="https://github.com/NeuronLinkX/macAIterm/issues">Open a GitHub issue</a></div></div></section></main><footer><div class="wrap"><div class="cols">
+<div><a class="brand" href="index.html"><img src="assets/img/icon.png" alt="" width="44" height="44">MacAIterm</a><p>A macOS terminal with a built-in agent<br>and server tools.</p></div>
+<div><h4>Product</h4><ul><li><a href="index.html">Overview</a></li><li><a href="download.html">Download</a></li><li><a href="https://github.com/NeuronLinkX/macAIterm/blob/main/CHANGELOG.md">Changelog</a></li></ul></div>
+<div><h4>Support</h4><ul><li><a href="help.html">Help / FAQ</a></li><li><a href="https://github.com/NeuronLinkX/macAIterm/issues">GitHub issues</a></li></ul></div>
+<div><h4>Project</h4><ul><li><a href="https://github.com/NeuronLinkX/macAIterm">GitHub</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="license.html">License</a></li></ul></div>
+</div><div>© MacAIterm · MIT license · This site uses no cookies or third-party scripts.<br>MacAIterm was formerly named AI Terminal.<br>Contact: <a href="mailto:jiwoo93@kookmin.ac.kr">jiwoo93@kookmin.ac.kr</a></div></div></footer></body></html>

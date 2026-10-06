@@ -90,7 +90,7 @@ class History {
   toMarkdown(id) {
     const rows = this.read(id);
     const meta = rows.find((r) => r.t === 'meta') || {};
-    const out = [`# AI Terminal 세션 ${id}`, '', `- 시작: ${meta.ts || ''}`, `- 디렉터리: \`${meta.cwd || ''}\``, ''];
+    const out = [`# MacAIterm 세션 ${id}`, '', `- 시작: ${meta.ts || ''}`, `- 디렉터리: \`${meta.cwd || ''}\``, ''];
     for (const r of rows) {
       if (r.t === 'user') out.push(`## 🧑 ${r.mode === 'shell' ? '`$` ' : ''}${r.text}`, '');
       else if (r.t === 'ai' && r.ev) {

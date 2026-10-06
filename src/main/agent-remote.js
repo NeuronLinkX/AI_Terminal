@@ -82,7 +82,7 @@ module.exports = {
     this.remoteCwd = '';
     this._audit({ kind: 'remote', subject: label, decision: 'off', reasons: [reason || '연결 종료'] });
     this.emitEv({ type: 'remote', on: false, reason: reason || '' });
-    this.emitEv({ type: 'note', text: `원격 모드를 껐습니다 — ${reason || 'SSH 연결이 끝났습니다'} (${label})` });
+    this.emitEv({ type: 'note', text: `원격 모드를 껐습니다: ${reason || 'SSH 연결이 끝났습니다'} (${label})` });
   },
 
   /** The description of the far side that goes into the prompt in place of the local project context. */

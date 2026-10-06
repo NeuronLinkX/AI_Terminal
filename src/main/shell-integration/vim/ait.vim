@@ -1,4 +1,4 @@
-" AI Terminal bundled Vim setup — loaded through $VIMINIT when vim is started inside AI Terminal.
+" MacAIterm bundled Vim setup — loaded through $VIMINIT when vim is started inside MacAIterm.
 " No downloads / external plugins: everything below is plain Vim 9 script + built-in optional packages.
 " Disable: AIT_VIM=0 in the environment, or start vim with `-u NONE` / `-u ~/.vimrc`.
 if exists('g:ait_loaded') || v:version < 900
@@ -42,7 +42,7 @@ if exists('+autocomplete')
   set autocomplete
 endif
 
-" true colour + cursor shape through the AI Terminal (xterm.js) PTY
+" true colour + cursor shape through the MacAIterm (xterm.js) PTY
 if &term =~# 'xterm\|tmux\|screen' || $COLORTERM ==# 'truecolor'
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -103,7 +103,7 @@ nnoremap <silent> <F1> :call ait#help()<CR>
 nnoremap <silent> ]d :call ait#lsp#jump(1)<CR>
 nnoremap <silent> [d :call ait#lsp#jump(-1)<CR>
 nnoremap <silent> <leader>d :call ait#lsp#list()<CR>
-" inline AI edit (needs the AI Terminal app): normal = current line, visual = selection
+" inline AI edit (needs the MacAIterm app): normal = current line, visual = selection
 nnoremap <silent> <leader>a :call ait#ai#ask(line('.'), line('.'))<CR>
 xnoremap <silent> <leader>a :<C-u>call ait#ai#ask(line("'<"), line("'>"))<CR>
 nnoremap <silent> <C-h> <C-w>h
