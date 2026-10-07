@@ -125,6 +125,11 @@
         <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="assets/img/site-vnc.png" width="1680" height="1080" loading="lazy" alt="Remote GUI: the XFCE desktop of an Ubuntu server with a file manager inside the window, and the AI chat on the right running whoami as a shell command"></figure>
       </div>
 
+      <div class="show flip">
+        <div class="text"><div class="label">SSH config</div><h3>Edit ~/.ssh/config in the app</h3><p>Opens <code>~/.ssh/config</code> in a window, from the&nbsp;session&nbsp;panel.<br>The syntax is checked with the real <code>ssh -G</code> before saving, and errors are reported with their&nbsp;line&nbsp;number.<br>Saving updates the host list at once and keeps the previous content as a&nbsp;timestamped&nbsp;backup.<br>A file that changed elsewhere in the meantime is&nbsp;never&nbsp;overwritten.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="assets/img/site-ssh-config.png" width="1680" height="1080" loading="lazy" alt="The ~/.ssh/config editor: the file as text with the selected host, a valid-syntax message, and the Check syntax and Save and apply buttons"></figure>
+      </div>
+
       <div class="pair" style="margin-bottom:0">
         <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="assets/img/site-sessions.png" width="1680" height="1080" loading="lazy" alt="Session manager with saved sessions, folders and hosts from ~/.ssh/config"></figure><h3>Session manager</h3><p>Saved sessions in folders, hosts from <code>~/.ssh/config</code> and&nbsp;recent&nbsp;logins.<br>Double-click&nbsp;to&nbsp;connect.<br>Passwords stay in the terminal, where you&nbsp;type&nbsp;them.</p></div>
         <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="assets/img/site-ssh-editor.png" width="1680" height="1080" loading="lazy" alt="Session editor: key file, jump host, X11 forwarding and port forwards"></figure><h3>Session settings</h3><p>Key file, jump host, start folder, X11, port forwarding&nbsp;and&nbsp;keep-alive.<br>Every field is validated, so a pasted value cannot become an additional&nbsp;ssh&nbsp;option.</p></div>

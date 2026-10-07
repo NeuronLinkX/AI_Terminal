@@ -445,7 +445,7 @@
       if (file.error) { toast(t(`ssh.cfg.err.${file.error}`) === `ssh.cfg.err.${file.error}` ? t('ssh.cfg.err.read') : t(`ssh.cfg.err.${file.error}`), 'err'); return; }
       let hash = file.hash;
       let saved = file.text;
-      const m = modal(t('ssh.cfg.title') + ' · ' + file.path, { wide: true });
+      const m = modal(file.path === '~/.ssh/config' ? t('ssh.cfg.title') : `${t('ssh.cfg.title')} · ${file.path}`, { wide: true }); // the title already names the default file
       m.dlg.classList.add('cfg-editor');
       const ta = el('textarea', 'sm-input cfg-text');
       ta.value = file.text;

@@ -126,6 +126,11 @@
         <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-vnc.png" width="1680" height="1080" loading="lazy" alt="원격 GUI: 창 안에 표시된 Ubuntu 서버의 XFCE 데스크톱과 파일 관리자, 그리고 whoami 를 셸 명령으로 실행하는 오른쪽 AI 채팅"></figure>
       </div>
 
+      <div class="show flip">
+        <div class="text"><div class="label">SSH 설정</div><h3>~/.ssh/config 편집</h3><p>세션 패널에서 <code>~/.ssh/config</code>를 창으로 열어 편집합니다.<br>저장하기 전에 실제 <code>ssh -G</code>로 문법을 검사하고, 오류는 줄 번호와 함께 표시합니다.<br>저장하면 호스트 목록에 바로 반영되며, 이전 내용은 시각이 붙은 백업으로 보관합니다.<br>그 사이 다른 곳에서 바뀐 파일은 덮어쓰지 않습니다.</p></div>
+        <figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-config.png" width="1680" height="1080" loading="lazy" alt="~/.ssh/config 편집 창: 선택된 호스트가 보이는 파일 내용, 문법이 올바르다는 메시지, 문법 검사와 저장하고 반영 버튼"></figure>
+      </div>
+
       <div class="pair" style="margin-bottom:0">
         <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-sessions.png" width="1680" height="1080" loading="lazy" alt="저장한 세션, 폴더, ~/.ssh/config의 호스트가 있는 세션 관리자"></figure><h3>세션 관리자</h3><p>폴더로 정리한 저장 세션, <code>~/.ssh/config</code>의 호스트, 최근 접속을 제공합니다.<br>더블클릭하면 연결됩니다.<br>비밀번호는 입력하는 위치인 터미널에만 남습니다.</p></div>
         <div><figure class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="../assets/img/ko/site-ssh-editor.png" width="1680" height="1080" loading="lazy" alt="세션 편집기: 키 파일, 점프 호스트, X11 포워딩, 포트 포워딩"></figure><h3>세션 설정</h3><p>키 파일, 점프 호스트, 시작 폴더, X11, 포트 포워딩, keep-alive를 설정할 수 있습니다.<br>모든 입력란을 검증하므로 붙여 넣은 값이 추가 ssh 옵션으로 해석되지 않습니다.</p></div>
