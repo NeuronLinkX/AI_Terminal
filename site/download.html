@@ -36,14 +36,14 @@
   <div class="wrap">
     <div class="page-head">
       <h1>Download MacAIterm</h1>
-      <p>Free and MIT licensed.<br>No account, no telemetry.<br>The installer is for Macs with Apple silicon running macOS 13 or later.</p>
+      <p>Free and&nbsp;MIT&nbsp;licensed.<br>No account,&nbsp;no&nbsp;telemetry.<br>The installer is for Macs with Apple silicon running macOS 13&nbsp;or&nbsp;later.</p>
     </div>
 
     <div class="dl">
       <div class="main">
         <div class="label">Current version</div>
         <h2>MacAIterm <span data-rel="version">0.1.0</span></h2>
-        <p>For Apple silicon (M1 and later).<br>Open the disk image and drag MacAIterm to Applications.</p>
+        <p>For Apple silicon (M1&nbsp;and&nbsp;later).<br>Open the disk image and drag MacAIterm&nbsp;to&nbsp;Applications.</p>
         <a class="btn btn-solid" data-rel-href="files.dmg.url" href="https://github.com/NeuronLinkX/macAIterm/releases/latest" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></svg>
           Download .dmg
@@ -62,15 +62,15 @@
 
     <table class="alt-files">
       <tr data-needs="files.zip"><td>ZIP archive</td><td>The same app as a ZIP: <span data-rel="files.zip.name">MacAIterm-0.1.0-arm64.zip</span>, <span data-rel="files.zip.size">130 MB</span>.<br>SHA-256 <span class="mono" style="font:12.5px var(--mono)" data-rel="files.zip.sha256"></span></td><td><a data-rel-href="files.zip.url" href="https://github.com/NeuronLinkX/macAIterm/releases/latest" download>Download .zip</a></td></tr>
-      <tr><td>Intel Macs</td><td>No Intel build is available yet.</td><td></td></tr>
-      <tr><td>Older versions</td><td>None. 0.1.0 is the first public version.</td><td><a data-rel-href="releases" href="https://github.com/NeuronLinkX/macAIterm/releases">All releases</a></td></tr>
+      <tr><td>Intel Macs</td><td>No Intel build is&nbsp;available&nbsp;yet.</td><td></td></tr>
+      <tr><td>Older versions</td><td>None. 0.1.0 is the first&nbsp;public&nbsp;version.</td><td><a data-rel-href="releases" href="https://github.com/NeuronLinkX/macAIterm/releases">All releases</a></td></tr>
     </table>
-    <p style="color:var(--faint);font-size:14.5px;margin-top:18px">By downloading you accept the <a href="license.html">MIT license</a>.<br>See the <a href="privacy.html">privacy notes</a> for what the app stores and what can leave your Mac.</p>
+    <p style="color:var(--faint);font-size:14.5px;margin-top:18px">By downloading you accept the <a href="license.html">MIT license</a>.<br>See the <a href="privacy.html">privacy notes</a> for what the app stores and what can leave&nbsp;your&nbsp;Mac.</p>
   </div>
 
   <section style="margin-top:70px">
     <div class="wrap">
-      <div class="note"><b>Notice.</b> MacAIterm does not include or download an AI model.<br>Before your first request, set one up with Ollama, an OpenAI-compatible server or Codex CLI (see <a href="index.html#models">Models</a>).</div>
+      <div class="note"><b>Notice.</b> MacAIterm does not include or download an&nbsp;AI&nbsp;model.<br>Before your first request, set one up with Ollama, an OpenAI-compatible server or Codex CLI (see <a href="index.html#models">Models</a>).</div>
     </div>
   </section>
 
@@ -80,25 +80,25 @@
         <h2>Install</h2>
         <ol class="list">
           <li>Download the <b>.dmg</b> above.</li>
-          <li>Double-click <code>MacAIterm-<span data-rel="version">0.1.0</span>-arm64.dmg</code> to open it.</li>
-          <li>Drag <b>MacAIterm</b> onto the <b>Applications</b> folder in the window.</li>
-          <li>Eject the disk image (⏏ in the Finder sidebar), then <b>right-click → Open</b> MacAIterm in Applications.</li>
-          <li>Install <a href="https://ollama.com">Ollama</a> and pull a model, for example <code>ollama pull qwen3:8b</code>, or choose another model option.</li>
+          <li>Double-click <code>MacAIterm-<span data-rel="version">0.1.0</span>-arm64.dmg</code> to&nbsp;open&nbsp;it.</li>
+          <li>Drag <b>MacAIterm</b> onto the <b>Applications</b> folder in&nbsp;the&nbsp;window.</li>
+          <li>Eject the disk image (⏏ in the Finder sidebar), then <b>right-click → Open</b> MacAIterm&nbsp;in&nbsp;Applications.</li>
+          <li>Install <a href="https://ollama.com">Ollama</a> and pull a model, for example <code>ollama pull qwen3:8b</code>, or choose another&nbsp;model&nbsp;option.</li>
         </ol>
         <h2 style="margin-top:36px">Verify the download</h2>
-        <p style="color:var(--dim)">Run this command in a terminal.<br>The result must match the SHA-256 shown above.</p>
+        <p style="color:var(--dim)">Run this command in&nbsp;a&nbsp;terminal.<br>The result must match the SHA-256&nbsp;shown&nbsp;above.</p>
         <div class="code">shasum -a 256 ~/Downloads/<span data-rel="files.dmg.name">MacAIterm-0.1.0-arm64.dmg</span><button class="copy" type="button" data-copy="shasum -a 256 ~/Downloads/MacAIterm-0.1.0-arm64.dmg">Copy</button></div>
       </div>
       <div>
         <h2>First launch</h2>
         <ul class="list">
-          <li><b>“Cannot be opened” / “unidentified developer”:</b> in Finder, right-click the app → Open → Open.<br>Or System Settings → Privacy &amp; Security → “Open Anyway”.</li>
+          <li><b>“Cannot be opened” / “unidentified developer”:</b> in Finder, right-click the app → Open&nbsp;→&nbsp;Open.<br>Or System Settings → Privacy &amp; Security →&nbsp;“Open&nbsp;Anyway”.</li>
           <li>If it is still blocked, run this once in a terminal:</li>
         </ul>
         <div class="code">xattr -dr com.apple.quarantine /Applications/MacAIterm.app<button class="copy" type="button" data-copy="xattr -dr com.apple.quarantine /Applications/MacAIterm.app">Copy</button></div>
         <ul class="list">
-          <li><b>Keychain prompt:</b> after installing or updating an unsigned app, macOS asks about the “MacAIterm Safe Storage” Keychain item.<br>Type your password yourself and choose “Always Allow”.<br>If you do not save API keys you can deny it; the app still works.</li>
-          <li><b>Coming from “AI Terminal”:</b> the app used to have that name.<br>On first launch your settings, tabs, history and saved SSH sessions are <b>copied</b> to the new data folder; the old one is left untouched.<br>API keys saved in Settings must be entered again.</li>
+          <li><b>Keychain prompt:</b> after installing or updating an unsigned app, macOS asks about the “MacAIterm Safe Storage”&nbsp;Keychain&nbsp;item.<br>Type your password yourself and choose&nbsp;“Always&nbsp;Allow”.<br>If you do not save API keys you can deny it; the app&nbsp;still&nbsp;works.</li>
+          <li><b>Coming from “AI Terminal”:</b> the app used to have&nbsp;that&nbsp;name.<br>On first launch your settings, tabs, history and saved SSH sessions are <b>copied</b> to the new data folder; the old one is&nbsp;left&nbsp;untouched.<br>API keys saved in Settings must be&nbsp;entered&nbsp;again.</li>
         </ul>
       </div>
     </div>
@@ -112,17 +112,17 @@
           <tbody>
             <tr><td>macOS</td><td>13 Ventura or later</td></tr>
             <tr><td>Processor</td><td>Apple silicon (M1 or later), arm64</td></tr>
-            <tr><td>Memory</td><td>16&nbsp;GB recommended for a local 8B model (about 6&nbsp;GB in use).<br>An 8&nbsp;GB Mac should use a 4B model, or a hosted one.</td></tr>
-            <tr><td>Disk</td><td>About 300&nbsp;MB for the app, plus the model (about 5&nbsp;GB for an 8B one).</td></tr>
-            <tr><td>Also</td><td><a href="https://ollama.com">Ollama</a> for local models.<br>SSH: key login, or a session opened from the app; X11 forwarding needs <a href="https://www.xquartz.org">XQuartz</a>.</td></tr>
+            <tr><td>Memory</td><td>16&nbsp;GB recommended for a local 8B model (about 6&nbsp;GB in use).<br>An 8&nbsp;GB Mac should use a 4B model, or a&nbsp;hosted&nbsp;one.</td></tr>
+            <tr><td>Disk</td><td>About 300&nbsp;MB for the app, plus the model (about 5&nbsp;GB for an&nbsp;8B&nbsp;one).</td></tr>
+            <tr><td>Also</td><td><a href="https://ollama.com">Ollama</a> for&nbsp;local&nbsp;models.<br>SSH: key login, or a session opened from the app; X11 forwarding needs <a href="https://www.xquartz.org">XQuartz</a>.</td></tr>
           </tbody>
         </table>
       </div>
       <div>
         <h2>FAQ</h2>
-        <details><summary>Where does my data go?</summary><p>There is no account, telemetry or analytics.<br>With a local model, conversations and command output stay on your Mac.<br>Settings and history live in <code>~/Library/Application Support/MacAIterm</code>.<br>If you choose OpenAI or Codex, the conversation is sent to that provider.</p></details>
-        <details><summary>Does it store my SSH password?</summary><p>No.<br>You type passwords and key passphrases in the terminal.<br>A saved session holds the host, user and the path of a key file, nothing that authenticates.</p></details>
-        <details><summary>How do I uninstall it?</summary><p>Move MacAIterm from Applications to the Trash.<br>To remove its data too, delete <code>~/Library/Application Support/MacAIterm</code>.</p></details>
+        <details><summary>Where does my&nbsp;data&nbsp;go?</summary><p>There is no account, telemetry&nbsp;or&nbsp;analytics.<br>With a local model, conversations and command output stay on&nbsp;your&nbsp;Mac.<br>Settings and history live in <code>~/Library/Application Support/MacAIterm</code>.<br>If you choose OpenAI or Codex, the conversation is sent to&nbsp;that&nbsp;provider.</p></details>
+        <details><summary>Does it store my&nbsp;SSH&nbsp;password?</summary><p>No.<br>You type passwords and key passphrases in&nbsp;the&nbsp;terminal.<br>A saved session holds the host, user and the path of a key file, nothing&nbsp;that&nbsp;authenticates.</p></details>
+        <details><summary>How do I&nbsp;uninstall&nbsp;it?</summary><p>Move MacAIterm from Applications to&nbsp;the&nbsp;Trash.<br>To remove its data too, delete <code>~/Library/Application Support/MacAIterm</code>.</p></details>
         
       </div>
     </div>
@@ -135,25 +135,25 @@
         <h3>Version <span data-rel="version">0.1.0</span></h3>
         <span class="date" data-rel="date">2026-10-05</span>
         <ul class="list">
-          <li><b>New name:</b> MacAIterm (formerly AI Terminal).<br>The first launch copies the old data folder.</li>
-          <li><b>SSH:</b> the agent can work on a server (approvals name the server); a server CPU / memory / GPU / disk strip and a status panel; a session manager with <code>~/.ssh/config</code> import, jump hosts, X11 and port forwards; server and Mac file trees with drag-and-drop copy, verified with SHA-256.</li>
-          <li>Your Mac's CPU load in the top bar, a larger default window, and a top bar that scales down instead of being cut off.</li>
-          <li>Tabs, split panes, session history, command blocks, process panel, terminal search, clickable links.</li>
-          <li>Plan mode, streaming answers, per-project allow rules, permission modes, audit-log export.</li>
-          <li>OpenAI-compatible servers and Codex CLI, API token usage, KV-cache savings for local models.</li>
-          <li>vim integration (<code>:AitAI</code>, LSP diagnostics), bash and fish integration, Korean and English interface, accessibility work.</li>
+          <li><b>New name:</b> MacAIterm (formerly&nbsp;AI&nbsp;Terminal).<br>The first launch copies the old&nbsp;data&nbsp;folder.</li>
+          <li><b>SSH:</b> the agent can work on a server (approvals name the server); a server CPU / memory / GPU / disk strip and a status panel; a session manager with <code>~/.ssh/config</code> import, jump hosts, X11 and port forwards; server and Mac file trees with drag-and-drop copy, verified&nbsp;with&nbsp;SHA-256.</li>
+          <li>Your Mac's CPU load in the top bar, a larger default window, and a top bar that scales down instead of being&nbsp;cut&nbsp;off.</li>
+          <li>Tabs, split panes, session history, command blocks, process panel, terminal search,&nbsp;clickable&nbsp;links.</li>
+          <li>Plan mode, streaming answers, per-project allow rules, permission modes,&nbsp;audit-log&nbsp;export.</li>
+          <li>OpenAI-compatible servers and Codex CLI, API token usage, KV-cache savings for&nbsp;local&nbsp;models.</li>
+          <li>vim integration (<code>:AitAI</code>, LSP diagnostics), bash and fish integration, Korean and English interface, accessibility&nbsp;work.</li>
         </ul>
-        <p style="color:var(--faint);font-size:14.5px">Known limits: not signed or notarized; no Intel build is available; SSH was exercised against a local test server, an Ubuntu VM and one NVIDIA DGX Spark (login and monitor); password-only servers were not tested.<br>The full list is in the <a href="https://github.com/NeuronLinkX/macAIterm/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
+        <p style="color:var(--faint);font-size:14.5px">Known limits: not signed or notarized; no Intel build is available; SSH was exercised against a local test server, an Ubuntu VM and one NVIDIA DGX Spark (login and monitor); password-only servers were&nbsp;not&nbsp;tested.<br>The full list is in the <a href="https://github.com/NeuronLinkX/macAIterm/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
       </div>
     </div>
   </section>
 </main>
 
 <footer><div class="wrap"><div class="cols">
-<div><a class="brand" href="index.html"><img src="assets/img/icon.png" alt="" width="44" height="44">MacAIterm</a><p>A macOS terminal with a built-in agent<br>and server tools.</p></div>
+<div><a class="brand" href="index.html"><img src="assets/img/icon.png" alt="" width="44" height="44">MacAIterm</a><p>A macOS terminal with a built-in agent<br>and&nbsp;server&nbsp;tools.</p></div>
 <div><h4>Product</h4><ul><li><a href="index.html">Overview</a></li><li><a href="download.html">Download</a></li><li><a href="https://github.com/NeuronLinkX/macAIterm/blob/main/CHANGELOG.md">Changelog</a></li></ul></div>
 <div><h4>Support</h4><ul><li><a href="help.html">Help / FAQ</a></li><li><a href="https://github.com/NeuronLinkX/macAIterm/issues">GitHub issues</a></li></ul></div>
 <div><h4>Project</h4><ul><li><a href="https://github.com/NeuronLinkX/macAIterm">GitHub</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="license.html">License</a></li></ul></div>
-</div><div>© MacAIterm · MIT license · This site uses no cookies or third-party scripts.<br>MacAIterm was formerly named AI Terminal.<br>Contact: <a href="mailto:jiwoo93@kookmin.ac.kr">jiwoo93@kookmin.ac.kr</a></div></div></footer>
+</div><div>© MacAIterm · MIT license · This site uses no cookies or&nbsp;third-party&nbsp;scripts.<br>MacAIterm was formerly named&nbsp;AI&nbsp;Terminal.<br>Contact: <a href="mailto:jiwoo93@kookmin.ac.kr">jiwoo93@kookmin.ac.kr</a></div></div></footer>
 </body>
 </html>

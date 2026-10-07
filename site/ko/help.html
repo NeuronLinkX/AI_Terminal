@@ -40,6 +40,7 @@
 <details><summary>모델이 응답하지 않아요.<br>무엇을 확인하나요?</summary><p>모델 칩에서 선택한 제공자를 확인하세요.<br>Ollama는 실행 중인지, 모델이 설치되어 있는지 봅니다.<br>호환 서버는 엔드포인트, 모델 이름, 인증 정보를 확인하세요.<br>Codex CLI는 설치와 로그인 상태를 확인하세요.</p></details>
 <details><summary>터미널 출력이 Mac 밖으로 나가나요?</summary><p>로컬 Ollama를 쓰면 모델 요청은 Mac 안에 머뭅니다.<br>원격 제공자를 쓰면 대화 컨텍스트와 명령 출력이 그 제공자에게 전달되며, SSH 서버의 출력도 포함됩니다.<br><a href="privacy.html">개인정보 안내</a>를 읽어 보세요.</p></details>
 <details><summary>SSH 모니터나 파일 트리가 비어 있는 이유는?</summary><p>이 도구들은 키 로그인이나 사이드바에서 연 세션의 공유 연결을 쓰는 별도의 비대화형 SSH 연결이 필요합니다.<br>비밀번호로만 접속한 일반 터미널 연결에서는 이 접근이 안 될 수 있습니다.<br><a href="https://github.com/NeuronLinkX/macAIterm/blob/main/docs/SSH.md">SSH 가이드</a>를 보세요.</p></details>
+<details><summary>원격 화면에서 AI 채팅은 어떻게 동작하나요?</summary><p>AI 채팅은 원격 화면을 보거나 조작하지 못합니다.<br>요청은 SSH 셸의 명령으로 실행되고 결과가 채팅에 나옵니다.<br>그래서 “terminal 창을 열어줘”라고 해도 클릭하는 대신 명령을 실행합니다.<br>서버에서 작업하게 하려면 채팅 아래의 원격 스위치를 켜세요.<br>키보드 입력은 포커스가 있는 곳으로 갑니다.<br>화면을 누르면 서버 바탕화면에, 아래 입력창을 누르면 AI에 입력됩니다.</p></details>
 <details><summary>설정과 기록은 어디에 저장되나요?</summary><p><code>~/Library/Application Support/MacAIterm/</code>에 저장됩니다.<br>세션 기록은 설정에서 끄고 세션별로 삭제할 수 있습니다.<br>로컬 저장 내용은 <a href="privacy.html">개인정보 페이지</a>에 정리했습니다.</p></details>
 <details><summary>MacAIterm을 삭제하려면?</summary><p>앱을 종료하고 응용 프로그램에서 휴지통으로 옮기세요.<br>설정과 기록까지 지우려면 <code>~/Library/Application Support/MacAIterm/</code>도 삭제하세요.<br>이 폴더를 지우면 로컬 데이터가 영구히 사라집니다.</p></details>
 <details><summary>MacAIterm은 무료인가요?</summary><p>MacAIterm은 <a href="license.html">MIT 라이선스</a>로 공개되어 있습니다.<br>고른 모델 제공자는 자체 서비스에 대해 별도로 요금을 받을 수 있습니다.</p></details>

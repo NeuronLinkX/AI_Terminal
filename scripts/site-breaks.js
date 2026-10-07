@@ -3,6 +3,8 @@
 // Puts a line break after every sentence in the text of the site pages (English: site/*.html, Korean: site/ko/*.html), so a
 // paragraph never starts its next sentence in the middle of a line. Safe to run again: sentences that already end in <br> are left alone.
 //   node scripts/site-breaks.js            (rewrites the pages)    node scripts/site-breaks.js --check   (only reports; exit 1 when something would change)
+// English pages also get the last words of every sentence tied together with no-break spaces, so a sentence that wraps never leaves one or two
+// stranded words on its last line (Korean pages keep whole words with CSS instead). Tails of up to 28 characters are tied (3 words, else 2).
 // Not touched: tags and attributes, <code>/<pre>/<script>/<style>/<title>, code boxes, the license text, "run-in" labels such as <b>Notice.</b>
 const fs = require('fs');
 const path = require('path');
@@ -18,7 +20,19 @@ const END = /([.!?][”"’)\]]?)([ \t\r\n]+)(?=[“"‘(\[]?[A-Z가-힣])/g;
 const TRAIL = /([.!?][”"’)\]]?)[ \t\r\n]+$/;
 const INLINE_OPEN = /^<(?:a|b|strong|em|code|span|i)\b/i;
 
-function breaks(html) {
+// plain-text words only: a tail that contains a tag, an entity or a no-break space is left alone
+const TAIL = /(?<=^|[\s>])([^\s<>&;]+) ([^\s<>&;]+) ([^\s<>&;]*[A-Za-z0-9)”’"][.!?][”’")]*)(?=<br>|<\/(?:p|li|figcaption|summary|dd|td)>)/g;
+function glueTails(s) {
+  let n = 0;
+  const out = s.replace(TAIL, (m, a, b, c) => {
+    if (a.length + b.length + c.length + 2 <= 28) { n++; return `${a}&nbsp;${b}&nbsp;${c}`; }
+    if (b.length + c.length + 1 <= 28) { n++; return `${a} ${b}&nbsp;${c}`; }
+    return m;
+  });
+  return { s: out, n };
+}
+
+function breaks(html, glue) {
   const keep = [];
   // blocks that must stay exactly as they are
   let s = html.replace(/<(script|style|code|pre|title|textarea)\b[\s\S]*?<\/\1>|<div class="(?:code|license-text)"[\s\S]*?<\/div>|<!--[\s\S]*?-->/g, (m) => { keep.push(m); return `\u0000${keep.length - 1}\u0000`; });
@@ -38,14 +52,15 @@ function breaks(html) {
     parts[i] = t;
   }
   s = head + parts.join('');
+  if (glue) { const g = glueTails(s); s = g.s; n += g.n; }
   return { html: s.replace(/\u0000(\d+)\u0000/g, (m, i) => keep[Number(i)]), n };
 }
 
 let total = 0;
 for (const f of pages) {
   const src = fs.readFileSync(f, 'utf8');
-  const { html, n } = breaks(src);
+  const { html, n } = breaks(src, !path.relative(site, f).startsWith('ko' + path.sep));
   if (n) { total += n; console.log(`${path.relative(site, f).padEnd(18)} +${n}`); if (!check) fs.writeFileSync(f, html); }
 }
-console.log(total ? (check ? `${total} sentence break(s) missing` : `${total} sentence break(s) added`) : 'all sentences already end a line');
+console.log(total ? (check ? `${total} sentence break(s) / tail tie(s) missing` : `${total} sentence break(s) / tail tie(s) added`) : 'all sentences end a line and, in English, end in tied words');
 process.exit(check && total ? 1 : 0);
