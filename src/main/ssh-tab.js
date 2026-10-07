@@ -6,6 +6,7 @@
 //   ssh:metrics  { id, metrics } | { id, unavailable }          CPU / memory / GPU / disk of the server (see remotemon.js)
 //   ssh:problem  { id, kind, level, hint, detail, fingerprint } host key changed, refused, dropped …
 //   ssh:offer    { id, target, reason? }                        "work on this server with the AI?" (setting sshAutoRemote = ask)
+// and, while a remote screen is open (see vnc.js):  vnc:data { id, vid, data }   vnc:end { id, vid, code }
 const { SshWatcher, validTarget } = require('./ssh');
 const { RemoteMonitor } = require('./remotemon');
 const { SshLink } = require('./sshlink');
@@ -40,6 +41,7 @@ class SshTab {
     this.monitor = null;
     this.link = null; // one non-interactive route to the server, shared by the monitor and the file panel
     this._browser = null;
+    this._vnc = null;
     this.target = null;
     this.since = 0;
     this.auto = null;
@@ -62,6 +64,7 @@ class SshTab {
     this.auto = null;
     if (this.watcher) this.watcher.stop();
     this._closeBrowser();
+    this._closeVnc();
     if (this.monitor) this.monitor.stop();
     if (this.link) this.link.close();
     this.watcher = null;
@@ -72,6 +75,20 @@ class SshTab {
 
   _closeBrowser() {
     if (this._browser) { this._browser.close(); this._browser = null; }
+  }
+
+  /** The remote screen of this tab (created on first use; only while an ssh session is active). */
+  vnc() {
+    if (!this.target || !this.link) return null;
+    if (!this._vnc) {
+      const { VncBridge } = require('./vnc'); // loaded when a screen is first opened
+      this._vnc = new VncBridge({ link: () => (this.target ? this.link : null), send: (ch, p) => this.send(ch, { id: this.id, ...p }) });
+    }
+    return this._vnc;
+  }
+
+  _closeVnc(code = 'closed') {
+    if (this._vnc) { this._vnc.closeAll(code); this._vnc = null; }
   }
 
   /** The server's file engine for this tab (created on first use; only while an ssh session is active). */
@@ -110,6 +127,7 @@ class SshTab {
     clearTimeout(this.auto);
     this.target = null;
     this._closeBrowser();
+    this._closeVnc('dropped');
     this.monitor.stop();
     if (this.link) { this.link.close(); this.link = null; }
     this.send('ssh:state', { id: this.id, active: false });

@@ -6,6 +6,7 @@ MacAIterm is built on the open-source components below. The list is generated fr
 
 | Component | Version | License | Source |
 |---|---|---|---|
+| @novnc/novnc | 1.7.0 | MPL-2.0 | https://github.com/novnc/noVNC |
 | @xterm/addon-fit | 0.11.0 | MIT | https://github.com/xtermjs/xterm.js/tree/master/addons/addon-fit |
 | @xterm/addon-search | 0.16.0 | MIT | https://github.com/xtermjs/xterm.js/tree/master/addons/addon-search |
 | @xterm/addon-web-links | 0.12.0 | MIT | https://github.com/xtermjs/xterm.js/tree/master/addons/addon-web-links |

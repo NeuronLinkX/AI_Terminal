@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- **Remote screen (VNC)** inside the window: an SSH tab can show the server's VNC desktop (noVNC). The picture travels only inside the tab's SSH connection (`ssh -W`, no local port, no extra login); the VNC password is asked for once and never stored; the screen is never sent to the AI. A per-server "Open on connect" option shows the screen as soon as the SSH login works and waits for a VNC server that is still starting.
 - **Tabs, split panes, session history** (search / export / delete), command blocks, process panel, terminal search (⌘F), clickable URLs and file paths.
 - **Plan mode**, project search tool, test-command detection, project guidance files (`AGENTS.md`), per-project saved "always allow" rules (stored outside the repository).
 - **Streaming answers** and approval choices (once / this session / this project / deny with feedback); permission modes (read-only, default, ask-all, trust).

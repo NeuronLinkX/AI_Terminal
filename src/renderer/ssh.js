@@ -225,6 +225,7 @@
       rows.forEach(([k, v]) => { const r = el('div', 'pop-r'); r.append(el('span', 'k', k), el('span', 'v', v)); pop.append(r); });
       const act = (ic, label, fn) => { const b = withIcon('button', ic, ' ' + label, 'btn pop-b'); b.onclick = () => { pop.hidden = true; fn(); }; pop.append(b); };
       act(tab.remote ? 'reset' : 'sparkle', tab.remote ? t('ssh.pop.local') : t('ssh.pop.ai'), () => C.setRemote(!tab.remote));
+      act('monitor', t('vnc.pop.open'), () => window.AITVnc && window.AITVnc.open({ auto: true }));
       act('folder', t('ssh.pop.files'), () => openPanel('files'));
       act('activity', t('ssh.pop.status'), () => openPanel('status'));
       act('copy', t('ssh.pop.copy'), () => ait.copy(tg.label));
@@ -406,9 +407,13 @@
         })), `f:${f}`);
       });
       const recent = data.recent.filter((r) => match(r.target));
+      const saveRecent = (r) => { const m = r.target.match(/^(?:([^@]+)@)?([^:]+)(?::(\d+))?$/); sessionEditor({ name: r.target, host: m ? m[2] : r.target, user: m && m[1] || '', port: m && m[3] ? Number(m[3]) : 22, keepAlive: true, share: true, x11: 'off', forwards: [] }, true); };
+      const forgetRecent = async (r) => { await ait.sessRecentForget(r.target); renderSessions(); };
+      const clearRecent = async () => { if (confirm(t('ssh.recent.clearConfirm'))) { await ait.sessRecentClear(); renderSessions(); } };
       section(t('ssh.sess.recent'), recent.map((r) => row({
         name: r.target, sub: ago(r.at), icon: 'clock', open: () => connect({ target: r.target }),
-        actions: [['play', t('ssh.sess.connect'), () => connect({ target: r.target })], ['plus', t('ssh.sess.save'), () => { const m = r.target.match(/^(?:([^@]+)@)?([^:]+)(?::(\d+))?$/); sessionEditor({ name: r.target, host: m ? m[2] : r.target, user: m && m[1] || '', port: m && m[3] ? Number(m[3]) : 22, keepAlive: true, share: true, x11: 'off', forwards: [] }, true); }]],
+        actions: [['play', t('ssh.sess.connect'), () => connect({ target: r.target })], ['plus', t('ssh.sess.save'), () => saveRecent(r)], ['trash', t('ssh.recent.forget'), () => forgetRecent(r)]],
+        menu: [{ label: t('ssh.sess.connect'), icon: 'play', onClick: () => connect({ target: r.target }) }, { label: t('ssh.sess.connectHere'), icon: 'terminal', onClick: () => connect({ target: r.target }, true) }, { label: t('ssh.sess.save'), icon: 'plus', onClick: () => saveRecent(r) }, 'sep', { label: t('ssh.recent.forget'), icon: 'trash', danger: true, onClick: () => forgetRecent(r) }, { label: t('ssh.recent.clear'), icon: 'trash', danger: true, onClick: clearRecent }],
       })), 'recent');
       const cfg = data.configured.filter((h) => match(h.alias, h.hostName, h.user));
       section(t('ssh.sess.config'), cfg.map((h) => row({

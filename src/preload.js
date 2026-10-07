@@ -42,6 +42,8 @@ contextBridge.exposeInMainWorld('ait', {
   sessDelete: (id) => call('sess:delete', id),
   sessDuplicate: (id) => call('sess:duplicate', id),
   sessFromConfig: (alias) => call('sess:from-config', alias),
+  sessRecentForget: (target) => call('sess:recent-forget', target),
+  sessRecentClear: () => call('sess:recent-clear'),
   sessCommand: (arg) => call('sess:command', arg),
   // file panel (server over ssh, and this Mac)
   sftpHome: (id) => call('sftp:home', id),
@@ -65,6 +67,13 @@ contextBridge.exposeInMainWorld('ait', {
   localTrash: (p) => call('local:trash', p),
   localReveal: (p) => ipcRenderer.send('local:reveal', p),
   pathForFile: (f) => { try { return webUtils.getPathForFile(f); } catch { return ''; } }, // a file dropped from Finder
+  // remote screen (VNC through the tab's ssh connection; bytes only, noVNC draws in the window)
+  vncOpen: (id, port, host) => call('vnc:open', { id, port, host }),
+  vncWrite: (id, vid, data) => ipcRenderer.send('vnc:write', { id, vid, data }),
+  vncAck: (id, vid, bytes) => ipcRenderer.send('vnc:ack', { id, vid, bytes }),
+  vncClose: (id, vid) => ipcRenderer.send('vnc:close', { id, vid }),
+  onVncData: (cb) => on('vnc:data', cb),
+  onVncEnd: (cb) => on('vnc:end', cb),
   onSshState: (cb) => on('ssh:state', cb),
   onSshMetrics: (cb) => on('ssh:metrics', cb),
   onSshProblem: (cb) => on('ssh:problem', cb),
@@ -118,4 +127,5 @@ contextBridge.exposeInMainWorld('ait', {
   onSysStats: (cb) => on('sys:stats', cb),
   setTheme: (t) => ipcRenderer.send('theme:set', t),
   copy: (t) => ipcRenderer.send('clipboard:write', t),
+  clipboardRead: () => call('clipboard:read'),
 });

@@ -623,3 +623,27 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .msub { color: var(--faint); font-size: 10.5px; margin-top: 3px; line-height: 1.4; word-break: break-word; }
 .spark { display: block; width: 100%; height: 34px; margin-top: 4px; } .spark .line { fill: none; stroke: var(--info); stroke-width: 1.4; } .spark .area { fill: rgba(90,169,255,.14); stroke: none; }
 .keyrow .kin { cursor: pointer; font-family: var(--sans); letter-spacing: .04em; } .keyrow .kin.rec { border-color: var(--accent); color: var(--accent); }
+
+/* remote screen (VNC) */
+.vnc-wrap { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; background: var(--term-bg); }
+.vnc-wrap[hidden] { display: none; }
+.vnc-bar { flex: none; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px 10px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.vnc-bar .grow { flex: 1 1 auto; }
+.vnc-status { display: inline-flex; align-items: center; gap: 7px; min-width: 0; font-size: 12px; color: var(--dim); }
+.vnc-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+.vnc-wrap[data-state="connected"] .vnc-status .dot { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+.vnc-wrap[data-state="connecting"] .vnc-status .dot { background: var(--warn); }
+.vnc-wrap[data-state="ended"] .vnc-status .dot { background: var(--err); }
+.vnc-port { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dim); }
+.vnc-port input { width: 78px; }
+.vnc-sel { height: 26px; width: auto; max-width: 130px; padding: 0 6px; }
+.vnc-vo { font-size: 12px; color: var(--dim); }
+.vnc-bar .btn:disabled { opacity: .45; cursor: default; }
+.vnc-screen { position: relative; flex: 1; min-height: 0; background: #0b0d11; overflow: hidden; }
+.vnc-msg { position: absolute; inset: 0; top: 38px; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; pointer-events: none; }
+.vnc-msg[hidden] { display: none; }
+.vnc-msg-text { max-width: 460px; white-space: pre-line; font-size: 13px; line-height: 1.7; color: #8b93a3; }
+.vnc-msg-text.vnc-err { color: var(--err); }
+#btn-screen[hidden] { display: none; }
+#btn-screen[data-live="1"] { position: relative; }
+#btn-screen[data-live="1"]::after { content: ""; position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }

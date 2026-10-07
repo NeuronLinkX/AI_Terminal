@@ -10,7 +10,7 @@ vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer',
 const I18N = ctx.window.AIT_I18N;
 
 const dir = path.join(__dirname, '..', 'src', 'renderer');
-const src = ['ssh.js', 'files.js', 'core.js', 'panels.js'].map((f) => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
+const src = ['ssh.js', 'files.js', 'vnc.js', 'core.js', 'panels.js'].map((f) => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
 const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
 
 test('keys used by the SSH UI exist in Korean and English', () => {

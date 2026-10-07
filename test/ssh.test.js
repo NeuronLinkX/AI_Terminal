@@ -170,6 +170,23 @@ test('connectCommand: only a plain destination reaches the terminal (no option i
   }
 });
 
+test('HostBook: removing one recent entry, or all of them, keeps the rest and the ~/.ssh/config hosts, and is remembered', () => {
+  const dir = tmp();
+  const sshDir = tmp();
+  fs.writeFileSync(path.join(sshDir, 'config'), 'Host vm\n  HostName 192.168.64.4\n  User ubuntu\n');
+  const b = new S.HostBook(dir, { sshDir });
+  b.remember('a@one'); b.remember('b@two'); b.remember('c@three');
+  b.forget('b@two');
+  b.forget('nobody@nowhere'); // an unknown entry is not an error
+  assert.deepEqual(b.recent.map((r) => r.target), ['c@three', 'a@one']);
+  assert.deepEqual(new S.HostBook(dir, { sshDir }).recent.map((r) => r.target), ['c@three', 'a@one'], 'removal survives a restart');
+  b.clear();
+  assert.deepEqual(b.list().recent, []);
+  assert.deepEqual(new S.HostBook(dir, { sshDir }).recent, [], 'clearing survives a restart');
+  assert.deepEqual(b.list().configured.map((h) => h.alias), ['vm'], 'the hosts of ~/.ssh/config are never touched');
+  assert.equal(b.remember('a@one'), true, 'a removed destination comes back when it is used again');
+});
+
 test('HostBook: remembers names only, dedupes, caps at 20, survives a restart, file is private, bad targets refused', () => {
   const dir = tmp();
   const sshDir = tmp();

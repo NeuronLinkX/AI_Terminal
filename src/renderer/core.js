@@ -101,6 +101,8 @@
     eyeoff: '<path d="M3 3l18 18"/><path d="M9.9 5.2A9.7 9.7 0 0 1 12 5c6 0 9.5 7 9.5 7a15 15 0 0 1-2.9 3.7M6.3 6.8A15 15 0 0 0 2.5 12S6 19 12 19c1.4 0 2.7-.3 3.8-.8"/>',
     key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',
     terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/>',
+    monitor: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+    expand: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
     symlink: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
     chevr: '<path d="M9 6l6 6-6 6"/>',
     link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
@@ -344,6 +346,7 @@
     for (const p of [tab.panes.main, tab.panes.second]) if (p) { paneIndex.delete(p.id); p.term.dispose(); }
     tab.termEl.remove();
     tab.tl.remove();
+    document.dispatchEvent(new CustomEvent('ait-tab-closed', { detail: { id } }));
     await ait.tabClose(id);
     if (!order.length) await newTab({ fromActive: false });
     else if (T === tab) activate(order[Math.min(idx, order.length - 1)]);

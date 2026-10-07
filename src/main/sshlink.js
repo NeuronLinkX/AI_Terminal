@@ -111,6 +111,19 @@ class SshLink extends EventEmitter {
     return c;
   }
 
+  /**
+   * Start `ssh -W host:port` (stdio is the connection to host:port, seen from the server) and hand back the child process.
+   * No local port is opened; the connection is the same one the other features use. host / port must be validated by the caller.
+   */
+  async forward(host, port) {
+    const mode = await this.ready();
+    const a = [...connOptions(this.target, { ctl: this.ctl, mode }), '-o', 'ExitOnForwardFailure=yes', '-W', `${host}:${port}`, '--', hostOf(this.target)];
+    const c = this._spawn(a);
+    this.children.add(c);
+    c.on('close', () => this.children.delete(c));
+    return c;
+  }
+
   retain() {
     this.users++;
   }

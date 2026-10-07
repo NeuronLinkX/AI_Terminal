@@ -88,6 +88,8 @@
 
 터미널 탭에서 `ssh` 로 서버에 들어가면 앱이 접속을 알아보고 **① 서버에서 일하는 AI**, **② 서버 CPU·메모리·GPU·디스크 모니터(이 Mac 의 사용량과 동시에 표시)**, **③ 왼쪽 사이드 바 — 세션 관리자와 서버 ⇄ 이 Mac 폴더 트리(드래그 복사)** 를 더해 줍니다. 자세한 사용법·안전장치·한계는 **[docs/SSH.md](docs/SSH.md)**.
 
+**원격 화면(VNC)**: SSH 탭의 터미널 제목줄 모니터 아이콘으로 서버의 VNC 바탕화면을 앱 안에서 봅니다. 화면은 이 탭의 SSH 연결(`ssh -W`) 안으로만 흐르고 이 Mac 에 포트를 열지 않으며, VNC 비밀번호는 저장하지 않고 AI 에는 전달하지 않습니다. 사용법과 한계는 [docs/SSH.md](docs/SSH.md), 코드 설계 기준은 [docs/VNC_CODE_GUIDE.md](docs/VNC_CODE_GUIDE.md).
+
 | | |
 | --- | --- |
 | ![세션 관리자](docs/screenshots/60-ssh-sessions.png)**세션 관리자** — 저장 세션·폴더·`~/.ssh/config`·최근 접속(비밀번호는 저장하지 않음) | ![서버·이 Mac 폴더 트리](docs/screenshots/61-ssh-files.png)**서버(위) / 이 Mac(아래) 폴더 트리** + 탭 아래 **서버 CPU·메모리·GPU·디스크** 띠 |
@@ -470,6 +472,7 @@ node scripts/e2e.js <시나리오...>          # shell tabs perm approve_yes unl
 node scripts/bench.js qwen3:8b qwen3:14b   # 모델 성능 측정
 node scripts/headless.js <dir> "<요청>"    # UI 없이 에이전트 흐름만
 npm run dist                               # DMG/ZIP 생성
+node scripts/e2e-vnc.js                    # 원격 화면(VNC) 종단 시험(임시 sshd + 가짜 VNC 서버, 소스 또는 AIT_APP_BIN 설치본)
 node scripts/e2e-features.js ssh           # SSH 화면 종단 시험(임시 sshd, 세션 관리자 → 접속 → 서버 모니터 → 폴더 트리·드래그 복사 → 서버에서 AI)
 node scripts/shots-ssh.js                  # SSH 문서용 스크린샷(설치된 앱: AIT_APP_BIN, AIT_DOC_PROMPT 참고)
 ```

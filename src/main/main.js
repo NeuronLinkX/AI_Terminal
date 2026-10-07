@@ -448,11 +448,21 @@ app.whenReady().then(async () => {
   ipcMain.handle('remote:set', (_e, { id, on }) => T(id).ssh.setRemote(!!on)); // { ok, remote, info?, reason? }
   ipcMain.handle('ssh:get', (_e, id) => (T(id) && T(id).ssh ? T(id).ssh.info() : { active: false }));
 
+  // ---- remote screen (VNC over the tab's ssh route; the window draws it, see vnc.js). Every argument is checked again here.
+  const vncOf = (id) => (typeof id === 'string' && T(id) && T(id).ssh ? T(id).ssh.vnc() : null);
+  const vint = (v) => (Number.isInteger(v) && v > 0 ? v : 0);
+  ipcMain.handle('vnc:open', (_e, a) => { const b = vncOf(a && a.id); return b ? b.open({ host: a.host, port: a.port }) : { ok: false, code: 'no-ssh' }; });
+  ipcMain.on('vnc:write', (_e, a) => { const b = vncOf(a && a.id); if (b && vint(a.vid)) b.write(a.vid, a.data); });
+  ipcMain.on('vnc:ack', (_e, a) => { const b = vncOf(a && a.id); if (b && vint(a.vid)) b.ack(a.vid, a.bytes); });
+  ipcMain.on('vnc:close', (_e, a) => { const b = vncOf(a && a.id); if (b && vint(a.vid)) b.close(a.vid); });
+
   // ---- session manager (side bar): saved sessions, ~/.ssh/config hosts, the command to type
   ipcMain.handle('sess:list', () => ({ sessions: sessionStore.list(), configured: hostBook.configured(), recent: hostBook.list().recent, x11: x11Available() }));
   ipcMain.handle('sess:save', (_e, s) => sessionStore.save(s));
   ipcMain.handle('sess:delete', (_e, id) => sessionStore.remove(String(id)));
   ipcMain.handle('sess:duplicate', (_e, id) => sessionStore.duplicate(String(id)));
+  ipcMain.handle('sess:recent-forget', (_e, target) => { if (typeof target === 'string') hostBook.forget(target); return hostBook.list().recent; });
+  ipcMain.handle('sess:recent-clear', () => { hostBook.clear(); return []; });
   ipcMain.handle('sess:from-config', (_e, alias) => { const h = hostBook.configured().find((x) => x.alias === String(alias)); return h ? sessionStore.fromConfig(h) : null; });
   /** { ok, command, title } — the only way a saved session becomes a command line; it is validated on the way */
   ipcMain.handle('sess:command', (_e, arg = {}) => {
@@ -666,6 +676,7 @@ app.whenReady().then(async () => {
     }
   });
   ipcMain.on('clipboard:write', (_e, text) => clipboard.writeText(String(text)));
+  ipcMain.handle('clipboard:read', () => clipboard.readText().slice(0, 100000)); // only when the user clicks "send clipboard" in the remote screen
   ipcMain.handle('external:take', () => pendingExternal.splice(0));
   if (externalSshTarget(process.argv)) handleExternal(process.argv); // first launch with --ssh
 

@@ -335,6 +335,10 @@ class HostBook {
     this.recent = this.recent.filter((r) => r.target !== target);
     this._save();
   }
+  clear() {
+    this.recent = [];
+    this._save();
+  }
   _save() {
     if (!this.file) return;
     try { fs.writeFileSync(this.file, JSON.stringify({ recent: this.recent }, null, 1), { mode: 0o600 }); } catch { /* read-only profile */ }
