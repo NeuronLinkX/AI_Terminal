@@ -46,6 +46,7 @@ const listeners = () => spawnSync('/usr/sbin/lsof', ['-nP', '-iTCP', '-sTCP:LIST
     await a.waitFor(`!!document.querySelector('.vnc-wrap') && !document.querySelector('.vnc-wrap').hidden`, 5000, 'screen view');
     const first = await a.ev(`(() => { const v = AITVnc.views.get(AITCore.getTab().id); return { state: v.state, port: v.port.value, term: !![...document.querySelectorAll('.term-wrap')].some((x) => x.classList.contains('active')) }; })()`);
     check('remote screen: opens as a view over the terminal, port 5901 suggested, not connected yet', first.state === 'idle' && first.port === '5901', JSON.stringify(first));
+    check('remote screen: the view says that the AI chat cannot see or control the screen', /AI chat cannot see or control this screen/.test(await a.ev(`document.querySelector('.vnc-note').innerText`)));
     const noClick = await a.ev(`document.querySelector('.vnc-msg-text').innerText`);
     check('remote screen: the first view explains what it needs', /VNC server must be running/.test(noClick), noClick.slice(0, 80));
 

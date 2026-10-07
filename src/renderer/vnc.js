@@ -203,12 +203,13 @@
       fs.setAttribute('aria-label', t('vnc.fullscreen'));
       fs.onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else v.root.requestFullscreen().catch(() => {}); };
       bar.append(back, st, el('span', 'grow'), pl, v.go, v.scale, v.preset, vo, au, v.cad, v.clipSend, v.clipGet, fs);
+      v.note = el('div', 'vnc-note', t('vnc.aiNote'));
       v.screen = el('div', 'vnc-screen');
       v.screen.addEventListener('mousedown', () => v.rfb && v.rfb.focus());
       v.msg = el('div', 'vnc-msg');
       v.msgText = el('div', 'vnc-msg-text');
       v.msg.append(v.msgText);
-      v.root.append(bar, v.screen, v.msg);
+      v.root.append(bar, v.note, v.screen, v.msg);
       $('terminal').append(v.root);
       views.set(tabId, v);
       setState(v, 'idle');

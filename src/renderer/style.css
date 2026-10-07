@@ -639,8 +639,9 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .vnc-sel { height: 26px; width: auto; max-width: 130px; padding: 0 6px; }
 .vnc-vo { font-size: 12px; color: var(--dim); }
 .vnc-bar .btn:disabled { opacity: .45; cursor: default; }
+.vnc-note { flex: none; padding: 5px 12px; font-size: 11.5px; line-height: 1.5; color: var(--dim); background: var(--panel-2); border-bottom: 1px solid var(--line); }
 .vnc-screen { position: relative; flex: 1; min-height: 0; background: #0b0d11; overflow: hidden; }
-.vnc-msg { position: absolute; inset: 0; top: 38px; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; pointer-events: none; }
+.vnc-msg { position: absolute; inset: 0; top: 62px; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; pointer-events: none; }
 .vnc-msg[hidden] { display: none; }
 .vnc-msg-text { max-width: 460px; white-space: pre-line; font-size: 13px; line-height: 1.7; color: #8b93a3; }
 .vnc-msg-text.vnc-err { color: var(--err); }
