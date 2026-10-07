@@ -84,7 +84,10 @@ const listeners = () => spawnSync('/usr/sbin/lsof', ['-nP', '-iTCP', '-sTCP:LIST
     check('remote screen: a key press reaches the server (keysym a)', fake.events.some((e) => e.type === 'key' && e.down && e.key === 0x61), JSON.stringify(fake.events.filter((e) => e.type === 'key')));
     let mk = [];
     for (let i = 0; i < 50; i++) { mk = await px(Math.min(fake.width - 1, wantX + 3), Math.min(fake.height - 1, wantY + 3)); if (JSON.stringify(mk) === JSON.stringify(fake.colors.marker)) break; await sleep(100); } // the answer travels the whole way back: allow a slow machine a few seconds
-    check('remote screen: the server\'s answer to the click (a white marker) is drawn', JSON.stringify(mk) === JSON.stringify(fake.colors.marker), JSON.stringify(mk));
+    const okMark = JSON.stringify(mk) === JSON.stringify(fake.colors.marker);
+    let why = JSON.stringify(mk);
+    if (!okMark) why += ' | ' + JSON.stringify(await a.ev(`({ visible: document.visibilityState, focus: document.hasFocus(), state: AITVnc.views.get(AITCore.getTab().id).state })`)) + ' server events: ' + fake.events.filter((e) => e.type === 'pointer').length;
+    check('remote screen: the server\'s answer to the click (a white marker) is drawn', okMark, why);
     await a.shot('vnc-2-marker');
 
     // ---- view only, clipboard from the server, quality / scale options
