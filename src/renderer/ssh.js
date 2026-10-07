@@ -97,6 +97,7 @@
     function ctxMenu(ev, items) {
       ev.preventDefault();
       document.querySelectorAll('.ctx').forEach((n) => n.remove());
+      if (!items || !items.length) return; // an empty menu would show as an empty box
       const m = el('div', 'ctx');
       m.setAttribute('role', 'menu');
       items.forEach((it) => {
@@ -352,7 +353,9 @@
     const ago = (ts) => { if (!ts) return ''; const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? t('ssh.ago.now') : m < 60 ? t('ssh.ago.m', { n: m }) : m < 1440 ? t('ssh.ago.h', { n: Math.round(m / 60) }) : t('ssh.ago.d', { n: Math.round(m / 1440) }); };
     async function renderSessions() {
       const box = $('sp-sessions');
+      const seq = (S.renderSeq = (S.renderSeq || 0) + 1);
       const data = await ait.sessList();
+      if (seq !== S.renderSeq) return; // a newer call is already drawing: an old answer must not overwrite it
       S.sess = data;
       if (S.panel !== 'sessions') return;
       const q = (S.sessQuery || '').toLowerCase();
@@ -361,7 +364,13 @@
       head.append(el('span', 'sp-title', t('ssh.sess.title')));
       const add = withIcon('button', 'plus', ' ' + t('ssh.sess.new'), 'btn mini primary');
       add.onclick = () => sessionEditor(null);
-      head.append(add);
+      const cfgBtn = el('button', 'btn mini icon');
+      cfgBtn.type = 'button';
+      cfgBtn.append(icon('key'));
+      cfgBtn.title = t('ssh.cfg.edit');
+      cfgBtn.setAttribute('aria-label', t('ssh.cfg.edit'));
+      cfgBtn.onclick = () => configEditor();
+      head.append(cfgBtn, add);
       const search = el('input', 'sm-input sp-search');
       search.type = 'search';
       search.placeholder = t('ssh.sess.search');
@@ -418,7 +427,8 @@
       const cfg = data.configured.filter((h) => match(h.alias, h.hostName, h.user));
       section(t('ssh.sess.config'), cfg.map((h) => row({
         name: h.alias, sub: `${h.user ? h.user + '@' : ''}${h.hostName || h.alias}${h.port ? ':' + h.port : ''}`, icon: 'key', open: () => connect({ alias: h.alias }),
-        actions: [['play', t('ssh.sess.connect'), () => connect({ alias: h.alias })], ['plus', t('ssh.sess.import'), async () => { const p = await ait.sessFromConfig(h.alias); if (p) sessionEditor(p, true); }]],
+        actions: [['play', t('ssh.sess.connect'), () => connect({ alias: h.alias })], ['plus', t('ssh.sess.import'), async () => { const p = await ait.sessFromConfig(h.alias); if (p) sessionEditor(p, true); }], ['pencil', t('ssh.cfg.edit'), () => configEditor(h.alias)]],
+        menu: [{ label: t('ssh.sess.connect'), icon: 'play', onClick: () => connect({ alias: h.alias }) }, { label: t('ssh.sess.connectHere'), icon: 'terminal', onClick: () => connect({ alias: h.alias }, true) }, { label: t('ssh.sess.import'), icon: 'plus', onClick: async () => { const p = await ait.sessFromConfig(h.alias); if (p) sessionEditor(p, true); } }, 'sep', { label: t('ssh.cfg.edit'), icon: 'pencil', onClick: () => configEditor(h.alias) }],
       })), 'config');
       if (!saved.length && !recent.length && !cfg.length) {
         const e = el('div', 'dr-empty', q ? t('ssh.sess.nomatch') : t('ssh.sess.empty'));
@@ -427,6 +437,54 @@
       }
       body.append(el('div', 'sp-foot', t('ssh.sess.pwnote')));
       box.append(body);
+    }
+
+    // ~/.ssh/config editor: the file as text, a syntax check with the real ssh, saved with a backup of the previous content
+    async function configEditor(alias) {
+      const file = await ait.sshCfgRead();
+      if (file.error) { toast(t(`ssh.cfg.err.${file.error}`) === `ssh.cfg.err.${file.error}` ? t('ssh.cfg.err.read') : t(`ssh.cfg.err.${file.error}`), 'err'); return; }
+      let hash = file.hash;
+      let saved = file.text;
+      const m = modal(t('ssh.cfg.title') + ' · ' + file.path, { wide: true });
+      m.dlg.classList.add('cfg-editor');
+      const ta = el('textarea', 'sm-input cfg-text');
+      ta.value = file.text;
+      ta.spellcheck = false;
+      ta.setAttribute('wrap', 'off');
+      ta.setAttribute('aria-label', file.path);
+      const status = el('div', 'cfg-status');
+      const warn = el('div', 'sd cfg-warn', t('ssh.cfg.warn'));
+      m.body.append(el('div', 'sd', file.exists ? t('ssh.cfg.hint') : `${t('ssh.cfg.new')} ${t('ssh.cfg.hint')}`), ta, status, warn);
+      const risky = () => /^[ \t]*(ProxyCommand|LocalCommand|PermitLocalCommand)\b|^[ \t]*Match\b[^\n]*\bexec\b/im.test(ta.value);
+      const showWarn = () => { warn.hidden = !risky(); };
+      showWarn();
+      const say = (text, kind) => { status.textContent = text; status.className = `cfg-status ${kind || ''}`; };
+      const problem = (r) => { if (r.code === 'syntax' || r.message) { const msg = r.line ? t('ssh.cfg.line', { n: r.line, msg: r.message }) : r.message; say(msg, 'err'); if (r.line) jump(r.line); } else say(t(`ssh.cfg.err.${r.code}`) === `ssh.cfg.err.${r.code}` ? t('ssh.cfg.err.write') : t(`ssh.cfg.err.${r.code}`), 'err'); };
+      const jump = (line) => { const lines = ta.value.split('\n'); let pos = 0; for (let i = 0; i < Math.min(line - 1, lines.length); i++) pos += lines[i].length + 1; ta.focus(); ta.setSelectionRange(pos, pos + (lines[line - 1] || '').length); ta.scrollTop = Math.max(0, (line - 4) * 19); };
+      ta.addEventListener('input', () => { say(''); showWarn(); });
+      const checkB = el('button', 'btn', t('ssh.cfg.check'));
+      const saveB = withIcon('button', 'check', ' ' + t('ssh.cfg.save'), 'btn primary');
+      const cancel = el('button', 'btn', t('common.cancel'));
+      m.foot.append(cancel, checkB, saveB);
+      const close = () => { if (ta.value !== saved && !confirm(t('ssh.cfg.dirty'))) return; m.close(); };
+      cancel.onclick = close;
+      checkB.onclick = async () => { const r = await ait.sshCfgCheck(ta.value); if (r.ok) say(t('ssh.cfg.ok'), 'ok'); else problem(r); };
+      saveB.onclick = async () => {
+        const r = await ait.sshCfgWrite(ta.value, hash);
+        if (!r.ok) return problem(r);
+        hash = r.hash;
+        saved = ta.value;
+        say(r.backup ? t('ssh.cfg.savedBak', { file: r.backup }) : t('ssh.cfg.saved'), 'ok');
+        renderSessions(); // the list reads the file again
+      };
+      ta.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveB.click(); } });
+      m.root.querySelector('.sm-backdrop').onclick = close;
+      setTimeout(() => {
+        ta.focus();
+        const re = alias ? new RegExp(`^[ \\t]*Host\\b[^\\n]*(?:^|\\s)${String(alias).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`, 'im') : null;
+        const hit = re && re.exec(ta.value);
+        if (hit) jump(ta.value.slice(0, hit.index).split('\n').length);
+      }, 40);
     }
 
     // session editor (new / edit)

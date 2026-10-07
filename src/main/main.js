@@ -20,6 +20,7 @@ const { listProcesses, signalProcess, descendants } = require('./procs');
 const { EDIT_SCHEMA } = require('./llm/schema');
 const { maskSecrets } = require('./text');
 const { externalSshTarget, connectCommand, HostBook } = require('./ssh');
+const { SshConfigFile } = require('./sshconfig');
 const { SshTab } = require('./ssh-tab');
 const { SessionStore, buildCommand, buildDestinationCommand, x11Available } = require('./sshsessions');
 const { localList } = require('./sftp');
@@ -461,6 +462,10 @@ app.whenReady().then(async () => {
   ipcMain.handle('sess:save', (_e, s) => sessionStore.save(s));
   ipcMain.handle('sess:delete', (_e, id) => sessionStore.remove(String(id)));
   ipcMain.handle('sess:duplicate', (_e, id) => sessionStore.duplicate(String(id)));
+  // ~/.ssh/config editor of the session panel (the window only; the AI has no tool for this file)
+  ipcMain.handle('sshcfg:read', () => new SshConfigFile(hostBook.sshDir).read());
+  ipcMain.handle('sshcfg:check', (_e, text) => (typeof text === 'string' ? new SshConfigFile(hostBook.sshDir).check(text) : { ok: false, line: 0, message: 'bad' }));
+  ipcMain.handle('sshcfg:write', (_e, a) => (a && typeof a.text === 'string' && typeof a.hash === 'string' ? new SshConfigFile(hostBook.sshDir).write(a.text, a.hash) : { ok: false, code: 'bad' }));
   ipcMain.handle('sess:recent-forget', (_e, target) => { if (typeof target === 'string') hostBook.forget(target); return hostBook.list().recent; });
   ipcMain.handle('sess:recent-clear', () => { hostBook.clear(); return []; });
   ipcMain.handle('sess:from-config', (_e, alias) => { const h = hostBook.configured().find((x) => x.alias === String(alias)); return h ? sessionStore.fromConfig(h) : null; });

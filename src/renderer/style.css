@@ -648,3 +648,8 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 #btn-screen[hidden] { display: none; }
 #btn-screen[data-live="1"] { position: relative; }
 #btn-screen[data-live="1"]::after { content: ""; position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+/* ~/.ssh/config editor */
+.cfg-editor .cfg-text { width: 100%; min-height: 380px; height: 52vh; padding: 10px 12px; font: 12.5px/19px var(--mono); white-space: pre; overflow: auto; resize: vertical; tab-size: 2; }
+.cfg-status { min-height: 20px; margin-top: 8px; font-size: 12.5px; color: var(--dim); } .cfg-status.ok { color: var(--ok); } .cfg-status.err { color: var(--err); }
+.cfg-warn { color: var(--warn); } .cfg-warn[hidden] { display: none; }
