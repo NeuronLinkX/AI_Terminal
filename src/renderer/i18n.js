@@ -532,7 +532,7 @@
     [/^서버가\ 연결을\ 거부했습니다\.\ 주소와\ 포트,\ 서버의\ sshd\ 실행\ 여부를\ 확인하세요\.$/, "The server refused the connection. Check the address and port, and that sshd is running on the server."],
     [/^서버가\ 응답하지\ 않습니다\.\ 주소·네트워크·방화벽을\ 확인하세요\.$/, "The server does not respond. Check the address, the network and the firewall."],
     [/^호스트\ 이름을\ 찾을\ 수\ 없습니다\.\ 철자와\ DNS\ 를\ 확인하세요\.$/, "The host name could not be found. Check the spelling and your DNS."],
-    [/^서버까지\ 가는\ 경로가\ 없습니다\.\ 같은\ 네트워크\(VPN\ 포함\)에\ 있는지\ 확인하세요\.$/, "There is no route to the server. Check that you are on the same network (VPN included)."],
+    [/^서버까지\ 가는\ 경로가\ 없습니다\.\ 같은\ 네트워크\(VPN\ 포함\)에\ 있는지\ 확인하세요\.\ 다른\ 프로그램에서는\ 되는데\ 이\ 앱에서만\ 안\ 되면\ 시스템\ 설정의\ 개인정보\ 보호\ 및\ 보안\ >\ 로컬\ 네트워크에서\ MacAIterm\ 을\ 허용하세요\.$/, "There is no route to the server. Check that you are on the same network (VPN included). If other programs can reach it and only this app cannot, allow MacAIterm in System Settings > Privacy & Security > Local Network."],
     [/^연결이\ 끊어졌습니다\.\ 다시\ 접속하세요\.\ 자주\ 끊기면\ `\-o\ ServerAliveInterval=30`\ 옵션을\ 쓰세요\.$/, "The connection was lost. Connect again. If it drops often, use the `-o ServerAliveInterval=30` option."],
     [/^원격\ 셸이\ 정상적으로\ 종료되었습니다\.$/, "The remote shell exited normally."],
     [/^서버에 모델 없음$/, 'No model on the server'], [/^서버에서 모델을 불러오세요\(LM Studio: Load Model\)\.$/, 'Load a model on the server (LM Studio: Load Model).'], [/^서버에 연결할 수 없음$/, 'Cannot reach the server'], [/^API 키 거부됨$/, 'API key rejected'],

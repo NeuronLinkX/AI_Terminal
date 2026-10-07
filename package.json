@@ -75,7 +75,8 @@
       ],
       "darkModeSupport": true,
       "extendInfo": {
-        "LSApplicationCategoryType": "public.app-category.developer-tools"
+        "LSApplicationCategoryType": "public.app-category.developer-tools",
+        "NSLocalNetworkUsageDescription": "MacAIterm connects to servers on your local network over SSH (for example a GPU server) and shows their status and files."
       },
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },

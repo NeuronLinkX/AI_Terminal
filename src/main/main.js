@@ -21,6 +21,7 @@ const { EDIT_SCHEMA } = require('./llm/schema');
 const { maskSecrets } = require('./text');
 const { externalSshTarget, connectCommand, HostBook } = require('./ssh');
 const { SshConfigFile } = require('./sshconfig');
+const lan = require('./lan');
 const { SshTab } = require('./ssh-tab');
 const { SessionStore, buildCommand, buildDestinationCommand, x11Available } = require('./sshsessions');
 const { localList } = require('./sftp');
@@ -462,6 +463,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('sess:save', (_e, s) => sessionStore.save(s));
   ipcMain.handle('sess:delete', (_e, id) => sessionStore.remove(String(id)));
   ipcMain.handle('sess:duplicate', (_e, id) => sessionStore.duplicate(String(id)));
+  ipcMain.handle('lan:probe', (_e, host) => lan.probe(String(host || ''), 22)); // one connection attempt from this process: makes macOS ask for local network access
   // ~/.ssh/config editor of the session panel (the window only; the AI has no tool for this file)
   ipcMain.handle('sshcfg:read', () => new SshConfigFile(hostBook.sshDir).read());
   ipcMain.handle('sshcfg:check', (_e, text) => (typeof text === 'string' ? new SshConfigFile(hostBook.sshDir).check(text) : { ok: false, line: 0, message: 'bad' }));

@@ -42,6 +42,7 @@ contextBridge.exposeInMainWorld('ait', {
   sessDelete: (id) => call('sess:delete', id),
   sessDuplicate: (id) => call('sess:duplicate', id),
   sessFromConfig: (alias) => call('sess:from-config', alias),
+  lanProbe: (host) => call('lan:probe', host),
   sshCfgRead: () => call('sshcfg:read'),
   sshCfgCheck: (text) => call('sshcfg:check', text),
   sshCfgWrite: (text, hash) => call('sshcfg:write', { text, hash }),
