@@ -42,7 +42,7 @@
   "author": "MacAIterm",
   "build": {
     "afterPack": "build/sign-after-pack.js",
-    "appId": "com.neuronlinkx.macaiterm",
+    "appId": "com.neuronlinkx.macaiterm.app",
     "productName": "MacAIterm",
     "copyright": "MIT",
     "directories": {

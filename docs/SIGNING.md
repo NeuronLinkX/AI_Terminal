@@ -45,6 +45,16 @@ npm run dist
 두 단계 모두 `build/entitlements.mac.plist`의 같은 권한(JIT 허용, **라이브러리 검증 해제**)을 줍니다. 겉 번들과 안쪽 조각의 서명자가 다르기 때문에 라이브러리 검증을 끄지 않으면 앱이 시작 직후 `Electron Framework ... have different Team IDs` 오류로 종료됩니다(시험으로 확인했습니다). 이 파일을 지우거나 권한을 빼지 마세요.
 시각 서버(타임스탬프)는 쓰지 않아서 오프라인에서도 빌드됩니다.
 
+## 실행 파일 UUID
+
+같은 Electron 버전으로 만든 앱은 메인 실행 파일이 같아서 내부 UUID(`LC_UUID`)도 같습니다(공식 Electron, 예전 빌드, 이 앱). macOS 의 로컬 네트워크 허용은 앱 식별자별로 기록되지만 UUID 별로 적용되기 때문에, 같은 UUID 를 쓰는 다른 앱이 이미 답을 받았으면 이 앱에는 허용 창이 뜨지 않고 조용히 막힐 수 있습니다. 서명 단계(`build/sign-after-pack.js`)가 메인 실행 파일과 헬퍼 4개의 UUID 를 앱 식별자와 파일 경로에서 계산한 고유 값으로 바꿉니다(`build/macho-uuid.js`). 같은 앱 식별자면 다시 빌드해도 같은 값입니다. 빌드 로그에 `own binary UUIDs: 5 executable(s)` 가 나옵니다.
+
+```bash
+dwarfdump --uuid /Applications/MacAIterm.app/Contents/MacOS/MacAIterm
+```
+
+공식 Electron 의 UUID(`4C4C448F-…`)와 다르면 적용된 것입니다.
+
 ## 확인
 
 설치한 앱과 새 빌드의 신원이 같은지 봅니다. 두 줄의 `H"…"` 값이 같아야 합니다.
