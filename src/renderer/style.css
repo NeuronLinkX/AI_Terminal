@@ -302,6 +302,10 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .sm-foot { display: flex; align-items: center; justify-content: space-between; padding: 11px 18px; border-top: 1px solid var(--line); background: var(--panel-2); }
 .sm-ver { color: var(--faint); font-size: 11px; font-family: var(--mono); }
 .sm-note { display: none; }
+.srow .lan-result { margin-top: 8px; font-size: 12px; font-weight: 600; line-height: 1.5; color: var(--dim); }
+.srow .lan-result:empty { display: none; }
+.srow .lan-result.ok { color: var(--ok, #1f8a4c); }
+.srow .lan-result.warn { color: var(--warn, #b26a00); }
 
 .sm-est .sm-live { margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(157,140,255,.3); font-weight: 600; }
 .sm-est.warn .sm-live { border-top-color: rgba(242,184,75,.4); }
@@ -560,6 +564,7 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .flink { color: var(--faint); font-size: 10.5px; }
 .fsz { color: var(--faint); font-size: 10.5px; font-variant-numeric: tabular-nums; flex: none; }
 .dr-empty.err { color: var(--err); }
+.dr-empty .dr-net { margin-top: 10px; color: var(--dim, var(--faint)); font-size: 11.5px; line-height: 1.55; }
 
 /* transfers */
 .fx { flex: none; max-height: 190px; display: flex; flex-direction: column; border-top: 1px solid var(--line); background: var(--panel-2); }

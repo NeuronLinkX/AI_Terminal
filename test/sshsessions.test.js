@@ -5,7 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
-const { SessionStore, validateSession, buildCommand, buildDestinationCommand, pathOk, jumpOk } = require('../src/main/sshsessions');
+const { SessionStore, validateSession, buildCommand, buildDestinationCommand, configSetsConnectTimeout, pathOk, jumpOk } = require('../src/main/sshsessions');
 const { parseSshArgs } = require('../src/main/ssh');
 
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'ait-sess-'));
@@ -69,7 +69,7 @@ test('buildCommand: the shell sees exactly the intended arguments — no extra o
   const r = buildCommand(s, { ctlDir: '/tmp/ait-ssh-501', home });
   assert.equal(r.ok, true);
   assert.deepEqual(argvOf(r.command), [
-    '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3', '-o', 'ControlMaster=auto', '-o', 'ControlPath=/tmp/ait-ssh-501/%C',
+    '-o', 'ConnectTimeout=10', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3', '-o', 'ControlMaster=auto', '-o', 'ControlPath=/tmp/ait-ssh-501/%C',
     '-p', '2222', '-i', '/Users/test/.ssh/id work', '-o', 'IdentitiesOnly=yes', '-J', 'jumper@bastion:2200', '-X', '-L', '8080:localhost:80', '-D', '1080', '-t',
     'ubuntu@192.168.64.4', 'cd "/srv/my app" && exec "$SHELL" -l',
   ]);
@@ -82,8 +82,9 @@ test('buildCommand: the shell sees exactly the intended arguments — no extra o
   assert.equal(t.interactive, true, 'a start folder uses -t with a command: still a login the user works in');
   // defaults: nothing optional appears
   const plain = buildCommand({ host: 'example.com' }, { ctlDir: null });
-  assert.equal(plain.command, 'ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 example.com');
-  assert.equal(buildCommand({ host: 'example.com', keepAlive: false, share: false }, { ctlDir: '/tmp/x' }).command, 'ssh example.com');
+  assert.equal(plain.command, 'ssh -o ConnectTimeout=10 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 example.com');
+  assert.equal(buildCommand({ host: 'example.com', keepAlive: false, share: false }, { ctlDir: '/tmp/x' }).command, 'ssh -o ConnectTimeout=10 example.com');
+  assert.equal(buildCommand({ host: 'example.com', keepAlive: false, share: false }, { ctlDir: '/tmp/x', connectTimeout: 0 }).command, 'ssh example.com', 'a ConnectTimeout of the user is left alone');
   assert.ok(buildCommand({ host: 'h', x11: 'trusted' }, { ctlDir: null }).command.includes(' -Y '));
 });
 
@@ -153,11 +154,21 @@ test('importing from ~/.ssh/config: a prefilled session that still goes through 
 
 test('buildDestinationCommand: an alias or a recent user@host:port becomes a plain ssh command; anything else is refused', () => {
   const o = { ctlDir: '/tmp/ait-ssh-501' };
-  assert.deepEqual(argvOf(buildDestinationCommand('vm', o).command), ['-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3', '-o', 'ControlMaster=auto', '-o', 'ControlPath=/tmp/ait-ssh-501/%C', 'vm']);
-  assert.deepEqual(argvOf(buildDestinationCommand('ubuntu@192.168.64.4:2200', { ...o, share: false, keepAlive: false }).command), ['-p', '2200', 'ubuntu@192.168.64.4']);
-  assert.deepEqual(argvOf(buildDestinationCommand('u@h:22', { ...o, share: false, keepAlive: false }).command), ['u@h'], 'port 22 is the default');
-  assert.deepEqual(argvOf(buildDestinationCommand('[fe80::1]', { ctlDir: null, keepAlive: false }).command), ['[fe80::1]']);
+  assert.deepEqual(argvOf(buildDestinationCommand('vm', o).command), ['-o', 'ConnectTimeout=10', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3', '-o', 'ControlMaster=auto', '-o', 'ControlPath=/tmp/ait-ssh-501/%C', 'vm']);
+  assert.deepEqual(argvOf(buildDestinationCommand('ubuntu@192.168.64.4:2200', { ...o, share: false, keepAlive: false, connectTimeout: 0 }).command), ['-p', '2200', 'ubuntu@192.168.64.4']);
+  assert.deepEqual(argvOf(buildDestinationCommand('u@h:22', { ...o, share: false, keepAlive: false, connectTimeout: 0 }).command), ['u@h'], 'port 22 is the default');
+  assert.deepEqual(argvOf(buildDestinationCommand('[fe80::1]', { ctlDir: null, keepAlive: false, connectTimeout: 0 }).command), ['[fe80::1]']);
   for (const bad of ['-oProxyCommand=x', 'a b', 'h;id', '$(id)', 'u@', '@h', 'h:99999', 'h:0', '', 'x'.repeat(300), "h'x"]) {
     assert.equal(buildDestinationCommand(bad, o).ok, false, JSON.stringify(bad));
   }
+});
+
+test('ConnectTimeout: added to every typed command, but never over one the user set in their own ssh config', () => {
+  assert.ok(buildDestinationCommand('vm', { ctlDir: null }).command.startsWith('ssh -o ConnectTimeout=10 '));
+  assert.equal(buildDestinationCommand('vm', { ctlDir: null, keepAlive: false, connectTimeout: 0 }).command, 'ssh vm');
+  assert.equal(configSetsConnectTimeout('Host dgx\n  HostName 192.168.50.34\n  ConnectTimeout 30\n'), true);
+  assert.equal(configSetsConnectTimeout('Host x\n\tconnecttimeout=5'), true, 'any case, = or space');
+  assert.equal(configSetsConnectTimeout('Host dgx\n  HostName 192.168.50.34\n# ConnectTimeout 30\n'), false, 'a comment does not count');
+  assert.equal(configSetsConnectTimeout(''), false);
+  assert.equal(configSetsConnectTimeout(undefined), false);
 });

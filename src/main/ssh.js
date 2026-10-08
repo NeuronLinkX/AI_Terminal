@@ -296,12 +296,16 @@ function externalSshTarget(argv) {
   return validTarget(v) ? String(v) : null;
 }
 
+/** Seconds ssh waits for the server to answer before it gives up (its own default is about 75 s of silence). */
+const CONNECT_TIMEOUT = 10;
+
 /** The command line typed into the terminal for a host picked in the UI, or null when the target is not acceptable. */
-function connectCommand(target, { keepAlive = true } = {}) {
+function connectCommand(target, { keepAlive = true, connectTimeout = CONNECT_TIMEOUT } = {}) {
   if (!validTarget(target)) return null;
   const d = parseDestination(target);
   if (!d.host || d.host.startsWith('-')) return null;
   const parts = ['ssh'];
+  if (connectTimeout > 0) parts.push('-o', `ConnectTimeout=${connectTimeout}`);
   if (keepAlive) parts.push('-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3');
   // user@host:port is not ssh syntax; a bare [v6] stays as is
   const bare = /^\[/.test(target) ? target : `${d.user ? d.user + '@' : ''}${d.host}`;
@@ -428,5 +432,5 @@ module.exports = {
   parseSshArgs, parseDestination, resolveFromConfig, labelOf, idOf, splitArgs, parseSshConfig,
   classifySshOutput, fingerprintOf,
   shellKind, sentinelLine, SHELL_PROBE, parseShellProbe, probeCommand, parseProbe,
-  validTarget, connectCommand, externalSshTarget, HostBook, SshWatcher,
+  validTarget, connectCommand, CONNECT_TIMEOUT, externalSshTarget, HostBook, SshWatcher,
 };

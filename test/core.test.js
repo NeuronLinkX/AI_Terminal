@@ -165,3 +165,27 @@ test('vim: every function key has a Mac-friendly Space-leader twin', { skip: !re
   assert.ok(/ait#run/.test(parts[0]) && /ait#check/.test(parts[1]) && /ait#format/.test(parts[2]), parts.join(' | '));
   assert.ok(/ait#run/.test(parts[3]) && /ait#check/.test(parts[4]) && /ait#format/.test(parts[5]), 'function keys still mapped');
 });
+
+test('exited() settles only once the shell has really exited (quit must wait for it, or node-pty aborts the app)', async () => {
+  const s = new PtySession({ cwd: '/tmp' }).start();
+  await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
+  assert.notStrictEqual(s.state, 'exited');
+  s.kill();
+  const t0 = Date.now();
+  await s.exited();
+  assert.strictEqual(s.state, 'exited', 'the exit event was delivered before exited() resolved');
+  assert.ok(Date.now() - t0 < 1400, 'did not run into the time limit');
+  await s.exited(); // already exited: settles at once
+});
+
+test('exited() gives up after the limit and kills a shell that ignores the hangup', async () => {
+  const s = new PtySession({ cwd: '/tmp' }).start();
+  await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
+  s.write('trap "" HUP\r');
+  await new Promise((r) => setTimeout(r, 500));
+  s.kill();
+  const t0 = Date.now();
+  await s.exited(800);
+  assert.strictEqual(s.state, 'exited', 'SIGKILL after half of the limit ended it');
+  assert.ok(Date.now() - t0 >= 350, 'the hangup alone did not end it, so the SIGKILL path was used');
+});

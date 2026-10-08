@@ -318,6 +318,12 @@
         E.path.value = P.root || '';
         if (P.err) {
           const e = el('div', 'dr-empty err', P.err);
+          if (side === 'remote' && P.netErr !== P.err) { // a timeout / no route: say when this Mac is on another network than the server (asked once per error)
+            P.netErr = P.err;
+            P.net = null;
+            if (/timed out|No route|unreachable/i.test(P.err)) ait.sshNetNote(id).then((n) => { P.net = n; render(); }).catch(() => {});
+          }
+          if (side === 'remote' && P.net && P.net.mine && P.net.mine.length) e.append(el('div', 'dr-net', t('ssh.problem.net', { mine: P.net.mine.join(', '), host: P.net.host })));
           const b = withIcon('button', 'refresh', ' ' + t('files.retry'), 'btn mini');
           b.style.margin = '8px auto 0';
           b.style.display = 'flex';

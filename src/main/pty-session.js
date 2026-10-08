@@ -143,6 +143,26 @@ class PtySession extends EventEmitter {
       /* already gone */
     }
   }
+  /** Resolves once the shell has really exited and its exit event was delivered (or after `ms`; a shell that ignores the hangup gets
+   *  SIGKILL halfway). Quit has to wait for this: node-pty reports the exit from its own thread, and when that report reaches JavaScript
+   *  while Electron is already tearing the process down, node-pty throws inside the teardown and the whole app aborts (SIGABRT, the
+   *  "MacAIterm quit unexpectedly" dialog). */
+  exited(ms = 1500) {
+    if (!this.pty || this.state === 'exited') return Promise.resolve();
+    return new Promise((resolve) => {
+      let hard = null;
+      let give = null;
+      const done = () => {
+        clearTimeout(hard);
+        clearTimeout(give);
+        this.removeListener('exit', done);
+        resolve();
+      };
+      this.on('exit', done);
+      hard = setTimeout(() => { try { process.kill(this.pid, 'SIGKILL'); } catch { /* gone */ } }, Math.floor(ms / 2));
+      give = setTimeout(done, ms);
+    });
+  }
 
   // ---- output pipeline ----
   _onData(chunk) {

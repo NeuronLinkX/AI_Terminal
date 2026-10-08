@@ -335,6 +335,25 @@
       body.append(row(t('set.ssh.sec.title'), t('set.ssh.sec.desc'), seg([2, 3, 5, 10].map((n) => [n, `${n}s`]), v.sshMonitorSec, (n) => save('sshMonitorSec', n), t('set.ssh.sec.title'))));
       body.append(row(t('set.ssh.keepAlive.title'), t('set.ssh.keepAlive.desc'), toggle(v.sshKeepAlive, (b) => save('sshKeepAlive', b), t('set.ssh.keepAlive.title'))));
       body.append(row(t('set.ssh.share.title'), t('set.ssh.share.desc'), toggle(v.sshShare, (b) => save('sshShare', b), t('set.ssh.share.title'))));
+      const lanNote = el('div', 'lan-result'); // under the description (the .sm-note class is hidden by the stylesheet)
+      const lanBtn = withIcon('button', 'server', ' ' + t('set.ssh.lan.btn'), 'btn');
+      const lanSay = (key, cls = '') => { lanNote.textContent = t(key); lanNote.className = `lan-result ${cls}`.trim(); };
+      lanBtn.onclick = async () => {
+        lanBtn.disabled = true;
+        lanBtn.lastChild.textContent = ' ' + t('set.ssh.lan.busy');
+        lanSay('set.ssh.lan.busy');
+        try {
+          // never leave the button waiting: the request is bounded in the main process, this is the second guard
+          const r = await Promise.race([ait.lanRequest(), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 8000))]);
+          // a router that answers (connected / refused) means macOS lets this app reach the local network already
+          if (r && (r.probe === 'connected' || r.probe === 'refused')) lanSay('set.ssh.lan.open', 'ok');
+          else if (r && r.probe === 'blocked') lanSay('set.ssh.lan.blocked', 'warn');
+          else lanSay('set.ssh.lan.sent', 'ok');
+        } catch { lanSay('set.ssh.lan.fail', 'warn'); }
+        lanBtn.lastChild.textContent = ' ' + t('set.ssh.lan.again');
+        lanBtn.disabled = false;
+      };
+      body.append(row(t('set.ssh.lan.title'), t('set.ssh.lan.desc'), lanBtn, lanNote));
       body.append(row(t('set.ssh.files.title'), t('set.ssh.files.desc'), seg(['auto', 'manual'].map((k) => [k, t('set.ssh.files.' + k)]), v.sshFiles, (k) => save('sshFiles', k), t('set.ssh.files.title'))));
 
       // ---- shortcuts
