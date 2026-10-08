@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- **Stable code signing**: the build signs the app with a certificate created once on the building Mac (`scripts/make-signing-cert.sh`, docs/SIGNING.md), so macOS permissions (local network, Keychain) survive rebuilds and updates; without it the build signs ad-hoc as before.
 - **~/.ssh/config editor** in the session panel: a modal with a syntax check (`ssh -G`), line-numbered errors, backups (`config.bak-<time>`, newest 5) and a conflict check; the right-click menu of ~/.ssh/config hosts is no longer empty.
 - **Remote screen (VNC)** inside the window: an SSH tab can show the server's VNC desktop (noVNC). The picture travels only inside the tab's SSH connection (`ssh -W`, no local port, no extra login); the VNC password is asked for once and never stored; the screen is never sent to the AI. A per-server "Open on connect" option shows the screen as soon as the SSH login works and waits for a VNC server that is still starting.
 - **Tabs, split panes, session history** (search / export / delete), command blocks, process panel, terminal search (⌘F), clickable URLs and file paths.

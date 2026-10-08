@@ -41,6 +41,7 @@
   },
   "author": "MacAIterm",
   "build": {
+    "afterPack": "build/sign-after-pack.js",
     "appId": "com.neuronlinkx.macaiterm",
     "productName": "MacAIterm",
     "copyright": "MIT",
@@ -68,7 +69,7 @@
     "mac": {
       "category": "public.app-category.developer-tools",
       "icon": "build/icon.icns",
-      "identity": "-",
+      "identity": null,
       "target": [
         "dmg",
         "zip"
