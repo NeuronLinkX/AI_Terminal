@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- **AI chat button** in the top bar (and ⇧⌘A, Session menu): the right-hand AI pane and the input bar below it open and close together, so the terminal can use the whole window. The choice is remembered. The chat opens by itself when an approval is waiting or a drawer (processes, command blocks) is opened, and the button shows a dot while the chat is closed but the AI is working or waiting for an answer.
 - **Own binary UUIDs** (`build/macho-uuid.js`, run by the signing hook): the app's main executable and helpers no longer share the stock Electron UUID. macOS keeps the local network decision per identity but enforces it per UUID; with several identities on one UUID it can skip the question and block the app silently. The UUID is derived from the app id and the file path, so it stays the same on every rebuild.
 - **Settings > SSH > Local network access**: a button that makes the app itself send one Bonjour question and touch the router, which makes macOS show its "allow local network access" question (the entry in System Settings > Privacy & Security > Local Network only exists after that). Works on any network.
 - **"Not the same network" note**: when a connection to a private address times out or has no route and this Mac is on another network than the server, the tab note and the file panel say so and name this Mac's networks.

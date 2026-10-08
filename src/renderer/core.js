@@ -598,6 +598,7 @@
     $('state').dataset.phase = phase;
     $('state-text').textContent = t(PHASE_KEY[phase] || 'phase.idle');
     $('statusbar').dataset.phase = T.state.phase;
+    updateAiBadge();
     $('status-text').textContent = tr(T.statusText) || t(PHASE_KEY[T.state.phase] || 'phase.idle');
     if (T.pending) showBar(T.pending.ev); else hideBar();
     $('btn-split').classList.toggle('on', !!T.panes.second);
@@ -844,6 +845,7 @@
     if (ev.rule) $('ap-rule').textContent = `"${ev.rule.label}"` + (ev.rule.exact ? ' ' + t('ap.exactOnly') : '');
     if ($('approval-bar').hidden) $('ap-fb').value = '';
     $('approval-bar').hidden = false;
+    showAi(); // an approval belongs to the chat: never leave it unseen behind a closed chat
     doFit();
   }
   function hideBar() {
@@ -1153,6 +1155,32 @@
   }
   $('plan-toggle').onclick = () => setPlan(!ui.plan);
 
+  // AI chat: the right-hand pane and the input bar under it open and close together (the choice is remembered)
+  try { ui.aiOpen = localStorage.getItem('ait-ai-open') !== '0'; } catch { ui.aiOpen = true; }
+  /** A dot on the button while the chat is closed but the AI works or waits for an answer there. */
+  function updateAiBadge() {
+    const attention = !ui.aiOpen && !!T && (T.state.aiBusy || !!T.pending);
+    $('btn-ai').dataset.busy = attention ? '1' : '';
+  }
+  function setAiOpen(on, { focus = true } = {}) {
+    const was = ui.aiOpen;
+    ui.aiOpen = !!on;
+    document.body.dataset.ai = ui.aiOpen ? 'open' : 'closed';
+    $('btn-ai').classList.toggle('on', ui.aiOpen);
+    $('btn-ai').setAttribute('aria-pressed', String(ui.aiOpen));
+    try { localStorage.setItem('ait-ai-open', ui.aiOpen ? '1' : '0'); } catch { /* ignore */ }
+    updateAiBadge();
+    if (was === ui.aiOpen) return;
+    doFit(); // the terminal takes the freed space (or gives it back)
+    if (!focus) return;
+    if (ui.aiOpen) input.focus();
+    else if (T) focusPane(T);
+  }
+  /** Something the user has to see or answer is in the chat: open it (approval, drawers). */
+  const showAi = () => { if (!ui.aiOpen) setAiOpen(true, { focus: false }); };
+  $('btn-ai').onclick = () => setAiOpen(!ui.aiOpen);
+  setAiOpen(ui.aiOpen, { focus: false });
+
   // remote (ssh / nested shell) mode: the AI works ON the server — commands, files, search
   async function setRemote(on) {
     if (!T) return null;
@@ -1361,8 +1389,8 @@
 
   const MENU_ACTIONS = {
     stop, copy: copyOutput, reset: resetSession, theme: toggleTheme,
-    'focus-ai': () => input.focus(), 'focus-term': () => T && focusPane(T),
-    'toggle-mode': () => { setMode(ui.mode === 'ai' ? 'sh' : 'ai'); input.focus(); }, 'toggle-plan': () => setPlan(!ui.plan),
+    'toggle-ai': () => setAiOpen(!ui.aiOpen), 'focus-ai': () => { showAi(); input.focus(); }, 'focus-term': () => T && focusPane(T),
+    'toggle-mode': () => { showAi(); setMode(ui.mode === 'ai' ? 'sh' : 'ai'); input.focus(); }, 'toggle-plan': () => setPlan(!ui.plan),
     'new-tab': () => newTab(), 'close-tab': () => T && closeTab(T.id), 'next-tab': () => switchRelative(1), 'prev-tab': () => switchRelative(-1),
     search: () => ($('termsearch').hidden ? openSearch() : closeSearch()), split: toggleSplit,
   };
@@ -1424,7 +1452,7 @@
   }
   window.AITCore = {
     ait, $, el, icon, withIcon, titled, richText, t, tr, ui, fmtTok, tabs, getOrder: () => order.slice(), getTab: () => T, note, push, submitAi, submitShell, userMsg,
-    registerAction: (name, fn) => actions.set(name, fn), setting, setRemote, activate, newTab, closeTab, applyI18n, onSettingsChanged, applyPerm, refreshChrome, doFit, setPlan, renderModel,
+    registerAction: (name, fn) => actions.set(name, fn), setting, setRemote, activate, newTab, closeTab, applyI18n, onSettingsChanged, applyPerm, refreshChrome, doFit, setPlan, setAiOpen, showAi, renderModel,
   };
 
   // running API token totals (usage.js) → monitor chip + model popover

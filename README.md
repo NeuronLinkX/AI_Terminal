@@ -82,7 +82,7 @@
 | ![온보딩(모의)](docs/screenshots/37-onboarding.png)**첫 실행 온보딩**(모의 서버 — 실제 다운로드 아님) | ![다운로드 진행(모의)](docs/screenshots/37b-onboarding-progress.png)**모델 내려받기 진행률**(모의 서버) |
 | ![vim AI 수정](docs/screenshots/44-vim-aiedit.png)**vim `:AitAI`** — AI 제안을 diff 로 보여주고 적용/취소 확인 | ![vim LSP](docs/screenshots/48-vim-lsp-diagnostics.png)**vim LSP** — 실제 clangd 의 진단이 줄과 상태줄에 표시 |
 
-기본 단축키(설정에서 변경 가능): 새 탭 ⌘T · 탭 닫기 ⌘W · 탭 이동 ⌘⇧[ / ⌘⇧] · AI 입력창 ⌘L · 터미널 ⌘⇧L · AI/셸 입력 전환 ⌘J · 중단 ⌘. · 출력 복사 ⌘⇧C · 세션 초기화 ⌘⇧K · 테마 ⌘⇧D · 설정 ⌘, · **찾기 ⌘F · 분할 ⌘D · 기록 ⌘Y · 명령 블록 ⌘B · 프로세스 ⌘⇧P · 계획 모드 ⌘⇧⏎**
+기본 단축키(설정에서 변경 가능): 새 탭 ⌘T · 탭 닫기 ⌘W · 탭 이동 ⌘⇧[ / ⌘⇧] · AI 채팅 열기/닫기 ⌘⇧A · AI 입력창 ⌘L · 터미널 ⌘⇧L · AI/셸 입력 전환 ⌘J · 중단 ⌘. · 출력 복사 ⌘⇧C · 세션 초기화 ⌘⇧K · 테마 ⌘⇧D · 설정 ⌘, · **찾기 ⌘F · 분할 ⌘D · 기록 ⌘Y · 명령 블록 ⌘B · 프로세스 ⌘⇧P · 계획 모드 ⌘⇧⏎**
 
 ### SSH 서버 접속 (MobaXterm 처럼)
 

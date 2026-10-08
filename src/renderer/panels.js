@@ -557,6 +557,7 @@
     function openDrawer(kind) {
       if (drawerKind === kind) return closeDrawer();
       drawerKind = kind;
+      C.showAi(); // the drawer lives in the chat pane
       drawer.hidden = false;
       $('drawer-title').replaceChildren(icon(kind === 'blocks' ? 'list' : 'activity'), document.createTextNode(' ' + t(kind === 'blocks' ? 'blocks.title' : 'procs.title')));
       clearInterval(procTimer);

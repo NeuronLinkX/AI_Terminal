@@ -4,7 +4,7 @@
 (() => {
   const ko = {
     // ---- chrome
-    'top.history.tip': '세션 기록 (⌘Y)', 'top.settings.tip': '설정 (⌘,)', 'top.stop': '중단', 'top.stop.tip': '실행 중단 (⌘.)', 'top.copy': '출력 복사', 'top.copy.tip': '선택한 출력 또는 화면 전체 복사 (⌘⇧C)',
+    'top.history.tip': '세션 기록 (⌘Y)', 'top.settings.tip': '설정 (⌘,)', 'top.ai': 'AI 채팅', 'top.ai.tip': 'AI 채팅 열기/닫기 (⇧⌘A): 오른쪽 AI 창과 아래 입력줄을 함께 숨기거나 보입니다', 'top.stop': '중단', 'top.stop.tip': '실행 중단 (⌘.)', 'top.copy': '출력 복사', 'top.copy.tip': '선택한 출력 또는 화면 전체 복사 (⌘⇧C)',
     'top.reset': '세션 초기화', 'top.reset.tip': '이 탭의 셸 + AI 대화 초기화 (⌘⇧K)', 'top.search.tip': '터미널에서 찾기 (⌘F)', 'top.split.tip': '화면 분할 (⌘D)', 'top.blocks.tip': '명령 블록 (⌘B)', 'top.procs.tip': '프로세스 (⌘⇧P)',
     'theme.toLight': '라이트 모드로 전환 (⌘⇧D)', 'theme.toDark': '다크 모드로 전환 (⌘⇧D)',
     'mon.cpuTip': 'CPU 사용률 {pct}% ({cores}코어). 이 Mac 전체의 최근 2초 평균입니다.', 'mon.gpu': 'GPU', 'mon.avail': '가용', 'mon.noModel': '모델 없음', 'mon.gpuNone': 'GPU 사용률을 읽을 수 없습니다', 'mon.gpuMem': '\nGPU가 쓰는 메모리 {gb}GB',
@@ -100,7 +100,7 @@
     'set.hist.title': '세션 기록 저장', 'set.hist.desc': '대화와 실행 내역을 이 Mac 에만 저장합니다(비밀 정보는 마스킹). 끄면 새 기록이 저장되지 않습니다.', 'set.restore.title': '다시 켤 때 탭 복원', 'set.restore.desc': '앱을 종료했을 때 열려 있던 탭과 디렉터리를 다음 실행 때 다시 엽니다.',
     'set.audit.title': '승인·실행 기록 내보내기', 'set.audit.desc': 'AI가 실행했거나 실행하려던 모든 명령과 승인/거부 결정을 기록합니다(비밀 정보 마스킹). 파일로 내보낼 수 있습니다.', 'set.audit.count': '{n}건', 'set.audit.saved': '저장됨: {p}',
     'set.keys.desc': '메뉴 단축키를 바꿉니다. 칸을 누른 다음 원하는 키 조합을 직접 누르세요(예: ⌘⇧T, ⌥K, F6). Esc 는 취소, ⌫ 는 기본값으로 되돌립니다.', 'set.keys.invalid': '올바르지 않은 단축키 형식입니다', 'set.keys.press': '키를 누르세요…', 'set.keys.dup': '이미 "{name}" 에 쓰이고 있습니다', 'set.keys.reset': '기본값',
-    'key.new-tab': '새 탭', 'key.close-tab': '탭 닫기', 'key.next-tab': '다음 탭', 'key.prev-tab': '이전 탭', 'key.focus-ai': 'AI 입력창으로 이동', 'key.focus-term': '터미널로 이동', 'key.toggle-mode': 'AI/셸 입력 전환', 'key.stop': '실행 중단', 'key.copy': '출력 복사', 'key.reset': '세션 초기화', 'key.theme': '라이트/다크 전환', 'key.settings': '설정', 'key.search': '터미널에서 찾기', 'key.split': '화면 분할', 'key.history': '세션 기록', 'key.blocks': '명령 블록', 'key.processes': '프로세스', 'key.toggle-plan': '계획 모드',
+    'key.new-tab': '새 탭', 'key.close-tab': '탭 닫기', 'key.next-tab': '다음 탭', 'key.prev-tab': '이전 탭', 'key.focus-ai': 'AI 입력창으로 이동', 'key.focus-term': '터미널로 이동', 'key.toggle-mode': 'AI/셸 입력 전환', 'key.stop': '실행 중단', 'key.copy': '출력 복사', 'key.reset': '세션 초기화', 'key.theme': '라이트/다크 전환', 'key.settings': '설정', 'key.search': '터미널에서 찾기', 'key.split': '화면 분할', 'key.history': '세션 기록', 'key.blocks': '명령 블록', 'key.processes': '프로세스', 'key.toggle-plan': '계획 모드', 'key.toggle-ai': 'AI 채팅 열기/닫기',
     'set.update.auto': '시작할 때 업데이트 자동 확인', 'set.update.desc': 'GitHub 릴리스 정보를 조회합니다(켜면 앱 시작 시 인터넷에 접속). 기본은 꺼짐이며, 아래 버튼으로 직접 확인할 수 있습니다. 설치는 항상 직접 합니다.', 'set.update.now': '지금 확인', 'set.update.checking': '확인 중…',
     'set.reset': '기본값으로 되돌리기', 'set.version': 'MacAIterm v{v} · {at} 빌드',
     'common.ok': '확인', 'common.cancel': '취소',
@@ -234,7 +234,7 @@
   };
 
   const en = {
-    'top.history.tip': 'Session history (⌘Y)', 'top.settings.tip': 'Settings (⌘,)', 'top.stop': 'Stop', 'top.stop.tip': 'Stop (⌘.)', 'top.copy': 'Copy output', 'top.copy.tip': 'Copy selection or the whole screen (⌘⇧C)',
+    'top.history.tip': 'Session history (⌘Y)', 'top.settings.tip': 'Settings (⌘,)', 'top.ai': 'AI chat', 'top.ai.tip': 'Show / hide the AI chat (⇧⌘A): the right-hand AI pane and the input bar below it', 'top.stop': 'Stop', 'top.stop.tip': 'Stop (⌘.)', 'top.copy': 'Copy output', 'top.copy.tip': 'Copy selection or the whole screen (⌘⇧C)',
     'top.reset': 'Reset session', 'top.reset.tip': 'Reset this tab’s shell + AI conversation (⌘⇧K)', 'top.search.tip': 'Find in terminal (⌘F)', 'top.split.tip': 'Split pane (⌘D)', 'top.blocks.tip': 'Command blocks (⌘B)', 'top.procs.tip': 'Processes (⌘⇧P)',
     'theme.toLight': 'Switch to light mode (⌘⇧D)', 'theme.toDark': 'Switch to dark mode (⌘⇧D)',
     'mon.cpuTip': 'CPU utilisation {pct}% ({cores} cores). This Mac as a whole, averaged over the last 2 seconds.', 'mon.gpu': 'GPU', 'mon.avail': 'Free', 'mon.noModel': 'no model', 'mon.gpuNone': 'GPU utilisation is unavailable', 'mon.gpuMem': '\nGPU memory in use {gb}GB',
@@ -319,7 +319,7 @@
     'set.hist.title': 'Save session history', 'set.hist.desc': 'Stores conversations and what ran on this Mac only (secrets masked). Off = nothing new is saved.', 'set.restore.title': 'Restore tabs on launch', 'set.restore.desc': 'Reopens the tabs and directories that were open when you quit.',
     'set.audit.title': 'Export approval / execution log', 'set.audit.desc': 'Every command the AI ran or tried to run, and every approve/deny decision, is logged (secrets masked). You can export it as a file.', 'set.audit.count': '{n} entries', 'set.audit.saved': 'Saved: {p}',
     'set.keys.desc': 'Change the menu shortcuts. Click a field, then press the keys you want (e.g. ⌘⇧T, ⌥K, F6). Esc cancels, ⌫ restores the default.', 'set.keys.invalid': 'Not a valid accelerator', 'set.keys.press': 'Press the keys…', 'set.keys.dup': 'Already used by “{name}”', 'set.keys.reset': 'Default',
-    'key.new-tab': 'New tab', 'key.close-tab': 'Close tab', 'key.next-tab': 'Next tab', 'key.prev-tab': 'Previous tab', 'key.focus-ai': 'Focus AI input', 'key.focus-term': 'Focus terminal', 'key.toggle-mode': 'Toggle AI / shell input', 'key.stop': 'Stop', 'key.copy': 'Copy output', 'key.reset': 'Reset session', 'key.theme': 'Toggle light / dark', 'key.settings': 'Settings', 'key.search': 'Find in terminal', 'key.split': 'Split pane', 'key.history': 'Session history', 'key.blocks': 'Command blocks', 'key.processes': 'Processes', 'key.toggle-plan': 'Plan mode',
+    'key.new-tab': 'New tab', 'key.close-tab': 'Close tab', 'key.next-tab': 'Next tab', 'key.prev-tab': 'Previous tab', 'key.focus-ai': 'Focus AI input', 'key.focus-term': 'Focus terminal', 'key.toggle-mode': 'Toggle AI / shell input', 'key.stop': 'Stop', 'key.copy': 'Copy output', 'key.reset': 'Reset session', 'key.theme': 'Toggle light / dark', 'key.settings': 'Settings', 'key.search': 'Find in terminal', 'key.split': 'Split pane', 'key.history': 'Session history', 'key.blocks': 'Command blocks', 'key.processes': 'Processes', 'key.toggle-plan': 'Plan mode', 'key.toggle-ai': 'Show / hide AI chat',
     'set.update.auto': 'Check for updates at launch', 'set.update.desc': 'Looks up the GitHub release info (connects to the internet at launch when on). Off by default; you can check manually below. Installing is always your decision.', 'set.update.now': 'Check now', 'set.update.checking': 'Checking…',
     'set.reset': 'Restore defaults', 'set.version': 'MacAIterm v{v} · built {at}',
     'common.ok': 'OK', 'common.cancel': 'Cancel',

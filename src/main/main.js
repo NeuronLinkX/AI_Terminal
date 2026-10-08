@@ -272,8 +272,8 @@ function createWindow() {
 
 // ---------------------------------------------------------------- menu (localised, user key bindings)
 const MENU = {
-  ko: { settings: '설정…', update: '업데이트 확인…', edit: '편집', tab: '탭', newTab: '새 탭', closeTab: '탭 닫기', next: '다음 탭', prev: '이전 탭', tabN: '탭', session: '세션', focusAi: 'AI 입력창으로 이동', focusTerm: '터미널로 이동', mode: 'AI/셸 입력 모드 전환', plan: '계획 모드 켜기/끄기', stop: '실행 중단', copy: '출력 복사', theme: '라이트/다크 모드 전환', reset: '세션 초기화', find: '터미널에서 찾기', split: '화면 분할 켜기/끄기', history: '세션 기록', blocks: '명령 블록', procs: '프로세스', view: '보기', window: '윈도우', closeWin: '창 닫기' },
-  en: { settings: 'Settings…', update: 'Check for Updates…', edit: 'Edit', tab: 'Tab', newTab: 'New Tab', closeTab: 'Close Tab', next: 'Next Tab', prev: 'Previous Tab', tabN: 'Tab', session: 'Session', focusAi: 'Focus AI Input', focusTerm: 'Focus Terminal', mode: 'Toggle AI / Shell Input', plan: 'Toggle Plan Mode', stop: 'Stop', copy: 'Copy Output', theme: 'Toggle Light / Dark', reset: 'Reset Session', find: 'Find in Terminal', split: 'Toggle Split Pane', history: 'Session History', blocks: 'Command Blocks', procs: 'Processes', view: 'View', window: 'Window', closeWin: 'Close Window' },
+  ko: { settings: '설정…', update: '업데이트 확인…', edit: '편집', tab: '탭', newTab: '새 탭', closeTab: '탭 닫기', next: '다음 탭', prev: '이전 탭', tabN: '탭', session: '세션', focusAi: 'AI 입력창으로 이동', focusTerm: '터미널로 이동', mode: 'AI/셸 입력 모드 전환', plan: '계획 모드 켜기/끄기', toggleAi: 'AI 채팅 열기/닫기', stop: '실행 중단', copy: '출력 복사', theme: '라이트/다크 모드 전환', reset: '세션 초기화', find: '터미널에서 찾기', split: '화면 분할 켜기/끄기', history: '세션 기록', blocks: '명령 블록', procs: '프로세스', view: '보기', window: '윈도우', closeWin: '창 닫기' },
+  en: { settings: 'Settings…', update: 'Check for Updates…', edit: 'Edit', tab: 'Tab', newTab: 'New Tab', closeTab: 'Close Tab', next: 'Next Tab', prev: 'Previous Tab', tabN: 'Tab', session: 'Session', focusAi: 'Focus AI Input', focusTerm: 'Focus Terminal', mode: 'Toggle AI / Shell Input', plan: 'Toggle Plan Mode', toggleAi: 'Show/Hide AI Chat', stop: 'Stop', copy: 'Copy Output', theme: 'Toggle Light / Dark', reset: 'Reset Session', find: 'Find in Terminal', split: 'Toggle Split Pane', history: 'Session History', blocks: 'Command Blocks', procs: 'Processes', view: 'View', window: 'Window', closeWin: 'Close Window' },
 };
 /** "auto": Korean when Korean is anywhere in the OS language list (the app is Korean-first), otherwise English. */
 const autoLang = () => {
@@ -319,6 +319,7 @@ function buildMenu() {
       {
         label: L.session,
         submenu: [
+          item(L.toggleAi, 'toggle-ai'),
           item(L.focusAi, 'focus-ai'),
           item(L.focusTerm, 'focus-term'),
           item(L.mode, 'toggle-mode'),
