@@ -9,7 +9,6 @@ const { Agent } = require('./agent');
 const { classify } = require('./shell-check');
 const sysmon = require('./sysmon');
 const { Settings, KV_CHOICES, COMPACT_CHOICES, CONTEXT_CHOICES, KEEPALIVE_CHOICES, PERMISSION_CHOICES, FONT_CHOICES, FONT_STACKS, CURSOR_CHOICES, LANG_CHOICES, KEY_ACTIONS, DEFAULT_KEYS } = require('./settings');
-const { Audit } = require('./audit');
 const { History, TabState } = require('./history');
 const { ProjectRules } = require('./projects');
 const { Secrets } = require('./secrets');
