@@ -191,7 +191,10 @@ const scenarios = {
     const empty = createMock({ port: MOCK_PORT + 1 });
     delete process.env.MOCK_EMPTY;
     await empty.listen();
-    const a = await launch({ OLLAMA_HOST: `127.0.0.1:${MOCK_PORT + 1}`, AIT_LANG: 'ko' });
+    // this step is about "Ollama installed, no model": a stub on PATH makes it pass on machines without Ollama (CI) too
+    const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'ait-feat-ollama-'));
+    fs.writeFileSync(path.join(bin, 'ollama'), '#!/bin/sh\nexit 1\n', { mode: 0o755 });
+    const a = await launch(env({ OLLAMA_HOST: `127.0.0.1:${MOCK_PORT + 1}`, AIT_LANG: 'ko', PATH: `${bin}:${process.env.PATH}` }));
     try {
       await a.waitFor(`!!document.querySelector('.banner.onboard')`, 40000, 'onboarding banner');
       const txt = await text(a, '.banner.onboard');
