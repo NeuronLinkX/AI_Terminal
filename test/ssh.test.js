@@ -160,10 +160,11 @@ test('probe parsing: the remote description is read from the output, never from 
 });
 
 test('connectCommand: only a plain destination reaches the terminal (no option injection, no shell syntax)', () => {
-  assert.equal(S.connectCommand('ubuntu@192.168.64.4'), 'ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ubuntu@192.168.64.4');
-  assert.equal(S.connectCommand('ubuntu@192.168.64.4', { keepAlive: false }), 'ssh ubuntu@192.168.64.4');
-  assert.equal(S.connectCommand('dev@host:2200', { keepAlive: false }), 'ssh -p 2200 dev@host');
-  assert.equal(S.connectCommand('myalias', { keepAlive: false }), 'ssh myalias');
+  assert.equal(S.connectCommand('ubuntu@192.168.64.4'), 'ssh -o ConnectTimeout=10 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ubuntu@192.168.64.4');
+  assert.equal(S.connectCommand('ubuntu@192.168.64.4', { keepAlive: false }), 'ssh -o ConnectTimeout=10 ubuntu@192.168.64.4'); // a silent server: give up after 10 s, not ssh's ~75 s
+  assert.equal(S.connectCommand('ubuntu@192.168.64.4', { keepAlive: false, connectTimeout: 0 }), 'ssh ubuntu@192.168.64.4');
+  assert.equal(S.connectCommand('dev@host:2200', { keepAlive: false, connectTimeout: 0 }), 'ssh -p 2200 dev@host');
+  assert.equal(S.connectCommand('myalias', { keepAlive: false, connectTimeout: 0 }), 'ssh myalias');
   for (const bad of ['-oProxyCommand=touch /tmp/x', '-o', 'host; rm -rf ~', 'host && id', 'a b', '$(id)', '`id`', 'host|cat', '', 'user@', 'x'.repeat(400), 'host\nid']) {
     assert.equal(S.connectCommand(bad), null, JSON.stringify(bad));
     assert.equal(S.validTarget(bad), false, JSON.stringify(bad));
@@ -305,5 +306,5 @@ test('externalSshTarget: --ssh=<host> from the command line, only acceptable des
   assert.equal(S.externalSshTarget(['--ssh=a b']), null);
   assert.equal(S.externalSshTarget(null), null);
   // the command main hands to the window comes from connectCommand, never from the raw argument
-  assert.equal(S.connectCommand(S.externalSshTarget(['--ssh', 'ubuntu'])), 'ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ubuntu');
+  assert.equal(S.connectCommand(S.externalSshTarget(['--ssh', 'ubuntu'])), 'ssh -o ConnectTimeout=10 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ubuntu');
 });

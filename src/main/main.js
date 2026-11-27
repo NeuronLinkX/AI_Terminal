@@ -19,10 +19,11 @@ const { checkForUpdate } = require('./updater');
 const { listProcesses, signalProcess, descendants } = require('./procs');
 const { EDIT_SCHEMA } = require('./llm/schema');
 const { maskSecrets } = require('./text');
-const { externalSshTarget, connectCommand, HostBook } = require('./ssh');
+const { externalSshTarget, connectCommand, HostBook, CONNECT_TIMEOUT } = require('./ssh');
 const { SshConfigFile } = require('./sshconfig');
+const lan = require('./lan');
 const { SshTab } = require('./ssh-tab');
-const { SessionStore, buildCommand, buildDestinationCommand, x11Available } = require('./sshsessions');
+const { SessionStore, buildCommand, buildDestinationCommand, configSetsConnectTimeout, x11Available } = require('./sshsessions');
 const { localList } = require('./sftp');
 const { controlDir } = require('./sshlink');
 const { migrateLegacyData } = require('./legacy');
@@ -84,6 +85,11 @@ const send = (ch, payload) => {
   if (win && !win.isDestroyed()) win.webContents.send(ch, payload);
 };
 
+/** Seconds ssh may wait for a server in the commands the app types: 10, unless the user's own ssh config sets ConnectTimeout (0 = add nothing). */
+function connectTimeout() {
+  try { return configSetsConnectTimeout(fs.readFileSync(path.join(process.env.AIT_SSH_DIR || path.join(os.homedir(), '.ssh'), 'config'), 'utf8')) ? 0 : CONNECT_TIMEOUT; } catch { return CONNECT_TIMEOUT; }
+}
+
 // ---------------------------------------------------------------- external requests (--ssh=<host>)
 // Requests wait here until the renderer asks for them, so one that arrives while the app is still starting is not lost.
 const pendingExternal = [];
@@ -95,7 +101,7 @@ function handleExternal(argv) {
     win.focus();
   }
   if (app.focus) app.focus({ steal: true });
-  const cmd = target && connectCommand(target);
+  const cmd = target && connectCommand(target, { connectTimeout: connectTimeout() });
   if (!cmd) return;
   pendingExternal.push({ target, cmd });
   send('external:wake', null);
@@ -266,8 +272,8 @@ function createWindow() {
 
 // ---------------------------------------------------------------- menu (localised, user key bindings)
 const MENU = {
-  ko: { settings: '설정…', update: '업데이트 확인…', edit: '편집', tab: '탭', newTab: '새 탭', closeTab: '탭 닫기', next: '다음 탭', prev: '이전 탭', tabN: '탭', session: '세션', focusAi: 'AI 입력창으로 이동', focusTerm: '터미널로 이동', mode: 'AI/셸 입력 모드 전환', plan: '계획 모드 켜기/끄기', stop: '실행 중단', copy: '출력 복사', theme: '라이트/다크 모드 전환', reset: '세션 초기화', find: '터미널에서 찾기', split: '화면 분할 켜기/끄기', history: '세션 기록', blocks: '명령 블록', procs: '프로세스', view: '보기', window: '윈도우', closeWin: '창 닫기' },
-  en: { settings: 'Settings…', update: 'Check for Updates…', edit: 'Edit', tab: 'Tab', newTab: 'New Tab', closeTab: 'Close Tab', next: 'Next Tab', prev: 'Previous Tab', tabN: 'Tab', session: 'Session', focusAi: 'Focus AI Input', focusTerm: 'Focus Terminal', mode: 'Toggle AI / Shell Input', plan: 'Toggle Plan Mode', stop: 'Stop', copy: 'Copy Output', theme: 'Toggle Light / Dark', reset: 'Reset Session', find: 'Find in Terminal', split: 'Toggle Split Pane', history: 'Session History', blocks: 'Command Blocks', procs: 'Processes', view: 'View', window: 'Window', closeWin: 'Close Window' },
+  ko: { settings: '설정…', update: '업데이트 확인…', edit: '편집', tab: '탭', newTab: '새 탭', closeTab: '탭 닫기', next: '다음 탭', prev: '이전 탭', tabN: '탭', session: '세션', focusAi: 'AI 입력창으로 이동', focusTerm: '터미널로 이동', mode: 'AI/셸 입력 모드 전환', plan: '계획 모드 켜기/끄기', toggleAi: 'AI 채팅 열기/닫기', stop: '실행 중단', copy: '출력 복사', theme: '라이트/다크 모드 전환', reset: '세션 초기화', find: '터미널에서 찾기', split: '화면 분할 켜기/끄기', history: '세션 기록', blocks: '명령 블록', procs: '프로세스', view: '보기', window: '윈도우', closeWin: '창 닫기' },
+  en: { settings: 'Settings…', update: 'Check for Updates…', edit: 'Edit', tab: 'Tab', newTab: 'New Tab', closeTab: 'Close Tab', next: 'Next Tab', prev: 'Previous Tab', tabN: 'Tab', session: 'Session', focusAi: 'Focus AI Input', focusTerm: 'Focus Terminal', mode: 'Toggle AI / Shell Input', plan: 'Toggle Plan Mode', toggleAi: 'Show/Hide AI Chat', stop: 'Stop', copy: 'Copy Output', theme: 'Toggle Light / Dark', reset: 'Reset Session', find: 'Find in Terminal', split: 'Toggle Split Pane', history: 'Session History', blocks: 'Command Blocks', procs: 'Processes', view: 'View', window: 'Window', closeWin: 'Close Window' },
 };
 /** "auto": Korean when Korean is anywhere in the OS language list (the app is Korean-first), otherwise English. */
 const autoLang = () => {
@@ -313,6 +319,7 @@ function buildMenu() {
       {
         label: L.session,
         submenu: [
+          item(L.toggleAi, 'toggle-ai'),
           item(L.focusAi, 'focus-ai'),
           item(L.focusTerm, 'focus-term'),
           item(L.mode, 'toggle-mode'),
@@ -462,17 +469,21 @@ app.whenReady().then(async () => {
   ipcMain.handle('sess:save', (_e, s) => sessionStore.save(s));
   ipcMain.handle('sess:delete', (_e, id) => sessionStore.remove(String(id)));
   ipcMain.handle('sess:duplicate', (_e, id) => sessionStore.duplicate(String(id)));
+  ipcMain.handle('lan:request', () => lan.request()); // the Settings button: makes macOS ask for local network access now, on any network
+  ipcMain.handle('lan:probe', (_e, host) => lan.probe(String(host || ''), 22)); // one connection attempt from this process: makes macOS ask for local network access
   // ~/.ssh/config editor of the session panel (the window only; the AI has no tool for this file)
   ipcMain.handle('sshcfg:read', () => new SshConfigFile(hostBook.sshDir).read());
   ipcMain.handle('sshcfg:check', (_e, text) => (typeof text === 'string' ? new SshConfigFile(hostBook.sshDir).check(text) : { ok: false, line: 0, message: 'bad' }));
   ipcMain.handle('sshcfg:write', (_e, a) => (a && typeof a.text === 'string' && typeof a.hash === 'string' ? new SshConfigFile(hostBook.sshDir).write(a.text, a.hash) : { ok: false, code: 'bad' }));
   ipcMain.handle('sess:recent-forget', (_e, target) => { if (typeof target === 'string') hostBook.forget(target); return hostBook.list().recent; });
   ipcMain.handle('sess:recent-clear', () => { hostBook.clear(); return []; });
+  /** Where this Mac is relative to the server of the tab (private address only): { host, mine } when it is on another network, else null. */
+  ipcMain.handle('ssh:netnote', (_e, id) => (T(id) && T(id).ssh ? lan.networkNote(T(id).ssh.target) : null));
   ipcMain.handle('sess:from-config', (_e, alias) => { const h = hostBook.configured().find((x) => x.alias === String(alias)); return h ? sessionStore.fromConfig(h) : null; });
   /** { ok, command, title } — the only way a saved session becomes a command line; it is validated on the way */
   ipcMain.handle('sess:command', (_e, arg = {}) => {
     // AIT_SSH_DIR (tests / documentation runs) also tells ssh itself which config to read: OpenSSH uses the account's ~/.ssh, not $HOME
-    const opts = { ctlDir: settings.get('sshShare') ? controlDir() : null, keepAlive: settings.get('sshKeepAlive'), share: settings.get('sshShare'), configFile: process.env.AIT_SSH_DIR ? path.join(process.env.AIT_SSH_DIR, 'config') : '' };
+    const opts = { ctlDir: settings.get('sshShare') ? controlDir() : null, keepAlive: settings.get('sshKeepAlive'), share: settings.get('sshShare'), configFile: process.env.AIT_SSH_DIR ? path.join(process.env.AIT_SSH_DIR, 'config') : '', connectTimeout: connectTimeout() };
     if (arg.alias !== undefined) { // a host of ~/.ssh/config: only names that really are in the file
       const h = hostBook.configured().find((x) => x.alias === String(arg.alias));
       if (!h) return { ok: false, errors: [{ field: 'host', message: '~/.ssh/config 에 없는 호스트입니다.' }] };
@@ -485,7 +496,7 @@ app.whenReady().then(async () => {
     }
     const s = arg.id ? sessionStore.get(String(arg.id)) : arg.session;
     if (!s) return { ok: false, errors: [{ field: 'id', message: '세션을 찾을 수 없습니다.' }] };
-    const r = buildCommand({ ...s, keepAlive: s.keepAlive && opts.keepAlive, share: s.share && opts.share }, { ctlDir: opts.ctlDir, configFile: opts.configFile });
+    const r = buildCommand({ ...s, keepAlive: s.keepAlive && opts.keepAlive, share: s.share && opts.share }, { ctlDir: opts.ctlDir, configFile: opts.configFile, connectTimeout: opts.connectTimeout });
     if (r.ok && arg.id) sessionStore.touch(String(arg.id));
     return r.ok ? { ok: true, command: r.command, title: s.name || s.host } : r;
   });
@@ -699,12 +710,17 @@ app.whenReady().then(async () => {
   }
 });
 
+/** Hangs up every shell; the promise settles once they have all exited (at most ~1.5 s), see PtySession.exited. */
 function killAll() {
+  const gone = [];
   for (const t of tabs.values()) {
     t.agent.abort();
-    t.session.kill();
-    for (const p of t.panes.values()) p.kill();
+    for (const s of [t.session, ...t.panes.values()]) {
+      s.kill();
+      gone.push(s.exited());
+    }
   }
+  return Promise.all(gone);
 }
 // Quit: remember the tabs, stop work, free the model's memory (wait briefly for Ollama to confirm), stop our Ollama.
 let quitting = false;
@@ -714,11 +730,11 @@ app.on('before-quit', (e) => {
   try { fs.rmSync(path.join(os.tmpdir(), `ait-drag-${process.pid}`), { recursive: true, force: true }); } catch { /* ignore */ }
   for (const t of tabs.values()) if (t.ssh) t.ssh.detach(); // also closes the monitor's own ssh connections
   if (tabState && tabs.size) tabState.save([...tabs.values()].map((t) => ({ cwd: t.session.cwd, title: t.title || '' })), Math.max(0, [...tabs.keys()].indexOf(activeTabId)));
-  killAll();
+  const shellsGone = killAll();
   if (quitting || !llm) return;
   quitting = true;
   e.preventDefault();
-  Promise.race([settings && !settings.get('unloadOnClose') ? Promise.resolve() : llm.unload(), new Promise((r) => setTimeout(r, 4000))]).finally(() => {
+  Promise.race([settings && !settings.get('unloadOnClose') ? Promise.resolve() : llm.unload(), new Promise((r) => setTimeout(r, 4000))]).then(() => shellsGone).finally(() => {
     llm.dispose();
     app.exit(0);
   });

@@ -10,6 +10,13 @@ const { PtySession } = require('../src/main/pty-session');
 
 const cwd = '/Users/x/proj';
 const lvl = (c) => assessCommand(c, cwd).level;
+// These tests use zsh syntax, so the shell is named instead of taken from $SHELL (bash on CI).
+// t.after closes it even when an assertion fails; a shell left open keeps the test process alive.
+const startZsh = (t) => {
+  const s = new PtySession({ cwd: '/tmp', shell: '/bin/zsh' }).start();
+  t.after(() => s.kill());
+  return s;
+};
 
 test('policy: read-only and dev commands run without approval', () => {
   for (const c of ['ls -la', 'git status', 'npm test 2>&1 | tail -20', 'lsof -nP -iTCP:3000 -sTCP:LISTEN', 'node server.js > /tmp/s.log 2>&1 &', 'cat .env.example', 'chmod +x run.sh']) assert.strictEqual(lvl(c), 'allow', c);
@@ -63,8 +70,8 @@ test('shell-check: Korean sentences are natural language, commands are not', asy
   assert.strictEqual((await classify('cd 문서')).natural, false);
   assert.strictEqual((await classify('echo 안녕')).natural, false);
 });
-test('pty session: real zsh, state kept, exit codes, Korean, interrupt', async () => {
-  const s = new PtySession({ cwd: '/tmp' }).start();
+test('pty session: real zsh, state kept, exit codes, Korean, interrupt', async (t) => {
+  const s = startZsh(t);
   await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
   let r = await s.runCommand('cd /usr && echo 한글');
   assert.ok(r.output.includes('한글') && r.exitCode === 0 && s.cwd === '/usr');
@@ -97,14 +104,15 @@ test('bundled vim setup loads and applies per-language settings', { skip: !requi
   }
 });
 
-test('prompt: Mac-style default, Windows-looking prompt reset, PS1 changes need approval', async () => {
+test('prompt: Mac-style default, Windows-looking prompt reset, PS1 changes need approval', async (t) => {
   assert.strictEqual(assessCommand('export PS1="C:\\\\x>"', '/Users/x/proj').level, 'approve');
   assert.strictEqual(assessCommand('PROMPT=">"', '/Users/x/proj').level, 'approve');
   assert.strictEqual(assessCommand('echo $PS1', '/Users/x/proj').level, 'allow');
   for (const env of [{}, { PS1: 'C:\\\\pydantic_demo>' }]) {
     const prev = process.env.PS1;
+    t.after(() => { if (prev === undefined) delete process.env.PS1; else process.env.PS1 = prev; });
     Object.assign(process.env, env);
-    const s = new PtySession({ cwd: '/tmp' }).start();
+    const s = startZsh(t);
     await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
     const r = await s.runCommand('print -r -- "$PS1"');
     assert.ok(/%n@%m/.test(r.output) && /%~/.test(r.output) && !/C:/.test(r.output), r.output);
@@ -135,11 +143,11 @@ test('settings: defaults, validation, persistence', () => {
   assert.strictEqual(s.get('contextTokens'), 12288);
 });
 
-test('shell history stays in the user home, never inside the app folder', async () => {
+test('shell history stays in the user home, never inside the app folder', async (t) => {
   const os = require('os');
   const path = require('path');
   const fs = require('fs');
-  const s = new PtySession({ cwd: '/tmp' }).start();
+  const s = startZsh(t);
   await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
   const r = await s.runCommand('print -r -- "$HISTFILE"');
   s.kill();
@@ -164,4 +172,28 @@ test('vim: every function key has a Mac-friendly Space-leader twin', { skip: !re
   const parts = fs.readFileSync(out, 'utf8').trim().split('|');
   assert.ok(/ait#run/.test(parts[0]) && /ait#check/.test(parts[1]) && /ait#format/.test(parts[2]), parts.join(' | '));
   assert.ok(/ait#run/.test(parts[3]) && /ait#check/.test(parts[4]) && /ait#format/.test(parts[5]), 'function keys still mapped');
+});
+
+test('exited() settles only once the shell has really exited (quit must wait for it, or node-pty aborts the app)', async (t) => {
+  const s = startZsh(t);
+  await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
+  assert.notStrictEqual(s.state, 'exited');
+  s.kill();
+  const t0 = Date.now();
+  await s.exited();
+  assert.strictEqual(s.state, 'exited', 'the exit event was delivered before exited() resolved');
+  assert.ok(Date.now() - t0 < 1400, 'did not run into the time limit');
+  await s.exited(); // already exited: settles at once
+});
+
+test('exited() gives up after the limit and kills a shell that ignores the hangup', async (t) => {
+  const s = startZsh(t);
+  await new Promise((r) => { const i = setInterval(() => s.integrated && (clearInterval(i), r()), 50); });
+  s.write('trap "" HUP\r');
+  await new Promise((r) => setTimeout(r, 500));
+  s.kill();
+  const t0 = Date.now();
+  await s.exited(800);
+  assert.strictEqual(s.state, 'exited', 'SIGKILL after half of the limit ended it');
+  assert.ok(Date.now() - t0 >= 350, 'the hangup alone did not end it, so the SIGKILL path was used');
 });

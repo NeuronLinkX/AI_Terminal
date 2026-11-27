@@ -271,7 +271,8 @@
     ait.onSshProblem(({ id, ...p }) => {
       const tab = C.tabs.get(id);
       if (!tab) return;
-      const c = C.note(tab, `${t(`ssh.problem.${p.kind}`) || ''} ${tr(p.hint || '')}`.trim(), p.level === 'danger' ? 'warn danger' : p.level === 'info' ? '' : 'warn');
+      const net = p.net && p.net.mine && p.net.mine.length ? ` ${t('ssh.problem.net', { mine: p.net.mine.join(', '), host: p.net.host })}` : ''; // the server is on another network than this Mac
+      const c = C.note(tab, `${t(`ssh.problem.${p.kind}`) || ''} ${tr(p.hint || '')}${net}`.trim(), p.level === 'danger' ? 'warn danger' : p.level === 'info' ? '' : 'warn');
       if (p.fingerprint) c.append(el('div', 'fp', t('ssh.problem.fp', { type: p.fingerprint.type, fp: p.fingerprint.fingerprint })));
     });
     ait.onSshOffer(({ id, target, reason }) => {

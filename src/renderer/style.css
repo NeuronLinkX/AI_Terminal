@@ -46,6 +46,13 @@ button { font: inherit; color: inherit; }
 #model-pop .row { display: flex; gap: 8px; margin-top: 10px; }
 
 #main { flex: 1; min-height: 0; display: flex; }
+/* the AI chat = the right-hand pane AND the input bar under it; they open and close together (button in the top bar, ⇧⌘A) */
+body[data-ai="closed"] #ai-pane, body[data-ai="closed"] #splitter, body[data-ai="closed"] #dock { display: none; }
+#topbar .btn.toggle { height: 26px; }
+#btn-ai { position: relative; }
+#btn-ai[data-busy="1"]::after { content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 0 2px var(--panel); animation: ai-pulse 1.4s ease-in-out infinite; }
+@keyframes ai-pulse { 50% { opacity: .35; } }
+@media (max-width: 1100px) { #btn-ai > span:not(.ic) { display: none; } #btn-ai { padding: 0 9px; } }
 #term-pane { flex: 1 1 58%; min-width: 320px; display: flex; flex-direction: column; background: var(--term-bg); }
 #ai-pane { flex: 0 0 var(--ai-w, 42%); min-width: 320px; display: flex; flex-direction: column; background: var(--panel); border-left: 1px solid var(--line); position: relative; }
 #splitter { width: 5px; margin-left: -3px; cursor: col-resize; z-index: 5; flex: none; }
@@ -302,6 +309,10 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .sm-foot { display: flex; align-items: center; justify-content: space-between; padding: 11px 18px; border-top: 1px solid var(--line); background: var(--panel-2); }
 .sm-ver { color: var(--faint); font-size: 11px; font-family: var(--mono); }
 .sm-note { display: none; }
+.srow .lan-result { margin-top: 8px; font-size: 12px; font-weight: 600; line-height: 1.5; color: var(--dim); }
+.srow .lan-result:empty { display: none; }
+.srow .lan-result.ok { color: var(--ok, #1f8a4c); }
+.srow .lan-result.warn { color: var(--warn, #b26a00); }
 
 .sm-est .sm-live { margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(157,140,255,.3); font-weight: 600; }
 .sm-est.warn .sm-live { border-top-color: rgba(242,184,75,.4); }
@@ -560,6 +571,7 @@ body[data-mode="sh"] #input { font-family: var(--mono); font-size: 12.5px; }
 .flink { color: var(--faint); font-size: 10.5px; }
 .fsz { color: var(--faint); font-size: 10.5px; font-variant-numeric: tabular-nums; flex: none; }
 .dr-empty.err { color: var(--err); }
+.dr-empty .dr-net { margin-top: 10px; color: var(--dim, var(--faint)); font-size: 11.5px; line-height: 1.55; }
 
 /* transfers */
 .fx { flex: none; max-height: 190px; display: flex; flex-direction: column; border-top: 1px solid var(--line); background: var(--panel-2); }

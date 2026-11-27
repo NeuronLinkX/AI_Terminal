@@ -11,6 +11,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { controlDir } = require('./sshlink');
+const { CONNECT_TIMEOUT } = require('./ssh');
 
 const HOST_RE = /^[A-Za-z0-9][A-Za-z0-9._:%-]*$|^\[[0-9A-Fa-f:.%]+\]$/;
 const USER_RE = /^[A-Za-z0-9_][A-Za-z0-9._-]{0,63}$/;
@@ -97,12 +98,13 @@ const fwdArg = (f) => (f.kind === 'D' ? `${f.listenPort}` : `${f.listenPort}:${f
  * `share` adds the app's shared-connection options: the terminal, the file panel and the server monitor then use ONE login.
  * @returns {{ok: true, command: string} | {ok: false, errors: object[]}}
  */
-function buildCommand(session, { ctlDir = controlDir(), home = os.homedir(), configFile = '' } = {}) {
+function buildCommand(session, { ctlDir = controlDir(), home = os.homedir(), configFile = '', connectTimeout = CONNECT_TIMEOUT } = {}) {
   const v = validateSession(session);
   if (!v.ok) return v;
   const s = v.session;
   const a = ['ssh'];
   if (configFile && pathOk(configFile)) a.push('-F', q(configFile));
+  if (connectTimeout > 0) a.push('-o', `ConnectTimeout=${connectTimeout}`);
   if (s.keepAlive) a.push('-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3');
   if (s.share && ctlDir) a.push('-o', 'ControlMaster=auto', '-o', `ControlPath=${ctlDir}/%C`);
   if (s.port !== 22) a.push('-p', String(s.port));
@@ -121,18 +123,22 @@ function buildCommand(session, { ctlDir = controlDir(), home = os.homedir(), con
  * `ssh [options] <destination>` for an ~/.ssh/config alias or a "recent" destination (user@host[:port]) — the same options as a
  * saved session (keep-alive, shared connection), nothing else. The destination is checked like a session's host.
  */
-function buildDestinationCommand(destination, { keepAlive = true, share = true, ctlDir = controlDir(), configFile = '' } = {}) {
+function buildDestinationCommand(destination, { keepAlive = true, share = true, ctlDir = controlDir(), configFile = '', connectTimeout = CONNECT_TIMEOUT } = {}) {
   const d = String(destination || '');
   const m = d.match(/^(?:([A-Za-z0-9_][A-Za-z0-9._-]{0,63})@)?([^@:\s]+|\[[0-9A-Fa-f:.%]+\])(?::(\d{1,5}))?$/);
   if (!m || !HOST_RE.test(m[2]) || m[2].length > 253 || (m[3] && !port(m[3]))) return { ok: false, errors: [{ field: 'host', message: '접속 대상이 올바르지 않습니다.' }] };
   const a = ['ssh'];
   if (configFile && pathOk(configFile)) a.push('-F', q(configFile));
+  if (connectTimeout > 0) a.push('-o', `ConnectTimeout=${connectTimeout}`);
   if (keepAlive) a.push('-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3');
   if (share && ctlDir) a.push('-o', 'ControlMaster=auto', '-o', `ControlPath=${ctlDir}/%C`);
   if (m[3] && Number(m[3]) !== 22) a.push('-p', m[3]);
   a.push(`${m[1] ? m[1] + '@' : ''}${m[2]}`);
   return { ok: true, command: a.join(' ') };
 }
+
+/** Does this ssh config text set ConnectTimeout itself? Then the app leaves it alone: an option on the command line would override it. */
+const configSetsConnectTimeout = (text) => /^[ \t]*ConnectTimeout[ \t=]/im.test(String(text || ''));
 
 /** XQuartz (or another X server) is needed for X11 forwarding on a Mac. */
 function x11Available() {
@@ -204,4 +210,4 @@ class SessionStore {
   }
 }
 
-module.exports = { SessionStore, validateSession, buildCommand, buildDestinationCommand, x11Available, pathOk, jumpOk, HOST_RE, USER_RE };
+module.exports = { SessionStore, validateSession, buildCommand, buildDestinationCommand, configSetsConnectTimeout, x11Available, pathOk, jumpOk, HOST_RE, USER_RE };

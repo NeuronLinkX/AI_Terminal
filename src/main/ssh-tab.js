@@ -11,6 +11,7 @@ const { SshWatcher, validTarget } = require('./ssh');
 const { RemoteMonitor } = require('./remotemon');
 const { SshLink } = require('./sshlink');
 const { RemoteBrowser } = require('./sftp');
+const { probe: lanProbe, isPrivateV4, networkNote } = require('./lan');
 
 /** What the UI may know about a connection: never key paths or config file locations. */
 function publicTarget(t) {
@@ -53,7 +54,12 @@ class SshTab {
     const w = (this.watcher = new SshWatcher(session, { descendants: this.descendants, intervalMs: this.pollMs, hosts: () => this.hostBook.configured() }));
     const m = (this.monitor = new RemoteMonitor({ isActive: this.visible }));
     w.on('change', (c) => (c.active ? this._started(c) : this._ended()));
-    w.on('problem', (p) => this.send('ssh:problem', { id: this.id, ...p, target: publicTarget(p.target || this.target) }));
+    w.on('problem', (p) => {
+      const t = p.target || this.target;
+      const net = p.kind === 'timeout' || p.kind === 'unreachable' ? networkNote(t) : null; // the server is on another network than this Mac
+      this.send('ssh:problem', { id: this.id, ...p, target: publicTarget(t), ...(net ? { net } : {}) });
+      if (p.kind === 'unreachable') this._askLocalNetwork(t);
+    });
     m.on('metrics', (metrics) => this.send('ssh:metrics', { id: this.id, metrics }));
     m.on('unavailable', (u) => this.send('ssh:metrics', { id: this.id, unavailable: u }));
     w.start();
@@ -99,6 +105,17 @@ class SshTab {
       this._browser.on('transfer', (t) => this.send('sftp:transfer', { id: this.id, t }));
     }
     return this._browser;
+  }
+
+  /**
+   * "No route to host" for a private address often is macOS refusing this app the local network (the permission is per app and is
+   * lost when the app is rebuilt). Only this process can make macOS ask: one short connection attempt, at most once a minute.
+   */
+  _askLocalNetwork(t) {
+    const host = t && (t.hostName || t.host);
+    if (!isPrivateV4(host) || Date.now() - (this._lanAt || 0) < 60000) return;
+    this._lanAt = Date.now();
+    lanProbe(host, (t && t.port) || 22).catch(() => {});
   }
 
   /** State for a freshly loaded UI (tab switch, reload). */

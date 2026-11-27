@@ -3,6 +3,11 @@
 ## Unreleased
 
 ### Added
+- **AI chat button** in the top bar (and ⇧⌘A, Session menu): the right-hand AI pane and the input bar below it open and close together, so the terminal can use the whole window. The choice is remembered. The chat opens by itself when an approval is waiting or a drawer (processes, command blocks) is opened, and the button shows a dot while the chat is closed but the AI is working or waiting for an answer.
+- **Own binary UUIDs** (`build/macho-uuid.js`, run by the signing hook): the app's main executable and helpers no longer share the stock Electron UUID. macOS keeps the local network decision per identity but enforces it per UUID; with several identities on one UUID it can skip the question and block the app silently. The UUID is derived from the app id and the file path, so it stays the same on every rebuild.
+- **Settings > SSH > Local network access**: a button that makes the app itself send one Bonjour question and touch the router, which makes macOS show its "allow local network access" question (the entry in System Settings > Privacy & Security > Local Network only exists after that). Works on any network.
+- **"Not the same network" note**: when a connection to a private address times out or has no route and this Mac is on another network than the server, the tab note and the file panel say so and name this Mac's networks.
+- **Stable code signing**: the build signs the app with a certificate created once on the building Mac (`scripts/make-signing-cert.sh`, docs/SIGNING.md), so macOS permissions (local network, Keychain) survive rebuilds and updates; without it the build signs ad-hoc as before.
 - **~/.ssh/config editor** in the session panel: a modal with a syntax check (`ssh -G`), line-numbered errors, backups (`config.bak-<time>`, newest 5) and a conflict check; the right-click menu of ~/.ssh/config hosts is no longer empty.
 - **Remote screen (VNC)** inside the window: an SSH tab can show the server's VNC desktop (noVNC). The picture travels only inside the tab's SSH connection (`ssh -W`, no local port, no extra login); the VNC password is asked for once and never stored; the screen is never sent to the AI. A per-server "Open on connect" option shows the screen as soon as the SSH login works and waits for a VNC server that is still starting.
 - **Tabs, split panes, session history** (search / export / delete), command blocks, process panel, terminal search (⌘F), clickable URLs and file paths.
@@ -24,6 +29,8 @@
 - **Download website** (`site/`, bilingual, light / dark, no cookies or external requests): an overview page and a download page (.dmg / .zip, SHA-256, install and first-launch steps, requirements, FAQ, changelog); `npm run site` fills in version, sizes and checksums from `dist/`; a Pages workflow publishes it. Added the MIT `LICENSE` file.
 
 ### Changed
+- **Connection attempts give up after 10 s** (`-o ConnectTimeout=10` in the commands the app types) instead of ssh's ~75 s of silence. A `ConnectTimeout` set in the user's own ssh config is left alone.
+- The app's signing identifier is now `com.neuronlinkx.macaiterm.app` (macOS had kept a never-answered local network record for the old one).
 - **The app is now called MacAIterm** (was *AI Terminal*): app bundle `MacAIterm.app`, installers `MacAIterm-<version>-<arch>.dmg`, bundle id `com.neuronlinkx.macaiterm`. On the first start the old data folder (`~/Library/Application Support/AI Terminal`) is copied to `MacAIterm` (settings, tabs, history, audit, usage, project rules, saved SSH sessions; never moved or overwritten). API keys saved in Settings are not copied (the Keychain item is named after the app) and must be entered again. Project guidance files may now also be called `MACAITERM.md` / `.macaiterm.md` (the old names still work).
 - Larger default window (1720×1060, never larger than the screen); the top bar now gives up labels and button captions step by step instead of cutting content off or overlapping when the window is narrow.
 

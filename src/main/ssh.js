@@ -205,7 +205,7 @@ const PROBLEMS = [
   { kind: 'dns', level: 'warn', re: /Could not resolve hostname|Name or service not known|nodename nor servname/i,
     hint: '호스트 이름을 찾을 수 없습니다. 철자와 DNS 를 확인하세요.' },
   { kind: 'unreachable', level: 'warn', re: /No route to host|Network is unreachable/i,
-    hint: '서버까지 가는 경로가 없습니다. 같은 네트워크(VPN 포함)에 있는지 확인하세요.' },
+    hint: '서버까지 가는 경로가 없습니다. 같은 네트워크(VPN 포함)에 있는지 확인하세요. 다른 프로그램에서는 되는데 이 앱에서만 안 되면 시스템 설정의 개인정보 보호 및 보안 > 로컬 네트워크에서 MacAIterm 을 허용하세요.' },
   { kind: 'dropped', level: 'warn', re: /client_loop: send disconnect|Write failed: Broken pipe|packet_write_wait|Connection reset by|Timeout, server .* not responding|Connection to .+ (closed by remote host|timed out)/i,
     hint: '연결이 끊어졌습니다. 다시 접속하세요. 자주 끊기면 `-o ServerAliveInterval=30` 옵션을 쓰세요.' },
   { kind: 'closed', level: 'info', re: /^Connection to \S+ closed\.?$/im, hint: '원격 셸이 정상적으로 종료되었습니다.' },
@@ -296,12 +296,16 @@ function externalSshTarget(argv) {
   return validTarget(v) ? String(v) : null;
 }
 
+/** Seconds ssh waits for the server to answer before it gives up (its own default is about 75 s of silence). */
+const CONNECT_TIMEOUT = 10;
+
 /** The command line typed into the terminal for a host picked in the UI, or null when the target is not acceptable. */
-function connectCommand(target, { keepAlive = true } = {}) {
+function connectCommand(target, { keepAlive = true, connectTimeout = CONNECT_TIMEOUT } = {}) {
   if (!validTarget(target)) return null;
   const d = parseDestination(target);
   if (!d.host || d.host.startsWith('-')) return null;
   const parts = ['ssh'];
+  if (connectTimeout > 0) parts.push('-o', `ConnectTimeout=${connectTimeout}`);
   if (keepAlive) parts.push('-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3');
   // user@host:port is not ssh syntax; a bare [v6] stays as is
   const bare = /^\[/.test(target) ? target : `${d.user ? d.user + '@' : ''}${d.host}`;
@@ -428,5 +432,5 @@ module.exports = {
   parseSshArgs, parseDestination, resolveFromConfig, labelOf, idOf, splitArgs, parseSshConfig,
   classifySshOutput, fingerprintOf,
   shellKind, sentinelLine, SHELL_PROBE, parseShellProbe, probeCommand, parseProbe,
-  validTarget, connectCommand, externalSshTarget, HostBook, SshWatcher,
+  validTarget, connectCommand, CONNECT_TIMEOUT, externalSshTarget, HostBook, SshWatcher,
 };
