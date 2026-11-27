@@ -7,6 +7,8 @@ on:
 jobs:
   test:
     runs-on: macos-latest
+    env:
+      SHELL: /bin/zsh # the macOS default; the tests and e2e scripts expect it (the runner's shell is bash)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
